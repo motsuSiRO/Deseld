@@ -1,0 +1,435 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{f7f3efbe-d60f-45e3-989a-3acb8dd845f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{9f64f4ff-d9e0-43d7-88e1-13e6d3656a89}</UniqueIdentifier>
+      <Extensions>hlsl;hlsli</Extensions>
+    </Filter>
+    <Filter Include="Code">
+      <UniqueIdentifier>{6282141a-ed81-4275-a239-fa5a4755114c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Lib">
+      <UniqueIdentifier>{a5c1945f-4fab-44b1-b536-bb4911ab12e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\InGame">
+      <UniqueIdentifier>{5efc3c97-b83f-4363-804f-d83c1c1ca691}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\InGame\Charactor">
+      <UniqueIdentifier>{e7756996-6be0-4088-81de-a944bf41c021}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\InGame\Charactor\Enemy">
+      <UniqueIdentifier>{0c21ea4f-6cfe-46f8-878d-f85cd9f24620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\InGame\Scene">
+      <UniqueIdentifier>{abba7a99-5dd6-434e-8417-225c41f3f7ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\Shared">
+      <UniqueIdentifier>{1f366b4b-25df-478a-ad52-b4663878d02b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Mo2Lib\ImGui\imgui.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\ImGui\imgui_demo.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\ImGui\imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\ImGui\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\ImGui\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\ImGui\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Camera.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\fbx_loader.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\framework.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\GeoPrimitive.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Input.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\logger.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\main.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\model.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\model_renderer.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\model_resource.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Shader.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Sprite.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Texture.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSource\SceneGame.cpp">
+      <Filter>Code\InGame\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSource\SceneLoad.cpp">
+      <Filter>Code\InGame\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSource\SceneManager.cpp">
+      <Filter>Code\InGame\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="GameSource\SceneTitle.cpp">
+      <Filter>Code\InGame\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Animation.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\model_data.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\BinaryConversion.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\FaceLoader.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Enemy.cpp">
+      <Filter>Code\InGame\Charactor\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\TheEmblion.cpp">
+      <Filter>Code\InGame\Charactor\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\GatesQuad.cpp">
+      <Filter>Code\InGame\Charactor\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\GhostShip03.cpp">
+      <Filter>Code\InGame\Charactor</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Bullet.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Collision.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Firearm.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\GameOption.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Mo2EffectByEffekseer.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Mo2GUI.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Physics.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics2D.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Player.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\PlayerControl.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\PlayerState.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Reticule.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\RigidBody2D.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\SkyBox.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\StateMachine.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\CameraMovement.cpp">
+      <Filter>Code\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\GameSystem.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Mo2Lib\ImGui\imconfig.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\ImGui\imgui.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\ImGui\imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\ImGui\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\ImGui\imgui_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\ImGui\imstb_rectpack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\ImGui\imstb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\ImGui\imstb_truetype.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Blender.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Camera.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\fbx_loader.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\framework.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\GeoPrimitive.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\high_resolution_timer.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Input.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\logger.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\misc.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Mo2Func.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\model.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\model_data.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\model_renderer.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\model_resource.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Shader.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Sprite.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Template.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Texture.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Vector3D.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="GameSource\Scene.h">
+      <Filter>Code\InGame\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Animation.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Mo2Cerealize.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\FaceLoader.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\BinaryConversion.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Enemy.h">
+      <Filter>Code\InGame\Charactor\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\TheEmblion.h">
+      <Filter>Code\InGame\Charactor\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\GatesQuad.h">
+      <Filter>Code\InGame\Charactor\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\ComponentObject.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\GhostShip03.h">
+      <Filter>Code\InGame\Charactor</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\SceneGame.h">
+      <Filter>Code\InGame\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\SceneLoad.h">
+      <Filter>Code\InGame\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Rasterizer.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Singleton.h">
+      <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Bullet.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Collision.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Firearm.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\GameEntity.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\GameOption.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Mo2EffectByEffekseer.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Mo2GUI.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Physics.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Player.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\PlayerConstant.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\PlayerControl.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Reticule.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\RigidBody2D.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\SkyBox.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\StateMachine.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\SteeringBehavior2D.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\CameraMovement.h">
+      <Filter>Code\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\GameSystem.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Mo2Lib\Shader\model.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Mo2Lib\Shader\Sprite.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Mo2Lib\Shader\geo_primitive.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Mo2Lib\Shader\tex_primitive.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Mo2Lib\geo_line.hlsli">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="Mo2Lib\Shader\Common.hlsli">
+      <Filter>Shaders\Shared</Filter>
+    </None>
+    <None Include="Mo2Lib\Shader\Structures.hlsli">
+      <Filter>Shaders\Shared</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Mo2Lib\Shader\model_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\model_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\Sprite_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\Sprite_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\geo_primitive_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\tex_primitive_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\geo_primitive_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\tex_primitive_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\geo_line_ps.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\geo_line_vs.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\StaticModel_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\StaticModel_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\SkinnedModel_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\SkinnedModel_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\NoLightObj_PS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\NoLightObj_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+  </ItemGroup>
+</Project>

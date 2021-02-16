@@ -1,0 +1,10 @@
+AudioLib/
+Data/
+DirectXTK-master/
+FBX SDK/
+Win32/
+cereal-1.2.2/
+effekseer/
+ImGui/
+*.ini
+*.vs

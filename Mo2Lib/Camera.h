@@ -35,6 +35,7 @@ public:
 	const Mo2Lib::Float3& GetOrientation() const { return m_orientation; }
 
 	const DirectX::XMMATRIX GetView() const;
+	const DirectX::XMMATRIX GetOriginView() const;
 	const DirectX::XMMATRIX GetPerspective() const { return DirectX::XMMatrixPerspectiveFovLH(fov_y, aspect, near_z, far_z); }
 
 
@@ -131,6 +132,7 @@ public:
 	void ImGui();
 
 	const DirectX::XMMATRIX GetView() const;
+	const DirectX::XMMATRIX GetOriginView() const;
 	const DirectX::XMMATRIX GetPerspective() const;
 
 	void SetScreensize(int w, int h) { screen_w = w; screen_h = h; }

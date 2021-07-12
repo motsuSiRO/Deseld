@@ -7,13 +7,14 @@
 #include "Shader.h"
 #include <unordered_map>
 #include "Singleton.h"
+#include "Rasterizer.h"
 
 class ModelRenderer : public Singleton<ModelRenderer>
 {
 public:
 	friend class Singleton<ModelRenderer>; // Singleton でのインスタンス作成は許可
 	ID3D11DeviceContext* context;
-
+	std::unique_ptr<Rasterizer> rasterizer;
 
 	void Begin(const DirectX::XMFLOAT3 eye_pos, const DirectX::XMFLOAT4X4& view_projection, const DirectX::XMFLOAT4& light_direction);
 	void Draw(ShaderEx* shader, Mo2Lib::Model& model);

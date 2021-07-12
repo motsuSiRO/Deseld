@@ -8,8 +8,9 @@
 #include <wrl.h>
 
 #include "misc.h"
+#include "Singleton.h"
 
-class Rasterizer
+class Rasterizer 
 {
 public:
 	enum RS_STATE
@@ -21,11 +22,15 @@ public:
 		MODE_END
 	};
 
-
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> states[MODE_END];
 
-	void Init(ID3D11Device* device)
+	Rasterizer* Create(ID3D11Device* device)
 	{
+		if (ins)
+		{
+			return ins;
+		}
+
 		//Mode : Wireframe  Culling : NONE
 		D3D11_RASTERIZER_DESC desc;
 		::memset(&desc, 0, sizeof(desc));
@@ -91,19 +96,17 @@ public:
 		hr = device->CreateRasterizerState(&desc, states[SOLID_CULLB].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
+
+		ins = this;
+
+		return ins;
 	}
 private:
+	static Rasterizer* ins;
+
+public:
 	Rasterizer() {}
 	~Rasterizer() {}
 
-public:
-
-	static Rasterizer* GetInstance()
-	{
-		static Rasterizer ins;
-		return &ins;
-	}
-
 };
 
-#define Rasterizer Rasterizer::GetInstance()

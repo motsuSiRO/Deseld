@@ -3,7 +3,6 @@
 #include "model_renderer.h"
 #include "misc.h"
 #include "Blender.h"
-#include "Rasterizer.h"
 
 
 void ModelRenderer::Initialize(ID3D11Device* device, ID3D11DeviceContext* _context)
@@ -150,7 +149,8 @@ void ModelRenderer::Initialize(ID3D11Device* device, ID3D11DeviceContext* _conte
 	//	HRESULT hr = device->CreateRasterizerState(&desc, m_rasterizer_state.GetAddressOf());
 	//	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	//}
-	Rasterizer->Init(device);
+	rasterizer = std::make_unique<Rasterizer>();
+	rasterizer->Create(device);
 
 	// サンプラステート
 	{
@@ -209,8 +209,8 @@ void ModelRenderer::Initialize(ID3D11Device* device, ID3D11DeviceContext* _conte
 
 void ModelRenderer::RSSet(int index)
 {
-	if (index >= Rasterizer->MODE_END)return;
-	context->RSSetState(Rasterizer->states[index].Get());
+	if (index >= Rasterizer::MODE_END)return;
+	context->RSSetState(rasterizer->states[index].Get());
 
 }
 

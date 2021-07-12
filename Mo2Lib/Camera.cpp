@@ -15,6 +15,17 @@ const DirectX::XMMATRIX Camera::GetView()const
 	return DirectX::XMMatrixLookAtLH(eye, focus, up);
 }
 
+const DirectX::XMMATRIX Camera::GetOriginView()const
+{
+	DirectX::XMVECTOR eye, focus, up;
+	eye = DirectX::XMVectorSet(0.f, 0.f, 0.f, 1.0f);
+	focus = DirectX::XMVectorSet(GetFocus().x - GetEye().x, GetFocus().y - GetEye().y, -(GetFocus().z - GetEye().z), 1.0f);
+	up = DirectX::XMVectorSet(GetUp().x, GetUp().y, -GetUp().z, 1.0f);
+
+	return DirectX::XMMatrixLookAtLH(eye, focus, up);
+
+}
+
 Mo2Lib::Float4 Camera::GetFixedQuaternion()
 {
 	DirectX::XMMATRIX m = DirectX::XMMatrixRotationRollPitchYaw(rotate.x, 0.f, rotate.z);
@@ -183,6 +194,10 @@ const DirectX::XMMATRIX MainCamera::GetView() const
 	else return main_cam->GetView();
 }
 
+const DirectX::XMMATRIX MainCamera::GetOriginView()const
+{
+	return main_cam->GetOriginView();
+}
 
 const DirectX::XMMATRIX MainCamera::GetPerspective() const
 {

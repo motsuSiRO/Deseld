@@ -121,7 +121,7 @@ class PL_Move : public State<GhostShip03>
 				
 				Mo2Lib::game.obj_list.emplace_back(obj);
 			}
-			fsm->ChangeState(GhostShip03::PL_AIM);
+			//fsm->ChangeState(GhostShip03::PL_AIM);
 		}
 
 
@@ -298,14 +298,16 @@ void GhostShip03::Start()
 	const char* fbx_filename;
 	std::shared_ptr<ModelResource> model_resource = std::make_shared<ModelResource>();
 
+	//choose binary or fbx load when start up function
+	//choose save or not to binary when end function
 	fbx_filename = "./Data/Assets/GhostShip/GhostShip03.fbx";
 	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_SKINNED_MODEL);
-	//fbx_filename = "./Data/Assets/GhostShip/Pistol Idle.fbx";
-	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	//fbx_filename = "./Data/Assets/GhostShip/standard Run.fbx";
-	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	//fbx_filename = "./Data/Assets/GhostShip/standard Run.fbx";
-	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
+	fbx_filename = "./Data/Assets/GhostShip/Pistol Idle.fbx";
+	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
+	fbx_filename = "./Data/Assets/GhostShip/Sword Run.fbx";
+	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
+	fbx_filename = "./Data/Assets/GhostShip/Sword Slash.fbx";
+	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION, true);
 	//fbx_filename = "./Data/Assets/GhostShip/Pistol WalkBackward.fbx";
 	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
 	//fbx_filename = "./Data/Assets/GhostShip/Pistol sideStepL.fbx";

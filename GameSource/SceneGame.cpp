@@ -53,8 +53,8 @@ void SceneGame::Initialize()
 	//sphere->CreateSphere(device, 16, 16);
 	//sphere->transform.scale = { 50.f, 50.f, 50.f };
 
-	sky_box = std::make_unique<SkyBox>();
-	sky_box->Initialize();
+	sky_box = std::make_unique<SkyBox>(device);
+	
 
 	CAM_LIST()->Init();
 	ModelRenderer::GetInstance().Initialize(device, context);
@@ -138,10 +138,10 @@ void SceneGame::Render()
 	// モデルの描画
 	{
 		// ビュー行列を作成
-		DirectX::XMMATRIX V;
-		{
-			V = CAM_LIST()->GetView();
-		}
+		//DirectX::XMMATRIX V;
+		//{
+		//	V = CAM_LIST()->GetView();
+		//}
 
 		// プロジェクション行列を作成
 		DirectX::XMMATRIX P, Sky_P;
@@ -158,12 +158,12 @@ void SceneGame::Render()
 
 
 			P = CAM_LIST()->GetPerspective();
-
+			Sky_P = DirectX::XMMatrixPerspectiveFovLH(fov_y, aspect, 0.1f, 100000.f);
 		}
 
 		// ビュー行列、プロジェクション行列を合成し行列データを取り出す。
 		DirectX::XMFLOAT4X4 view_projection;
-		{
+		
 			DirectX::XMMATRIX C = DirectX::XMMatrixSet(
 				1, 0, 0, 0,
 				0, 1, 0, 0,
@@ -172,11 +172,15 @@ void SceneGame::Render()
 			);
 
 
+			DirectX::XMMATRIX V;
+			{
+				V = CAM_LIST()->GetOriginView();
+			}
 			DirectX::XMMATRIX VP;
-			VP = C * V * P;
+			VP = C * V * Sky_P;
 
 			DirectX::XMStoreFloat4x4(&view_projection, VP);
-		}
+		
 		Mo2Render().Begin(CAM_LIST()->main_cam->GetEye(),
 			view_projection,
 			DirectX::XMFLOAT4(0, -1, -1, 0)	// ライトの向き
@@ -184,8 +188,21 @@ void SceneGame::Render()
 		context->OMSetBlendState(Blender->states[Blender->ALPHA].Get(), nullptr, 0xFFFFFFFF);
 
 		Mo2Render().RSSet(D3D11_CULL_FRONT);
-		Mo2Render().Draw(skybox_NoL.get(), *sky_box->sky);
+		sky_box->Render(Mo2System->DX11context.Get(), view_projection, true);
+		//Mo2Render().Draw(skybox_NoL.get(), *sky_box->sky);
 		Mo2Render().RSSet(D3D11_CULL_BACK);
+
+
+		{
+			V = CAM_LIST()->GetView();
+		}
+
+		VP = C * V * P;
+		DirectX::XMStoreFloat4x4(&view_projection, VP);
+		Mo2Render().Begin(CAM_LIST()->main_cam->GetEye(),
+			view_projection,
+			DirectX::XMFLOAT4(0, -1, -1, 0)	// ライトの向き
+		);
 
 		for (auto t : Mo2CD()->face_map[0].transforms)
 		{

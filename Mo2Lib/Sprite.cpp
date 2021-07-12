@@ -211,15 +211,6 @@ void Sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
 	DirectX::XMFLOAT4 color(r, g, b, a);
 	vertices[0].color = vertices[1].color = vertices[2].color = vertices[3].color = color;
 
-	// UNIT.04
-	//vertices[0].texcoord.x = 0;
-	//vertices[0].texcoord.y = 0;
-	//vertices[1].texcoord.x = 1;
-	//vertices[1].texcoord.y = 0;
-	//vertices[2].texcoord.x = 0;
-	//vertices[2].texcoord.y = 1;
-	//vertices[3].texcoord.x = 1;
-	//vertices[3].texcoord.y = 1;
 	vertices[0].texcoord.x = static_cast<FLOAT>(sx) / texture2d_desc.Width;
 	vertices[0].texcoord.y = static_cast<FLOAT>(sy) / texture2d_desc.Height;
 	vertices[1].texcoord.x = static_cast<FLOAT>(sx + sw) / texture2d_desc.Width;

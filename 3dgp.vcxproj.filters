@@ -179,6 +179,9 @@
     <ClCompile Include="Mo2Lib\GameSystem.cpp">
       <Filter>Code</Filter>
     </ClCompile>
+    <ClCompile Include="Rasterizer.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mo2Lib\ImGui\imconfig.h">
@@ -429,6 +432,12 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Mo2Lib\Shader\NoLightObj_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\SkyBox_VS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\SkyBox_PS.hlsl">
       <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>

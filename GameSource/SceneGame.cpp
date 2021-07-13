@@ -98,11 +98,11 @@ void SceneGame::Initialize()
 	
 	Mo2CD()->face_map[0].transforms.resize(9);
 	static float margin = 100800.f;
-	for (size_t i = 0; i < Mo2CD()->face_map[0].transforms.size(); ++i)
+	//for (size_t i = 0; i < Mo2CD()->face_map[0].transforms.size(); ++i)
 	{
-		Mo2CD()->face_map[0].transforms[i].translate = { -margin + margin * (i % 3), 0.f, -margin + margin * (i / 3) };
-		Mo2CD()->face_map[0].transforms[i].rotate = DirectX::XMQuaternionRotationRollPitchYaw(0.f, DirectX::XMConvertToRadians(90.f) * (rand() % 4), 0.f);
-		Mo2CD()->face_map[0].transforms[i].scale = { 1.f, 1.f, 1.f };
+		//Mo2CD()->face_map[0].transforms[0].translate = { -margin + margin * (i % 3), 0.f, -margin + margin * (i / 3) };
+		//Mo2CD()->face_map[0].transforms[0].rotate = DirectX::XMQuaternionRotationRollPitchYaw(0.f, DirectX::XMConvertToRadians(90.f) * (rand() % 4), 0.f);
+		Mo2CD()->face_map[0].transforms[0].scale = { 5.f, 50.f, 5.f };
 	}
 
 }
@@ -204,9 +204,9 @@ void SceneGame::Render()
 			DirectX::XMFLOAT4(0, -1, -1, 0)	// ƒ‰ƒCƒg‚ÌŒü‚«
 		);
 
-		for (auto t : Mo2CD()->face_map[0].transforms)
+		//for (auto t : Mo2CD()->face_map[0].transforms)
 		{
-			model->SetTransform(t);
+			model->SetTransform(Mo2CD()->face_map[0].transforms[0]);
 			Mo2Render().Draw(static_bp.get(), *model);
 		}
 		Mo2Render().Draw(skinned_bp.get(), *model2);

@@ -57,9 +57,9 @@ class PL_Idle : public State<GhostShip03>
 			fsm->ChangeState(GhostShip03::PL_AIM);
 		}
 
-		for (int i = 0; i < GhostShip03::FULLBODY; i++)
+		//for (int i = 0; i < GhostShip03::FULLBODY; i++)
 		{
-			p->anim.CallBlendAnim(i, GhostShip03::IDLE, true, true);
+			p->anim.CallBlendAnim(GhostShip03::SPINE                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                , GhostShip03::IDLE, true, true);
 		}
 	}
 
@@ -98,11 +98,11 @@ class PL_Move : public State<GhostShip03>
 
 		p->anim.anim_spd = p->physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
 		p->anim.CallBlendAnim(GhostShip03::SPINE, GhostShip03::RUN, true, true);
-		p->anim.CallBlendAnim(GhostShip03::HEAD, GhostShip03::RUN, true, true);
-		p->anim.CallBlendAnim(GhostShip03::L_ARM, GhostShip03::IDLE, true, true);
-		p->anim.CallBlendAnim(GhostShip03::R_ARM, GhostShip03::IDLE, true, true);
-		p->anim.CallBlendAnim(GhostShip03::L_FOOT, GhostShip03::RUN, true, true);
-		p->anim.CallBlendAnim(GhostShip03::R_FOOT, GhostShip03::RUN, true, true);
+		//p->anim.CallBlendAnim(GhostShip03::HEAD, GhostShip03::RUN, true, true);
+		//p->anim.CallBlendAnim(GhostShip03::L_ARM, GhostShip03::IDLE, true, true);
+		//p->anim.CallBlendAnim(GhostShip03::R_ARM, GhostShip03::IDLE, true, true);
+		//p->anim.CallBlendAnim(GhostShip03::L_FOOT, GhostShip03::RUN, true, true);
+		//p->anim.CallBlendAnim(GhostShip03::R_FOOT, GhostShip03::RUN, true, true);
 
 
 		if (p->physics->velocity == 0)
@@ -337,12 +337,12 @@ void GhostShip03::Start()
 
 
 
-	anim.AddLayer(0, 3);
-	anim.AddLayer(4, 6);
-	anim.AddLayer(7, 22);
-	anim.AddLayer(23, 38);
-	anim.AddLayer(39, 43);
-	anim.AddLayer(43, anim.prev_nodes.size());
+	//anim.AddLayer(0, 3);
+	//anim.AddLayer(4, 6);
+	//anim.AddLayer(7, 22);
+	//anim.AddLayer(23, 38);
+	//anim.AddLayer(39, 43);
+	anim.AddLayer(0, anim.prev_nodes.size());
 
 }
 
@@ -374,6 +374,8 @@ void GhostShip03::ImGui()
 	{
 		ImGui::Checkbox("Is_Moving", &ismoving);
 	}
+
+
 }
 
 //-----------------------------------------------------

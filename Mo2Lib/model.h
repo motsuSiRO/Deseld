@@ -101,5 +101,19 @@ namespace Mo2Lib
 		LOADINGMODE_JSON,
 	};
 
+	class ModelResourceLoader
+	{
+	private:
+		std::unordered_map<std::string, std::shared_ptr<ModelResource>> cache;
+		bool is_saving;
+
+	public:
+		void Begin(int load_type, bool is_save = false);
+
+		void Load(const char* filename, int mode);
+
+		void End();
+
+	};
 	int LoadModelResource(std::shared_ptr<ModelResource> resource, const char* filename, int mode, int load_type, bool is_save = false);
 }

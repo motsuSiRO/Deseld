@@ -185,6 +185,7 @@
     <ClCompile Include="Mo2Lib\ParticleSystem.cpp">
       <Filter>Code\Lib</Filter>
     </ClCompile>
+    <ClCompile Include="TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mo2Lib\Blender.h">
@@ -367,6 +368,7 @@
     <ClInclude Include="Mo2Lib\ParticleSystem.h">
       <Filter>Code\Lib</Filter>
     </ClInclude>
+    <ClInclude Include="TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Mo2Lib\Shader\model.hlsli">

@@ -129,7 +129,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\DirectXTex;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -153,7 +153,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\DirectXTex;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -175,7 +175,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\DirectXTex;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -201,7 +201,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\DirectXTex;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -227,7 +227,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\DirectXTex;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -248,7 +248,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)ExternalLib\cereal-1.2.2\include;$(ProjectDir)ExternalLib\DirectXTK-master\Inc;$(ProjectDir)ExternalLib\DirectXTex;$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\include;$(ProjectDir)ExternalLib\ImGui;$(ProjectDir)GameSource;$(ProjectDir)Mo2Lib</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -310,6 +310,7 @@
     <ClCompile Include="Mo2Lib\TheEmblion.cpp" />
     <ClCompile Include="Physics2D.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
+    <ClCompile Include="TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ExternalLib\ImGui\imconfig.h" />
@@ -372,6 +373,7 @@
     <ClInclude Include="Mo2Lib\TheEmblion.h" />
     <ClInclude Include="Mo2Lib\Vector3D.h" />
     <ClInclude Include="Template.h" />
+    <ClInclude Include="TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Mo2Lib\geo_line.hlsli" />

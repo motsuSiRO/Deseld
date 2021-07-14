@@ -1,6 +1,7 @@
 #pragma once
 #include "model_data.h"
 
+class Texture;
 
 enum LOADING_TYPE
 {
@@ -28,7 +29,7 @@ public:
 	struct Material
 	{
 		DirectX::XMFLOAT4 color = { 1.f, 1.f, 1.f, 1.0f };
-		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view;
+		Microsoft::WRL::ComPtr<Texture> shader_resource_view;
 	};
 
 	struct Subset

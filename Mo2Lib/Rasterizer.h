@@ -8,7 +8,7 @@
 #include <wrl.h>
 
 #include "misc.h"
-#include "Singleton.h"
+//#include "Singleton.h"
 
 class Rasterizer 
 {

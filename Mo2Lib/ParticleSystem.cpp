@@ -1,8 +1,9 @@
-#include "DxSystem.h"
 #include "ParticleSystem.h"
+#include "framework.h"
+
 cParticleSystem::cParticleSystem(int num)
 {
-	ID3D11Device* device = pSystem->GetDevice();
+	ID3D11Device* device = Mo2System->DX11device.Get();
 
 	data = new ParticleData[num];
 	ZeroMemory(data, sizeof(ParticleData)*num);

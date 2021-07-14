@@ -302,7 +302,7 @@ void GhostShip03::Start()
 	//choose save or not to binary when end function
 	fbx_filename = "./Data/Assets/GhostShip/GhostShip03.fbx";
 	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_SKINNED_MODEL);
-	fbx_filename = "./Data/Assets/GhostShip/Pistol Idle.fbx";
+	fbx_filename = "./Data/Assets/GhostShip/Sword Idle.fbx";
 	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
 	fbx_filename = "./Data/Assets/GhostShip/Sword Run.fbx";
 	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);

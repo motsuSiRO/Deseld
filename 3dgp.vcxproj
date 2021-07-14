@@ -286,6 +286,7 @@
     <ClCompile Include="Mo2Lib\GatesQuad.cpp" />
     <ClCompile Include="Mo2Lib\GeoPrimitive.cpp" />
     <ClCompile Include="Mo2Lib\GhostShip03.cpp" />
+    <ClCompile Include="Mo2Lib\ParticleSystem.cpp" />
     <ClCompile Include="Mo2Lib\PlayerControl.cpp" />
     <ClCompile Include="Mo2Lib\PlayerState.cpp" />
     <ClCompile Include="Mo2Lib\Input.cpp" />
@@ -351,6 +352,7 @@
     <ClInclude Include="Mo2Lib\model_data.h" />
     <ClInclude Include="Mo2Lib\model_renderer.h" />
     <ClInclude Include="Mo2Lib\model_resource.h" />
+    <ClInclude Include="Mo2Lib\ParticleSystem.h" />
     <ClInclude Include="Mo2Lib\Player.h" />
     <ClInclude Include="Mo2Lib\Physics.h" />
     <ClInclude Include="Mo2Lib\PlayerConstant.h" />
@@ -376,6 +378,7 @@
     <None Include="Mo2Lib\Shader\Common.hlsli" />
     <None Include="Mo2Lib\Shader\geo_primitive.hlsli" />
     <None Include="Mo2Lib\Shader\model.hlsli" />
+    <None Include="Mo2Lib\Shader\pointSprite.hlsli" />
     <None Include="Mo2Lib\Shader\Sprite.hlsli" />
     <None Include="Mo2Lib\Shader\Structures.hlsli" />
     <None Include="Mo2Lib\Shader\tex_primitive.hlsli" />
@@ -448,6 +451,36 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\pointSprite_gs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Geometry</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='ReleaseDebug|Win32'">Geometry</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='ReleaseDebug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='ReleaseDebug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\pointSprite_ps.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='ReleaseDebug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='ReleaseDebug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='ReleaseDebug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Mo2Lib\Shader\pointSprite_vs.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='ReleaseDebug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='ReleaseDebug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='ReleaseDebug|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="Mo2Lib\Shader\SkinnedModel_PS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>

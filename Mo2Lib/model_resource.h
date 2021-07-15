@@ -29,7 +29,7 @@ public:
 	struct Material
 	{
 		DirectX::XMFLOAT4 color = { 1.f, 1.f, 1.f, 1.0f };
-		Microsoft::WRL::ComPtr<Texture> shader_resource_view;
+		std::shared_ptr<Texture> tex;
 	};
 
 	struct Subset
@@ -89,7 +89,7 @@ public:
 	int GetRemoveNodeCount() { return remove_node; }
 	bool Load(ID3D11Device* device, ModelData* m_data, int load_type);
 	//bool LoadFromBinary(ID3D11Device* device, const char* Filename, ModelData* m_data);
-	void Set(Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> texture) { materials[0].shader_resource_view = texture; }
+	void Set(std::shared_ptr<Texture> texture) { materials[0].tex = texture; }
 
 private:
 	// モデルデータを構築

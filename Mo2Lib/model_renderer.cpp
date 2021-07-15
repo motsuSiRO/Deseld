@@ -3,7 +3,7 @@
 #include "model_renderer.h"
 #include "misc.h"
 #include "Blender.h"
-
+#include "Texture.h"
 
 void ModelRenderer::Initialize(ID3D11Device* device, ID3D11DeviceContext* _context)
 {
@@ -102,21 +102,21 @@ void ModelRenderer::Initialize(ID3D11Device* device, ID3D11DeviceContext* _conte
 
 	// ブレンドステート
 	{
-		D3D11_BLEND_DESC desc;
-		::memset(&desc, 0, sizeof(desc));
-		desc.AlphaToCoverageEnable = false;
-		desc.IndependentBlendEnable = false;
-		desc.RenderTarget[0].BlendEnable = true;
-		desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-		desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		//D3D11_BLEND_DESC desc;
+		//::memset(&desc, 0, sizeof(desc));
+		//desc.AlphaToCoverageEnable = false;
+		//desc.IndependentBlendEnable = false;
+		//desc.RenderTarget[0].BlendEnable = true;
+		//desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		//desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		//desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		//desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		//desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		//desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		//desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-		HRESULT hr = device->CreateBlendState(&desc, m_blend_state.GetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+		//HRESULT hr = device->CreateBlendState(&desc, m_blend_state.GetAddressOf());
+		//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 
 	// 深度ステンシルステート
@@ -207,12 +207,6 @@ void ModelRenderer::Initialize(ID3D11Device* device, ID3D11DeviceContext* _conte
 	}
 }
 
-void ModelRenderer::RSSet(int index)
-{
-	if (index >= Rasterizer::MODE_END)return;
-	context->RSSetState(rasterizer->states[index].Get());
-
-}
 
 // 描画開始
 void ModelRenderer::Begin(const DirectX::XMFLOAT3 eye_pos, const DirectX::XMFLOAT4X4& view_projection, const DirectX::XMFLOAT4& light_direction)
@@ -228,9 +222,11 @@ void ModelRenderer::Begin(const DirectX::XMFLOAT3 eye_pos, const DirectX::XMFLOA
 	context->VSSetConstantBuffers(0, ARRAYSIZE(constant_buffers), constant_buffers);
 	context->PSSetConstantBuffers(0, ARRAYSIZE(constant_buffers), constant_buffers);
 
-	const float blend_factor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	context->OMSetBlendState(m_blend_state.Get(), blend_factor, 0xFFFFFFFF);
-	RSSet(D3D11_CULL_BACK);
+	//const float blend_factor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	//context->OMSetBlendState(Blender->states[Blender->ALPHA].Get(), blend_factor, 0xFFFFFFFF);
+	Mo2System->SetBlendState(BLEND_STATE::ALPHA);
+
+	Mo2System->SetRSState(RS_STATE::RS_CULL_BUCK);
 	context->OMSetDepthStencilState(m_depth_stencil_state.Get(), 0);
 	context->PSSetSamplers(0, 1, m_sampler_state.GetAddressOf());
 
@@ -298,7 +294,8 @@ void ModelRenderer::Draw(ShaderEx* shader, Mo2Lib::Model& model)
 			CbSubset cb_subset;
 			cb_subset.material_color = subset.material->color;
 			context->UpdateSubresource(m_cb_subset.Get(), 0, 0, &cb_subset, 0, 0);
-			context->PSSetShaderResources(0, 1, subset.material->shader_resource_view.Get() ? subset.material->shader_resource_view.GetAddressOf() : m_dummy_srv.GetAddressOf());
+			//context->PSSetShaderResources(0, 1, subset.material->shader_resource_view.Get() ? subset.material->tex.Get().GetAddressOf() : m_dummy_srv.GetAddressOf());
+			subset.material->tex.Get()->Set(0);
 			context->PSSetSamplers(0, 1, m_sampler_state.GetAddressOf());
 			context->DrawIndexed(subset.index_count, subset.start_index, 0);
 		}

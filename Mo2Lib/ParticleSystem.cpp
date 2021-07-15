@@ -1,5 +1,6 @@
 #include "ParticleSystem.h"
 #include "framework.h"
+#include "Blender.h"
 
 cParticleSystem::cParticleSystem(int num)
 {
@@ -53,7 +54,7 @@ cParticleSystem::cParticleSystem(std::shared_ptr<Texture> texture,int num)
 	//パーティクル作成と画像設定
 	this->texture = texture;
 
-	ID3D11Device* device = pSystem->GetDevice();
+	ID3D11Device* device = Mo2System->DX11device.Get();
 
 	//	頂点バッファ作成
 	D3D11_BUFFER_DESC bd;
@@ -83,7 +84,7 @@ cParticleSystem::cParticleSystem(std::shared_ptr<Texture> texture,int num)
 
 void cParticleSystem::Update()
 {
-	float time = pSystem->elapsed_time;
+	float time = Mo2System->delta_time;
 	for (int i = 0; i < num_particles; i++) {
 		if (data[i].type < 0) continue;
 
@@ -95,7 +96,7 @@ void cParticleSystem::Update()
 		data[i].y += data[i].vy * time;
 		data[i].z += data[i].vz * time;
 
-		data[i].timer -= pSystem->elapsed_time;
+		data[i].timer -= Mo2System->delta_time;
 		data[i].alpha = data[i].timer*data[i].timer*data[i].timer*data[i].timer;
 		if (data[i].timer <= 0) data[i].type = -1;
 	}
@@ -104,7 +105,7 @@ void cParticleSystem::Update()
 void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRIX* projection)
 {
 
-	ID3D11DeviceContext* device_context = pSystem->GetDeviceContext();
+	ID3D11DeviceContext* device_context = Mo2System->DX11context.Get();
 	//シェーダ有効化
 	shader->Activate();
 
@@ -122,11 +123,11 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	device_context->PSSetConstantBuffers(0, 1, ConstantBuffer.GetAddressOf());
 
 	//ブレンドステート設定
-	device_context->OMSetBlendState(pSystem->GetBlendState(pSystem->BS_ALPHA), nullptr, 0xFFFFFFFF);
+	Mo2System->SetBlendState(BLEND_STATE::ALPHA);
 	//ラスタライザ―設定
-	device_context->RSSetState(pSystem->GetRasterizerState(pSystem->RS_CULL_BACK));
+	Mo2System->SetRSState(RS_STATE::RS_CULL_BUCK);
 	//デプスステンシルステート設定
-	device_context->OMSetDepthStencilState(pSystem->GetDephtStencilState(pSystem->DS_WRITE_FALSE), 1);
+	device_context->OMSetDepthStencilState(, 1);
 	//プリミティブ・トポロジーをセット
 	device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
@@ -160,7 +161,7 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	device_context->Draw(n, 0);
 
 	//デプスステンシルステート設定
-	device_context->OMSetDepthStencilState(pSystem->GetDephtStencilState(pSystem->DS_FALSE), 1);
+	device_context->OMSetDepthStencilState(, 1);
 
 	//シェーダ無効化
 	shader->Inactivate();

@@ -18,15 +18,24 @@ private:
 		float timer;
 		int type;
 	};
+
+	struct VERTEX
+	{
+		XMFLOAT3 Pos;	//位置
+		XMFLOAT3 Normal;//法線
+		XMFLOAT2 Tex;	//UV座標
+		XMFLOAT4 Color;	//頂点色
+	};
+
 	ParticleData* data; //パーティクルデータ
 	VERTEX* v;			//頂点データ
 
 	int num_particles;
 
 	// 頂点データ
-	ComPtr<ID3D11Buffer> VertexBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> VertexBuffer;
 	// 定数バッファ
-	ComPtr<ID3D11Buffer> ConstantBuffer;
+	Microsoft::WRL::ComPtr<ID3D11Buffer> ConstantBuffer;
 	//テクスチャ利用
 	std::shared_ptr<Texture> texture = nullptr;
 	// 定数バッファのデータ定義
@@ -38,10 +47,13 @@ private:
 		float		dumy1;
 		float		dumy2;
 	};
+
+private:
+	
 public:
 
 	cParticleSystem(int num = 1000);
-	cParticleSystem(std::shared_ptr<Texture> texture,int num = 1000);
+	cParticleSystem(std::shared_ptr<Texture> texture, int num = 1000);
 	~cParticleSystem() { delete[] data; delete[] v; }
 	void Update();
 	void Render(Shader* shader, const XMMATRIX* v, const XMMATRIX* p);

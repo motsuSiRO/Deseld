@@ -57,7 +57,7 @@ void SceneGame::Initialize()
 	
 
 	CAM_LIST()->Init();
-	ModelRenderer::GetInstance().Initialize(device, context);
+	Mo2Render().Initialize(device, context);
 	//model_renderer = std::make_unique<ModelRenderer>(device, context);
 
 

@@ -10,26 +10,28 @@
 #include "misc.h"
 //#include "Singleton.h"
 
-class Rasterizer 
+namespace RS_STATE
 {
-public:
-	enum RS_STATE
+	enum enumRS_STATE
 	{
-		WIRE_CULLN = 0,
-		SOLID_CULLN,
-		SOLID_CULLF,
-		SOLID_CULLB,
+		RS_WIREFRAME = 0,
+		RS_CULL_NONE,
+		RS_CULL_FRONT,
+		RS_CULL_BUCK,
 		MODE_END
 	};
 
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState> states[MODE_END];
+}
 
-	Rasterizer* Create(ID3D11Device* device)
+class Rasterizer 
+{
+public:
+
+	Microsoft::WRL::ComPtr<ID3D11RasterizerState> states[RS_STATE::MODE_END];
+
+
+	void Create(ID3D11Device* device)
 	{
-		if (ins)
-		{
-			return ins;
-		}
 
 		//Mode : Wireframe  Culling : NONE
 		D3D11_RASTERIZER_DESC desc;
@@ -45,7 +47,7 @@ public:
 		desc.CullMode = D3D11_CULL_NONE;
 		desc.AntialiasedLineEnable = false;
 
-		HRESULT hr = device->CreateRasterizerState(&desc, states[WIRE_CULLN].GetAddressOf());
+		HRESULT hr = device->CreateRasterizerState(&desc, states[RS_STATE::RS_WIREFRAME].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 		//Mode : Solid  Culling : NONE
@@ -61,7 +63,7 @@ public:
 		desc.CullMode = D3D11_CULL_NONE;
 		desc.AntialiasedLineEnable = false;
 
-		hr = device->CreateRasterizerState(&desc, states[SOLID_CULLN].GetAddressOf());
+		hr = device->CreateRasterizerState(&desc, states[RS_STATE::RS_CULL_NONE].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 		//Mode : Solid  Culling : FRONT
@@ -77,7 +79,7 @@ public:
 		desc.CullMode = D3D11_CULL_FRONT;
 		desc.AntialiasedLineEnable = false;
 
-		hr = device->CreateRasterizerState(&desc, states[SOLID_CULLF].GetAddressOf());
+		hr = device->CreateRasterizerState(&desc, states[RS_STATE::RS_CULL_FRONT].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 		//Mode : Solid  Culling : BACK
@@ -93,16 +95,9 @@ public:
 		desc.CullMode = D3D11_CULL_BACK;
 		desc.AntialiasedLineEnable = false;
 
-		hr = device->CreateRasterizerState(&desc, states[SOLID_CULLB].GetAddressOf());
+		hr = device->CreateRasterizerState(&desc, states[RS_STATE::RS_CULL_BUCK].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-
-
-		ins = this;
-
-		return ins;
 	}
-private:
-	static Rasterizer* ins;
 
 public:
 	Rasterizer() {}

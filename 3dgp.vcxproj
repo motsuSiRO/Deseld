@@ -260,6 +260,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\3dgp.Ex モデルY\Mo2Lib\DepthStencilState.cpp" />
     <ClCompile Include="ExternalLib\ImGui\imgui.cpp" />
     <ClCompile Include="ExternalLib\ImGui\imgui_demo.cpp" />
     <ClCompile Include="ExternalLib\ImGui\imgui_draw.cpp" />
@@ -307,12 +308,13 @@
     <ClCompile Include="Mo2Lib\Sprite.cpp" />
     <ClCompile Include="Mo2Lib\StateMachine.cpp" />
     <ClCompile Include="Mo2Lib\Texture.cpp" />
+    <ClCompile Include="Mo2Lib\TextureLoader.cpp" />
     <ClCompile Include="Mo2Lib\TheEmblion.cpp" />
     <ClCompile Include="Physics2D.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
-    <ClCompile Include="TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\3dgp.Ex モデルY\Mo2Lib\DepthStencilState.h" />
     <ClInclude Include="ExternalLib\ImGui\imconfig.h" />
     <ClInclude Include="ExternalLib\ImGui\imgui.h" />
     <ClInclude Include="ExternalLib\ImGui\imgui_impl_dx11.h" />
@@ -370,10 +372,10 @@
     <ClInclude Include="Mo2Lib\StateMachine.h" />
     <ClInclude Include="Mo2Lib\SteeringBehavior2D.h" />
     <ClInclude Include="Mo2Lib\Texture.h" />
+    <ClInclude Include="Mo2Lib\TextureLoader.h" />
     <ClInclude Include="Mo2Lib\TheEmblion.h" />
     <ClInclude Include="Mo2Lib\Vector3D.h" />
     <ClInclude Include="Template.h" />
-    <ClInclude Include="TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Mo2Lib\geo_line.hlsli" />

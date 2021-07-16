@@ -15,6 +15,7 @@ private:
 		float vx, vy, vz;
 		float ax, ay, az;
 		float alpha;
+		float anim_timer;
 		float timer;
 		int type;
 	};

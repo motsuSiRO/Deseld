@@ -97,8 +97,14 @@ void cParticleSystem::Update()
 		data[i].z += data[i].vz * time;
 
 		data[i].timer -= Mo2System->delta_time;
-		data[i].type++;
-		if (data[i].type > 12)data[i].type = 0;
+		data[i].anim_timer += Mo2System->delta_time;
+		static float next_timer = 0.05f;
+		if(data[i].anim_timer > next_timer)
+		{
+			data[i].type++;
+			if (data[i].type > 12)data[i].type = 0;
+			data[i].anim_timer -= next_timer;
+		}
 		data[i].alpha = data[i].timer*data[i].timer*data[i].timer*data[i].timer;
 		if (data[i].timer <= 0) data[i].type = -1;
 	}
@@ -125,7 +131,7 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	device_context->PSSetConstantBuffers(0, 1, ConstantBuffer.GetAddressOf());
 
 	//ブレンドステート設定
-	Mo2System->SetBlendState(BLEND_STATE::ALPHA);
+	Mo2System->SetBlendState(BLEND_STATE::ADD);
 	//ラスタライザ―設定
 	Mo2System->SetRSState(RS_STATE::RS_CULL_FRONT);
 	//デプスステンシルステート設定
@@ -204,7 +210,7 @@ void cParticleSystem::Snow(DirectX::XMFLOAT3 pos, /*float r,*/ int max)
 		DirectX::XMFLOAT3 f = { 0,0,0 };
 		DirectX::XMFLOAT2 s = { 1.f, 1.f };
 
-		Set(12, 10, p, v, f, s);
+		Set(Mo2Lib::RandInt(0, 10), 10, p, v, f, s);
 
 	}
 }

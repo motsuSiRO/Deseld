@@ -20,6 +20,7 @@ void Firearm::Start()
 
 	trans = Parent->GetComponent<Transform>();
 
+
 	phong = std::make_shared<ShaderEx>();
 	phong->Create(L"model_vs", L"model_ps");
 

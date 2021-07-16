@@ -31,7 +31,7 @@ void SceneGame::Initialize()
 	obj->AddComponent<Transform>();
 	obj->AddComponent<Physics2>();
 	obj->AddComponent<PlayerControl>();
-	obj->AddComponent<Firearm>();
+	//obj->AddComponent<Firearm>();
 	obj->AddComponent<GhostShip03>();
 
 	//obj_list.push_back(obj);
@@ -158,7 +158,7 @@ void SceneGame::Render()
 
 
 			P = CAM_LIST()->GetPerspective();
-			Sky_P = DirectX::XMMatrixPerspectiveFovLH(fov_y, aspect, 0.1f, 100000.f);
+			Sky_P = DirectX::XMMatrixPerspectiveFovLH(fov_y, aspect, 0.1f, 100.f);
 		}
 
 		// ビュー行列、プロジェクション行列を合成し行列データを取り出す。
@@ -185,13 +185,14 @@ void SceneGame::Render()
 			view_projection,
 			DirectX::XMFLOAT4(0, -1, -1, 0)	// ライトの向き
 		);
-		context->OMSetBlendState(Blender->states[Blender->ALPHA].Get(), nullptr, 0xFFFFFFFF);
+		Mo2System->SetBlendState(BLEND_STATE::ALPHA);
 
-		Mo2Render().RSSet(D3D11_CULL_FRONT);
+		//Mo2Render().RSSet(D3D11_CULL_FRONT);
+		Mo2System->SetRSState(RS_STATE::RS_CULL_FRONT);
 		sky_box->Render(Mo2System->DX11context.Get(), view_projection, true);
 		//Mo2Render().Draw(skybox_NoL.get(), *sky_box->sky);
-		Mo2Render().RSSet(D3D11_CULL_BACK);
-
+		//Mo2Render().RSSet(D3D11_CULL_BACK);
+		Mo2System->SetRSState(RS_STATE::RS_CULL_BUCK);
 
 		{
 			V = CAM_LIST()->GetView();

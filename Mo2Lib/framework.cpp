@@ -24,8 +24,9 @@ bool FrameWork::Initialize()
 	hr = CreateDevice(current_windowed);
 
 
-	blender->Create(DX11device.Get());
-	rasterizer->Create(DX11device.Get());
+	blender.Create(DX11device.Get());
+	rasterizer.Create(DX11device.Get());
+	depthstencilstate.Create(DX11device.Get());
 
 	SceneMgr.ChangeScene(new SceneTitle);
 

@@ -62,9 +62,9 @@ namespace Texture
 #include "Texture.h"
 //#include "Sampler.h"
 #if _DEBUG
-#pragma comment ( lib, "DirectXTex/DirectXTexD.lib")
+#pragma comment ( lib, "ExternalLib/DirectXTex/DirectXTexD.lib")
 #else
-#pragma comment ( lib, "DirectXTex/DirectXTex.lib")
+#pragma comment ( lib, "ExternalLib/DirectXTex/DirectXTex.lib")
 #endif
 
 

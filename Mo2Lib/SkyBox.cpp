@@ -1,9 +1,9 @@
 #include "SkyBox.h"
-#include "Texture.h"
 #include <Windows.h>
 #include <string>
 #include "framework.h"
 #include "Mo2GUI.h"
+#include "TextureLoader.h"
 
 #ifdef SkyBoxGenerate
 void SkyBox::Initialize()
@@ -192,7 +192,7 @@ bool SkyBox::CreateCube(ID3D11Device* device)
 	vertex vertices[4 * 6] = {};
 	unsigned int indices[3 * 2 * 6] = {};
 	//size ‘å‚«‚­
-	float half_size = 100.f;
+	float half_size = 1.f;
 	int numV = 0, numI = 0;
 
 	//	ã–Ê
@@ -406,7 +406,8 @@ void SkyBox::Load(ID3D11Device* device)
 			::mbstowcs_s(&length, wfilename, 256, filename.c_str(), _TRUNCATE);
 
 
-			Texture::LoadFromFile(device, wfilename, tex_list[index].GetAddressOf(), &tex_desc[index]);
+			//Texture::LoadFromFile(device, wfilename, tex_list[index].GetAddressOf(), &tex_desc[index]);
+			tex_list[index] = Mo2Tex().Load(wfilename);
 		}
 		++index;
 	}
@@ -488,7 +489,8 @@ void SkyBox::Render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& vie
 
 	//if (tex_link)
 	//{
-		context->PSSetShaderResources(0, 1, tex_list[tex_num].GetAddressOf());
+		//context->PSSetShaderResources(0, 1, tex_list[tex_num].GetAddressOf());
+	tex_list[tex_num]->Set(0);
 		context->PSSetSamplers(0, 1, sampler_state.GetAddressOf());
 	//}
 
@@ -521,7 +523,7 @@ void SkyBox::ImGui()
 		{
 			Mo2Lib::Clamp(tex_num, 0, (int)tex_list.size() - 1);
 
-			ImGui::Image((void*)(tex_list[tex_num].Get()), ImVec2(640, 360));
+			ImGui::Image((void*)(tex_list[tex_num]->GetSRV()), ImVec2(640, 360));
 			if (ImGui::Button("SetTexture"))
 			{
 				Set(tex_num);

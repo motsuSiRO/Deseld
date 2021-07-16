@@ -1,7 +1,7 @@
 #include "TextureLoader.h"
 #include "Texture.h"
 
-std::shared_ptr<Texture> TextureLoader::Load(const wchar_t* filename = nullptr)
+std::shared_ptr<Texture> TextureLoader::Load(const wchar_t* filename)
 {
 	auto it = texture_list.find(filename);
 	if (it != texture_list.end())
@@ -11,12 +11,13 @@ std::shared_ptr<Texture> TextureLoader::Load(const wchar_t* filename = nullptr)
 	}
 	else
 	{
-		Texture tex;
-		tex.Load(filename);
+		std::shared_ptr<Texture> tex = std::make_shared<Texture>();
 
-		texture_list.insert(std::make_pair(filename, &tex));
+		tex->Load(filename);
 
-		return std::make_shared<Texture>(tex);
+		texture_list.insert(std::make_pair(filename, tex));
+
+		return tex;
 	}
 
 

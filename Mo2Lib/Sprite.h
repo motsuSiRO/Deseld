@@ -6,6 +6,7 @@
 //#include <directxmath.h>
 #include "Vector3D.h"
 #include <string>
+#include "Texture.h"
 //#include "GeometricPrimitive.h"
 
 class Sprite
@@ -20,8 +21,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> rasterizer_state;
 
 	//UNIT.04
-	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view;
-	D3D11_TEXTURE2D_DESC texture2d_desc;
+	//Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> shader_resource_view;
+	//D3D11_TEXTURE2D_DESC texture2d_desc;
+	std::shared_ptr<Texture> texture;
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler_state;
 
 	//Unit.06

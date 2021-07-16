@@ -29,6 +29,7 @@ class Blender
 public:
 
 
+
 	Microsoft::WRL::ComPtr<ID3D11BlendState> states[BLEND_STATE::END];
 
 	void Create(ID3D11Device* device)

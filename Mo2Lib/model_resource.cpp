@@ -584,6 +584,8 @@ void ModelResource::BuildMaterial(ID3D11Device* device, const char* dirname, Fbx
 	// ディフューズテクスチャ
 	if (fbxDiffuseProperty.IsValid())
 	{
+		material.tex = std::make_shared<Texture>();
+
 		int fbxTextureCount = fbxDiffuseProperty.GetSrcObjectCount<FbxFileTexture>();
 		if (fbxTextureCount > 0)
 		{

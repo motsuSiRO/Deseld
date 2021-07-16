@@ -127,7 +127,7 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	//ラスタライザ―設定
 	Mo2System->SetRSState(RS_STATE::RS_CULL_BUCK);
 	//デプスステンシルステート設定
-	device_context->OMSetDepthStencilState(, 1);
+	Mo2System->SetDSState(DS_STATE::D_TRUE_W_FALSE);
 	//プリミティブ・トポロジーをセット
 	device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
@@ -161,7 +161,7 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	device_context->Draw(n, 0);
 
 	//デプスステンシルステート設定
-	device_context->OMSetDepthStencilState(, 1);
+	//device_context->OMSetDepthStencilState(, 1);
 
 	//シェーダ無効化
 	shader->Inactivate();

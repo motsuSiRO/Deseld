@@ -2,6 +2,7 @@
 #include "framework.h"
 #include "Vector3D.h"
 #include <vector>
+#include "InputLayout.h"
 
 HRESULT create_vs_from_cso(ID3D11Device* device, const char* cso_name, ID3D11VertexShader** vertex_shader, ID3D11InputLayout** input_layout, D3D11_INPUT_ELEMENT_DESC* input_element_desc, UINT num_elements);
 HRESULT create_ps_from_cso(ID3D11Device* device, const char* cso_name, ID3D11PixelShader** pixel_shader);
@@ -48,7 +49,7 @@ public:
 class ShaderEx :public Shader
 {
 private:
-	std::vector<D3D11_INPUT_ELEMENT_DESC>* input_element_desc;
+	std::vector<D3D11_INPUT_ELEMENT_DESC> input_element_desc;
 
 private:
 
@@ -60,8 +61,8 @@ private:
 
 
 public:
-	ShaderEx() {}
-	ShaderEx(std::vector<D3D11_INPUT_ELEMENT_DESC>* desc): input_element_desc(desc) {}
+	ShaderEx() { input_element_desc.assign(std::begin(model_input_element_desc), std::end(model_input_element_desc)); }
+	ShaderEx(std::vector<D3D11_INPUT_ELEMENT_DESC> desc): input_element_desc(desc) {}
 	virtual ~ShaderEx() {}
 	bool Create(WCHAR* vsfilename, WCHAR* psfilename);
 	bool Create(WCHAR* vsfilename, WCHAR* gsfilename, WCHAR* psfilename);

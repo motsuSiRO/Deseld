@@ -41,8 +41,9 @@ public:
 	bool CreateDepth(u_int width, u_int height, DXGI_FORMAT format = DXGI_FORMAT_R24G8_TYPELESS);
 
 
-	ID3D11RenderTargetView* GetRenderTargetView() { return RenderTargetView.Get(); }
-	ID3D11DepthStencilView* GetDepthStencilView() { return DepthStencilView.Get(); }
+	ID3D11RenderTargetView* GetRTV() { return RenderTargetView.Get(); }
+	ID3D11DepthStencilView* GetDSV() { return DepthStencilView.Get(); }
+	ID3D11ShaderResourceView* GetSRV() { return ShaderResourceView.Get(); }
 
 	//CubeMap—p
 	bool CreateCube(u_int width, u_int height, DXGI_FORMAT format, int miplevel = 1);

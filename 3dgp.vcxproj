@@ -260,7 +260,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\3dgp.Ex モデルY\Mo2Lib\DepthStencilState.cpp" />
     <ClCompile Include="ExternalLib\ImGui\imgui.cpp" />
     <ClCompile Include="ExternalLib\ImGui\imgui_demo.cpp" />
     <ClCompile Include="ExternalLib\ImGui\imgui_draw.cpp" />
@@ -287,13 +286,13 @@
     <ClCompile Include="Mo2Lib\GatesQuad.cpp" />
     <ClCompile Include="Mo2Lib\GeoPrimitive.cpp" />
     <ClCompile Include="Mo2Lib\GhostShip03.cpp" />
+    <ClCompile Include="Mo2Lib\InputLayout.cpp" />
     <ClCompile Include="Mo2Lib\ParticleSystem.cpp" />
     <ClCompile Include="Mo2Lib\PlayerControl.cpp" />
     <ClCompile Include="Mo2Lib\PlayerState.cpp" />
     <ClCompile Include="Mo2Lib\Input.cpp" />
     <ClCompile Include="Mo2Lib\logger.cpp" />
     <ClCompile Include="Mo2Lib\main.cpp" />
-    <ClCompile Include="Mo2Lib\Mo2EffectByEffekseer.cpp" />
     <ClCompile Include="Mo2Lib\Mo2GUI.cpp" />
     <ClCompile Include="Mo2Lib\model.cpp" />
     <ClCompile Include="Mo2Lib\model_data.cpp" />
@@ -311,10 +310,8 @@
     <ClCompile Include="Mo2Lib\TextureLoader.cpp" />
     <ClCompile Include="Mo2Lib\TheEmblion.cpp" />
     <ClCompile Include="Physics2D.cpp" />
-    <ClCompile Include="Rasterizer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\3dgp.Ex モデルY\Mo2Lib\DepthStencilState.h" />
     <ClInclude Include="ExternalLib\ImGui\imconfig.h" />
     <ClInclude Include="ExternalLib\ImGui\imgui.h" />
     <ClInclude Include="ExternalLib\ImGui\imgui_impl_dx11.h" />
@@ -332,6 +329,7 @@
     <ClInclude Include="Mo2Lib\CameraMovement.h" />
     <ClInclude Include="Mo2Lib\Collision.h" />
     <ClInclude Include="Mo2Lib\ComponentObject.h" />
+    <ClInclude Include="Mo2Lib\DepthStencilState.h" />
     <ClInclude Include="Mo2Lib\Enemy.h" />
     <ClInclude Include="Mo2Lib\FaceLoader.h" />
     <ClInclude Include="Mo2Lib\fbx_loader.h" />
@@ -345,10 +343,10 @@
     <ClInclude Include="Mo2Lib\GhostShip03.h" />
     <ClInclude Include="Mo2Lib\high_resolution_timer.h" />
     <ClInclude Include="Mo2Lib\Input.h" />
+    <ClInclude Include="Mo2Lib\InputLayout.h" />
     <ClInclude Include="Mo2Lib\logger.h" />
     <ClInclude Include="Mo2Lib\misc.h" />
     <ClInclude Include="Mo2Lib\Mo2Cerealize.h" />
-    <ClInclude Include="Mo2Lib\Mo2EffectByEffekseer.h" />
     <ClInclude Include="Mo2Lib\Mo2Func.h" />
     <ClInclude Include="Mo2Lib\Mo2GUI.h" />
     <ClInclude Include="Mo2Lib\model.h" />

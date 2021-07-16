@@ -15,6 +15,7 @@
 
 #include "Blender.h"
 #include "Rasterizer.h"
+#include "DepthStencilState.h"
 
 #define DIRECTINPUT_VERSION 0x0800
 extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -34,11 +35,13 @@ public:
 	float delta_time;
 
 private:
-	Blender* blender;
-	Rasterizer* rasterizer;
+	Blender blender;
+	Rasterizer rasterizer;
+	DepthStencilState depthstencilstate;
 public:
-	void SetBlendState(int state) { DX11context->OMSetBlendState(blender->states[state].Get(), nullptr, 0xFFFFFFFF); }
-	void SetRSState(int state) { DX11context->RSSetState(rasterizer->states[state].Get()); }
+	void SetBlendState(int state) { DX11context->OMSetBlendState(blender.states[state].Get(), nullptr, 0xFFFFFFFF); }
+	void SetRSState(int state) { DX11context->RSSetState(rasterizer.states[state].Get()); }
+	void SetDSState(int state) { DX11context->OMSetDepthStencilState(depthstencilstate.states[state].Get(), 0); }
 
 	Microsoft::WRL::ComPtr<ID3D11Device>			DX11device;//
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext>		DX11context;//

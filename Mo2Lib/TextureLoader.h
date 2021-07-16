@@ -16,7 +16,7 @@ private:
 
 };
 
-TextureLoader& Mo2Tex()
+static TextureLoader& Mo2Tex()
 {
 	return TextureLoader::GetInstance();
 }

@@ -24,6 +24,7 @@
 
 void SceneGame::Initialize()
 {
+
 	ID3D11Device* device = Mo2System->DX11device.Get();;
 	ID3D11DeviceContext* context = Mo2System->DX11context.Get();
 
@@ -49,12 +50,17 @@ void SceneGame::Initialize()
 	skybox_NoL = std::make_unique<ShaderEx>();
 	skybox_NoL->Create(L"NoLightObj_VS", L"NoLightObj_PS");
 
+	std::vector<D3D11_INPUT_ELEMENT_DESC> bIL(std::begin(billbord_input_element_desc), std::end(billbord_input_element_desc));
+	point_sprite = std::make_unique<ShaderEx>(bIL);
+	point_sprite->Create(L"pointSprite_vs", L"pointSprite_gs", L"pointSprite_ps");
+
 	//sphere = std::make_unique<GeoPrimitive>(device);
 	//sphere->CreateSphere(device, 16, 16);
 	//sphere->transform.scale = { 50.f, 50.f, 50.f };
 
 	sky_box = std::make_unique<SkyBox>(device);
 	
+	particleSys = std::make_unique<cParticleSystem>(10000);
 
 	CAM_LIST()->Init();
 	Mo2Render().Initialize(device, context);
@@ -125,6 +131,10 @@ void SceneGame::Update(float elapsed_time)
 		}
 	}
 	CAM_LIST()->Interpolation(elapsed_time);
+
+	particleSys->Update();
+
+	particleSys->Snow(DirectX::XMFLOAT3(0.f, 100.f, 0.f), 1);
 }
 
 
@@ -220,6 +230,7 @@ void SceneGame::Render()
 
 		Mo2Render().End();
 
+		particleSys->Render(point_sprite.get(), &V, &P);
 
 #ifdef _DEBUG 
 		if (visiblity)

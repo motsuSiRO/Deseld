@@ -9,6 +9,7 @@
 #include "Reticule.h"
 #include "SkyBox.h"
 #include "Shader.h"
+#include "ParticleSystem.h"
 
 class SceneGame :public Scene
 {
@@ -17,12 +18,14 @@ private:
 	std::unique_ptr<Mo2Lib::Model>		model2;
 	std::unique_ptr<SkyBox>				sky_box;
 
+	std::unique_ptr<cParticleSystem>	particleSys;
 	std::unique_ptr<Reticule>			reticule;
 
 	std::unique_ptr<ShaderEx>			skinned_bp;
 	std::unique_ptr<ShaderEx>			static_bp;
 	std::unique_ptr<ShaderEx>			skybox_NoL;
 	std::unique_ptr<ShaderEx>			primi_shader;
+	std::unique_ptr<ShaderEx>			point_sprite;
 
 	bool visiblity = false;
 	float rad;

@@ -17,7 +17,7 @@ public:
 	Physics2* physics;
 	Transform* trans;
 	PlayerControl* pctrl;
-	Firearm* gun;
+	//Firearm* gun;
 	std::unique_ptr<StateMachine<GhostShip03>> fsm;
 	Mo2Lib::Animator anim;
 

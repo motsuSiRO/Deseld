@@ -15,7 +15,7 @@ cParticleSystem::cParticleSystem(int num)
 	for (int i = 0; i < num_particles; i++) { data[i].type = -1;}
 	//パーティクル作成と画像ロード
 	texture = std::make_unique<Texture>();
-	texture->Load(L"Assets/particle1.png");
+	texture->Load(L"./Data/Assets/Effect/Electric.png");
 
 
 	//頂点バッファ作成
@@ -52,7 +52,7 @@ cParticleSystem::cParticleSystem(std::shared_ptr<Texture> texture,int num)
 	num_particles = num;
 	for (int i = 0; i < num_particles; i++) { data[i].type = -1; }
 	//パーティクル作成と画像設定
-	this->texture = texture;
+	//this->texture = texture;
 
 	ID3D11Device* device = Mo2System->DX11device.Get();
 
@@ -97,6 +97,8 @@ void cParticleSystem::Update()
 		data[i].z += data[i].vz * time;
 
 		data[i].timer -= Mo2System->delta_time;
+		data[i].type++;
+		if (data[i].type > 12)data[i].type = 0;
 		data[i].alpha = data[i].timer*data[i].timer*data[i].timer*data[i].timer;
 		if (data[i].timer <= 0) data[i].type = -1;
 	}
@@ -116,7 +118,7 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	cb.view = fv;
 	XMStoreFloat4x4(&fp, *projection);
 	cb.projection = fp;
-	cb.size = 0.1f;
+	cb.size = 1.1f;
 	device_context->UpdateSubresource(ConstantBuffer.Get(), 0, nullptr, &cb, 0, 0);
 	device_context->VSSetConstantBuffers(0, 1, ConstantBuffer.GetAddressOf());
 	device_context->GSSetConstantBuffers(0, 1, ConstantBuffer.GetAddressOf());
@@ -125,7 +127,7 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	//ブレンドステート設定
 	Mo2System->SetBlendState(BLEND_STATE::ALPHA);
 	//ラスタライザ―設定
-	Mo2System->SetRSState(RS_STATE::RS_CULL_BUCK);
+	Mo2System->SetRSState(RS_STATE::RS_CULL_FRONT);
 	//デプスステンシルステート設定
 	Mo2System->SetDSState(DS_STATE::D_TRUE_W_FALSE);
 	//プリミティブ・トポロジーをセット
@@ -189,7 +191,7 @@ void cParticleSystem::Set(int type,float timer, DirectX::XMFLOAT3 p, DirectX::XM
 	}
 }
 
-void cParticleSystem::Snow(DirectX::XMFLOAT3 pos, float r, int max)
+void cParticleSystem::Snow(DirectX::XMFLOAT3 pos, /*float r,*/ int max)
 {
 	for (int i = 0; i < max; i++) {
 		DirectX::XMFLOAT3 p;
@@ -200,7 +202,7 @@ void cParticleSystem::Snow(DirectX::XMFLOAT3 pos, float r, int max)
 		DirectX::XMFLOAT3 v = { 0,0,0 };
 		v.y = -(rand() % 1001)*0.002f - 0.002f;
 		DirectX::XMFLOAT3 f = { 0,0,0 };
-		DirectX::XMFLOAT2 s = { .2f,.2f };
+		DirectX::XMFLOAT2 s = { 1.f, 1.f };
 
 		Set(12, 10, p, v, f, s);
 

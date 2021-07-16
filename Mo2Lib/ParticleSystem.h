@@ -67,7 +67,7 @@ public:
 		DirectX::XMFLOAT2 size = DirectX::XMFLOAT2(1.0f, 1.0f)
 	);
 
-	void cParticleSystem::Snow(DirectX::XMFLOAT3 pos, float r, int max);
+	void cParticleSystem::Snow(DirectX::XMFLOAT3 pos,/* float r,*/ int max);
 	void cParticleSystem::Spark(DirectX::XMFLOAT3 pos, int max);
 
 };

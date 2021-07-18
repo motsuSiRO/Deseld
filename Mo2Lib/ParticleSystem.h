@@ -37,6 +37,9 @@ private:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> VertexBuffer;
 	// 定数バッファ
 	Microsoft::WRL::ComPtr<ID3D11Buffer> ConstantBuffer;
+
+	Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler_state;
+
 	//テクスチャ利用
 	std::shared_ptr<Texture> texture = nullptr;
 	// 定数バッファのデータ定義

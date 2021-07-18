@@ -109,6 +109,66 @@ bool Texture::Load(const wchar_t* filename)
 	return true;
 }
 
+bool Texture::LoadArray(std::vector<const wchar_t*>& list)
+{
+	ID3D11Device* device = Mo2System->DX11device.Get();
+
+	DirectX::TexMetadata metadata;
+	DirectX::ScratchImage texture;
+	HRESULT hr;
+
+	std::vector<D3D11_SUBRESOURCE_DATA> srs_d;
+	for (const wchar_t* filename : list)
+	{
+		DirectX::ScratchImage img;
+		const DirectX::Image* mem;
+
+		// 画像ファイル読み込み DirectXTex
+		hr = LoadFromWICFile(filename, 0, &metadata, img);
+
+		assert(SUCCEEDED(hr));
+
+		mem = img.GetImages();
+
+		srs_d.emplace_back();
+		
+		srs_d.back().pSysMem = mem->pixels;
+		srs_d.back().SysMemPitch = mem->rowPitch;
+		srs_d.back().SysMemSlicePitch = mem->slicePitch;
+	}
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> Texture2D;
+	//	テクスチャ作成
+	ZeroMemory(&texture2d_desc, sizeof(texture2d_desc));
+	texture2d_desc.Width = metadata.width;
+	texture2d_desc.Height = metadata.height;
+	texture2d_desc.MipLevels = 1;
+	texture2d_desc.ArraySize = srs_d.size();
+	texture2d_desc.Format = metadata.format;
+	texture2d_desc.SampleDesc.Count = 1;
+	texture2d_desc.SampleDesc.Quality = 0;
+	texture2d_desc.Usage = D3D11_USAGE_DEFAULT;
+	texture2d_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	texture2d_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+	D3D11_SUBRESOURCE_DATA* srs_d_copy = srs_d.data();
+
+	device->CreateTexture2D(&texture2d_desc, srs_d.data(), Texture2D.GetAddressOf());
+	// 画像からシェーダリソースView
+
+	D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
+	ZeroMemory(&srvd, sizeof(srvd));
+	srvd.Format = metadata.format;
+	srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	srvd.Texture2D.MostDetailedMip = 0;
+	srvd.Texture2D.MipLevels = 1;
+
+	hr = device->CreateShaderResourceView(Texture2D.Get(), &srvd, ShaderResourceView.GetAddressOf());
+	assert(SUCCEEDED(hr));
+
+
+	return true;
+}
+
 
 bool Texture::LoadMipMap(const wchar_t* filename)
 {
@@ -219,6 +279,27 @@ void Texture::Set(UINT Slot, BOOL flg)
 	}
 }
 
+void Texture::SetArray(UINT Slot, BOOL flg)
+{
+	ID3D11DeviceContext* device_context = Mo2System->DX11context.Get();
+
+	if (flg == FALSE) {
+
+		ID3D11ShaderResourceView* rtv[1] = { NULL };
+		ID3D11SamplerState* ss[1] = { NULL };
+		device_context->PSSetShaderResources(Slot, 1, rtv);
+		device_context->PSSetSamplers(Slot, 1, ss);
+		device_context->DSSetShaderResources(Slot, 1, rtv);
+		device_context->DSSetSamplers(Slot, 1, ss);
+		return;
+	}
+	if (ShaderResourceView) {
+		device_context->PSSetShaderResources(Slot, 1, ShaderResourceView.GetAddressOf());
+		device_context->DSSetShaderResources(Slot, 1, ShaderResourceView.GetAddressOf());
+	}
+
+}
+
 bool Texture::Create(u_int width, u_int height, DXGI_FORMAT format)
 {
 	ID3D11Device* device = Mo2System->DX11device.Get();
@@ -238,6 +319,7 @@ bool Texture::Create(u_int width, u_int height, DXGI_FORMAT format)
 	texture2d_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	texture2d_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
+	
 	hr = device->CreateTexture2D(&texture2d_desc, NULL, Texture2D.GetAddressOf());
 	assert(SUCCEEDED(hr));
 

@@ -29,9 +29,11 @@ public:
 	Texture();
 	virtual ~Texture();
 	bool Load(const wchar_t* filename = nullptr);
+	bool LoadArray(std::vector<const wchar_t*>& flinames);
 	bool LoadMipMap(const wchar_t* filename = nullptr);
 
 	void Set(UINT Slot = 0, BOOL flg = TRUE);
+	void SetArray(UINT Slot = 0, BOOL flg = TRUE);
 
 	UINT GetWidth() { return texture2d_desc.Width; }
 	UINT GetHeight() { return texture2d_desc.Height; }

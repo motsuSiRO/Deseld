@@ -375,6 +375,7 @@ void GhostShip03::ImGui()
 		ImGui::Checkbox("Is_Moving", &ismoving);
 	}
 
+	ImGui::Text(fsm->GetCurrentName());
 
 }
 

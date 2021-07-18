@@ -6,7 +6,7 @@
 //--------------------------------------------
 //	テクスチャ
 //--------------------------------------------
-Texture2D DiffuseTexture : register(t0);
+Texture2DArray<float4> DiffuseTexture : register(t0);
 
 SamplerState DecalSampler : register(s0);
 
@@ -34,7 +34,7 @@ struct GSInput
 struct PSInput
 {
 	float4 Position  : SV_POSITION;     // 頂点座標(射影座標系)
-	float2 Tex  : TEXCOORD;        // テクスチャ座標
+	float3 Tex  : TEXCOORD;        // テクスチャ座標
 	float4 Color : COLOR0;
 };
 

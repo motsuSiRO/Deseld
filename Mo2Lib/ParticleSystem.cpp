@@ -15,7 +15,11 @@ cParticleSystem::cParticleSystem(int num)
 	for (int i = 0; i < num_particles; i++) { data[i].type = -1;}
 	//パーティクル作成と画像ロード
 	texture = std::make_unique<Texture>();
-	texture->Load(L"./Data/Assets/Effect/Electric.png");
+	std::vector<const wchar_t*> filename;
+	filename.push_back(L"./Data/Assets/Effect/Electric.png");
+	filename.push_back(L"./Data/Assets/Effect/Electric2.png");
+	texture->Load(filename[0]);
+
 
 
 	//頂点バッファ作成
@@ -40,6 +44,29 @@ cParticleSystem::cParticleSystem(int num)
 
 	hr = device->CreateBuffer(&cbd, nullptr, ConstantBuffer.GetAddressOf());
 	assert(SUCCEEDED(hr));
+
+	// サンプラステート
+	{
+		D3D11_SAMPLER_DESC desc;
+		::memset(&desc, 0, sizeof(desc));
+		desc.MipLODBias = 0.0f;
+		desc.MaxAnisotropy = 1;
+		desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+		desc.MinLOD = -FLT_MAX;
+		desc.MaxLOD = FLT_MAX;
+		desc.BorderColor[0] = 1.0f;
+		desc.BorderColor[1] = 1.0f;
+		desc.BorderColor[2] = 1.0f;
+		desc.BorderColor[3] = 1.0f;
+		desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+		desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+		desc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+		desc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+
+		HRESULT hr = device->CreateSamplerState(&desc, sampler_state.GetAddressOf());
+		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	}
+
 
 }
 cParticleSystem::cParticleSystem(std::shared_ptr<Texture> texture,int num)
@@ -99,12 +126,12 @@ void cParticleSystem::Update()
 		data[i].timer -= Mo2System->delta_time;
 		data[i].anim_timer += Mo2System->delta_time;
 		static float next_timer = 0.05f;
-		if(data[i].anim_timer > next_timer)
-		{
-			data[i].type++;
-			if (data[i].type > 12)data[i].type = 0;
-			data[i].anim_timer -= next_timer;
-		}
+		//if(data[i].anim_timer > next_timer)
+		//{
+		//	data[i].type++;
+		//	if (data[i].type > 12)data[i].type = 0;
+		//	data[i].anim_timer -= next_timer;
+		//}
 		data[i].alpha = data[i].timer*data[i].timer*data[i].timer*data[i].timer;
 		if (data[i].timer <= 0) data[i].type = -1;
 	}
@@ -131,7 +158,7 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	device_context->PSSetConstantBuffers(0, 1, ConstantBuffer.GetAddressOf());
 
 	//ブレンドステート設定
-	Mo2System->SetBlendState(BLEND_STATE::ADD);
+	Mo2System->SetBlendState(BLEND_STATE::ALPHA);
 	//ラスタライザ―設定
 	Mo2System->SetRSState(RS_STATE::RS_CULL_FRONT);
 	//デプスステンシルステート設定
@@ -139,8 +166,9 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	//プリミティブ・トポロジーをセット
 	device_context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
+	device_context->PSSetSamplers(0, 1, sampler_state.GetAddressOf());
 	//テクスチャ設定
-	if (texture) texture->Set(0);
+	if (texture) texture->SetArray(0);
 
 	int n = 0; //パーティクル発生数
 	for (int i = 0; i < num_particles; i++)

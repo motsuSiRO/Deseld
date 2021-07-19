@@ -1,9 +1,11 @@
+
+
+#ifdef COLLSION_OLD
 #include "Collision.h"
 #include "BinaryConversion.h"
 #include "framework.h"
 
 
-#ifdef COLLSION_OLD
 Collision* Mo2CD()//Collision Detection
 {
 	return Collision::GetInstance();
@@ -14,8 +16,8 @@ void Collision::Initialize()
 #ifdef _DEBUG
 	ID3D11Device* device = Mo2System->DX11device.Get();
 
-	sphere = std::make_unique<GeoPrimitive>(device);
-	sphere->CreateSphere(device, 16, 16);
+	sphere = std::make_unique<GeoPrimitive>();
+	sphere->CreateSphere(16, 16);
 	sphere->color = { 0.8f, 0.8f, 0.3f, 0.5f };
 
 
@@ -616,8 +618,192 @@ bool Collision::calcRaySphere(
 }
 
 #else
+#include "Collision.h"
 
 
+INT generate_contact_sphere_sphere(SphereComponent* s0, SphereComponent* s1)
+{
+	//2つの球体の衝突判定を行う
+	//衝突している場合はContactオブジェクトを生成する
+	//Contactの全てのメンバ変数に値をセットし、コンテナ(contacts)に追加する
+	assert(s0 != s1);
+
+	Mo2Lib::Float3 p0 = s0->trans.translate;
+	Mo2Lib::Float3 p1 = s1->trans.translate;
+
+	Mo2Lib::Float3 n = p0 - p1;
+	FLOAT l = n.Length();
+	//D3DXVec3Normalize(&n, &n);
+	if (l < s0->r + s1->r)
+	{
+		//Contact contact;
+		//contact.normal = n;
+		//contact.penetration = s0->r + s1->r - l;
+		////contact.point = p1 + 0.5f * l * n;
+		//contact.point = p1 + (s1->r - (0.5f * contact.penetration)) * n;
+		//contact.body[0] = s0;
+		//contact.body[1] = s1;
+		//contact.restitution = restitution;
+		//contacts->push_back(contact);
+		return 1;
+	}
+	return 0;
+}
+//INT generate_contact_sphere_plane(Sphere* sphere, Plane* plane, std::vector<Contact>* contacts, FLOAT restitution, BOOL half_space)
+//{
+//	//球体と平面の衝突判定を行う
+//	//衝突している場合はContactオブジェクトを生成する
+//	//Contactの全てのメンバ変数に値をセットし、コンテナ(contacts)に追加する
+//	//※half_spaceが真の場合は片面、偽の場合は両面の衝突判定を行う
+//	D3DXMATRIX matrix, inverse_matrix;
+//	D3DXMatrixRotationQuaternion(&matrix, &plane->orientation);
+//	matrix._41 = plane->position.x;
+//	matrix._42 = plane->position.y;
+//	matrix._43 = plane->position.z;
+//	D3DXVECTOR3 n(matrix._21, matrix._22, matrix._23);
+//	D3DXMatrixInverse(&inverse_matrix, 0, &matrix);
+//
+//	D3DXVECTOR3 p;
+//	D3DXVec3TransformCoord(&p, &sphere->position, &inverse_matrix);
+//
+//	//Half-space
+//	if (half_space && p.y < 0) return 0;
+//
+//	if (fabsf(p.y) < sphere->r)
+//	{
+//		Contact contact;
+//		contact.normal = p.y > 0 ? n : -n;
+//		contact.point = sphere->position + p.y * -n;
+//		contact.penetration = sphere->r - fabsf(p.y);
+//		contact.body[0] = sphere;
+//		contact.body[1] = plane;
+//		contact.restitution = restitution;
+//		contacts->push_back(contact);
+//		return 1;
+//	}
+//	return 0;
+//}
+
+INT generate_contact_sphere_box(SphereComponent* sphere, BoxComponent* box)
+{
+	//①球体と直方体の衝突判定を行う
+	//衝突している場合はContactオブジェクトを生成する
+	//Contactの全てのメンバ変数に値をセットし、コンテナ(contacts)に追加する
+	DirectX::XMMATRIX boxM_space, R, T;
+	T = DirectX::XMMatrixTranslation(box->trans.translate.x, box->trans.translate.y, box->trans.translate.z);
+	DirectX::XMMatrixRotationQuaternion(box->trans.rotate.ConvertToXMVECTOR());
+	Mo2Lib::Float3 dimension = box->GetDimension();
+	boxM_space = R * T;
+	DirectX::XMMATRIX Inverse_boxM_space;
+	Inverse_boxM_space = DirectX::XMMatrixInverse(NULL, boxM_space);
+
+	Mo2Lib::Float3 sp;
+	sp = DirectX::XMVector3TransformCoord(sphere->trans.translate.ConvertToXMVECTOR(), Inverse_boxM_space);
+
+
+	Mo2Lib::Float3 closest_pt = sp;
+	if (closest_pt.x > box->trans.scale.x/2)closest_pt.x = box->trans.scale.x/2;
+	if (closest_pt.x < -box->trans.scale.x/2)closest_pt.x = -box->trans.scale.x/2;
+
+	if (closest_pt.y > box->trans.scale.y/2)closest_pt.y = box->trans.scale.y/2;
+	if (closest_pt.y < -box->trans.scale.y/2)closest_pt.y = -box->trans.scale.y/2;
+
+	if (closest_pt.z > box->trans.scale.z/2)closest_pt.z = box->trans.scale.z/2;
+	if (closest_pt.z < -box->trans.scale.z/2)closest_pt.z = -box->trans.scale.z/2;
+
+	Mo2Lib::Float3 dist = closest_pt - sp;
+	FLOAT len = dist.Length();
+
+	if (len < sphere->r && len > FLT_EPSILON)
+	{
+		closest_pt = DirectX::XMVector3TransformCoord(closest_pt.ConvertToXMVECTOR(), boxM_space);
+
+		//Contact contact;
+		//D3DXVec3Normalize(&contact.normal, &(sphere->position - closest_pt));
+		//contact.point = closest_pt;
+		//contact.penetration = sphere->r - dist;
+		//contact.body[0] = sphere;
+		//contact.body[1] = box;
+		//contact.restitution = restitution;
+		//contacts->push_back(contact);
+		return 1;
+	}
+
+	return 0;
+}
+//INT generate_contact_box_plane(Box* box, Plane* plane, std::vector<Contact>* contacts, FLOAT restitution)
+//{
+//	//②直方体と平面の衝突判定を行う
+//	//衝突している場合はContactオブジェクトを生成する
+//	//Contactの全てのメンバ変数に値をセットし、コンテナ(contacts)に追加する
+//	INT contacts_used = 0;	// 生成したContactオブジェクトの数（同フレームに衝突したポイントの数）
+//
+//	D3DXVECTOR3 vertices[8] =
+//	{
+//		D3DXVECTOR3(-box->half_size.x, -box->half_size.y, -box->half_size.z),
+//		D3DXVECTOR3(-box->half_size.x, -box->half_size.y, +box->half_size.z),
+//		D3DXVECTOR3(-box->half_size.x, +box->half_size.y, -box->half_size.z),
+//		D3DXVECTOR3(-box->half_size.x, +box->half_size.y, +box->half_size.z),
+//		D3DXVECTOR3(+box->half_size.x, -box->half_size.y, -box->half_size.z),
+//		D3DXVECTOR3(+box->half_size.x, -box->half_size.y, +box->half_size.z),
+//		D3DXVECTOR3(+box->half_size.x, +box->half_size.y, -box->half_size.z),
+//		D3DXVECTOR3(+box->half_size.x, +box->half_size.y, +box->half_size.z)
+//	};
+//
+//	D3DXVECTOR3 n;
+//	rotate_vector_by_quaternion(&n, plane->orientation, D3DXVECTOR3(0, 1, 0));
+//	FLOAT d = D3DXVec3Dot(&n, &plane->position);
+//
+//	for (int i = 0; i < 8; i++)
+//	{
+//		rotate_vector_by_quaternion(&vertices[i], box->orientation, vertices[i]);
+//		vertices[i] += box->position;
+//
+//
+//		FLOAT distance = D3DXVec3Dot(&vertices[i], &n);
+//
+//		if (distance < d)
+//		{
+//			Contact contact;
+//			contact.normal = n;
+//			contact.point = vertices[i];
+//			contact.penetration = d - distance;
+//			contact.body[0] = box;
+//			contact.body[1] = plane;
+//			contact.restitution = restitution;
+//
+//			// 同時衝突が起こるため、最大めり込み量をもつポイントでのみ、めり込み量の処理を行う
+//			float maxPenetration = 0.0f;
+//			for (int j = 0; j < contacts->size(); j++)
+//			{
+//				if ((*contacts)[j].penetration > maxPenetration)
+//				{
+//					maxPenetration = (*contacts)[j].penetration;
+//				}
+//			}
+//			if (maxPenetration < contact.penetration)
+//			{
+//				contact.penetFlg = true;
+//
+//				// これまでのめり込みフラグをfalseに
+//				for (int j = 0; j < contacts->size(); j++)
+//				{
+//					(*contacts)[j].penetFlg = false;
+//				}
+//			}
+//			else
+//			{
+//				contact.penetFlg = false;
+//			}
+//
+//			contacts->push_back(contact);
+//
+//			contacts_used++;
+//		}
+//	}
+//
+//	return contacts_used;
+//}
 
 
 

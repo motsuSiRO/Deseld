@@ -8,7 +8,7 @@
 #include "misc.h"
 #include "texture.h"
 #include <vector>
-
+#include "TextureLoader.h"
 
 bool GeoPrimitive::CreateBuffers(ID3D11Device* _device, vertex* vertices, int numV, u_int* indices, int numI)
 {
@@ -70,8 +70,10 @@ bool GeoPrimitive::CreateBuffers(ID3D11Device* _device, vertex* vertices, int nu
 	return true;
 }
 
-GeoPrimitive::GeoPrimitive(ID3D11Device* _device, std::wstring texture)
+GeoPrimitive::GeoPrimitive(std::wstring texture)
 {
+	ID3D11Device* device = Mo2System->DX11device.Get();
+
 	//	情報初期値
 	transform.translate = Mo2Lib::Float3(0, 0, 0);
 	transform.rotate = Mo2Lib::Float4(0, 0, 0, 1);
@@ -128,6 +130,15 @@ GeoPrimitive::GeoPrimitive(ID3D11Device* _device, std::wstring texture)
 
 	//}
 
+	if (texture != L"")
+	{
+		this->texture = Mo2Tex().Load(texture.c_str());
+	}
+	else
+	{
+		this->texture = Mo2Tex().Load(L"./Data/Assets/textures/dummy_texture.png");
+	}
+
 	//	ラスタライザーステート(ワイヤーフレーム)の作成
 	D3D11_RASTERIZER_DESC rsDesc;
 	ZeroMemory(&rsDesc, sizeof(rsDesc));
@@ -136,7 +147,7 @@ GeoPrimitive::GeoPrimitive(ID3D11Device* _device, std::wstring texture)
 	rsDesc.FrontCounterClockwise = FALSE;
 	rsDesc.DepthClipEnable = TRUE;
 	rsDesc.AntialiasedLineEnable = TRUE;
-	hr = _device->CreateRasterizerState(&rsDesc, wireframe_rasterizer_state.GetAddressOf());
+	hr = device->CreateRasterizerState(&rsDesc, wireframe_rasterizer_state.GetAddressOf());
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 	//	ラスタライザーステート(ソリッド)の作成
@@ -146,7 +157,7 @@ GeoPrimitive::GeoPrimitive(ID3D11Device* _device, std::wstring texture)
 	rsDesc.CullMode = D3D11_CULL_NONE;
 	rsDesc.FrontCounterClockwise = true;
 	rsDesc.DepthClipEnable = TRUE;
-	hr = _device->CreateRasterizerState(&rsDesc, solid_rasterizer_state.GetAddressOf());
+	hr = device->CreateRasterizerState(&rsDesc, solid_rasterizer_state.GetAddressOf());
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 	//	深度ステンシルStateの作成
@@ -156,7 +167,7 @@ GeoPrimitive::GeoPrimitive(ID3D11Device* _device, std::wstring texture)
 	dssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
 	dssDesc.DepthFunc = D3D11_COMPARISON_LESS;
 	dssDesc.StencilEnable = FALSE;					//	ステンシルは無効
-	hr = _device->CreateDepthStencilState(&dssDesc, depth_stencil_state.GetAddressOf());
+	hr = device->CreateDepthStencilState(&dssDesc, depth_stencil_state.GetAddressOf());
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 
@@ -216,6 +227,7 @@ void GeoPrimitive::render(
 
 	//if (tex_link)
 	//{
+	texture->Set(0);
 	//	context->PSSetShaderResources(0, 1, &shader_resource_view);
 	//	context->PSSetSamplers(0, 1, &sampler_state);
 	//}
@@ -290,8 +302,9 @@ void GeoPrimitive::render(
 
 }
 
-bool GeoPrimitive::CreateCube(ID3D11Device* device)
+bool GeoPrimitive::CreateCube()
 {
+	ID3D11Device* device = Mo2System->DX11device.Get();
 	vertex vertices[4 * 6] = {};
 	unsigned int indices[3 * 2 * 6] = {};
 
@@ -374,8 +387,10 @@ bool GeoPrimitive::CreateCube(ID3D11Device* device)
 
 }
 
-bool GeoPrimitive::CreateSphere(ID3D11Device* device, u_int slices, u_int stacks)
+bool GeoPrimitive::CreateSphere(u_int slices, u_int stacks)
 {
+	ID3D11Device* device = Mo2System->DX11device.Get();
+
 	std::vector<vertex> vertices;
 	std::vector<u_int> indices;
 
@@ -490,8 +505,10 @@ bool GeoPrimitive::CreateSphere(ID3D11Device* device, u_int slices, u_int stacks
 
 }
 
-bool GeoPrimitive::CreateBillBoard(ID3D11Device* device)
+bool GeoPrimitive::CreateBillBoard()
 {
+	ID3D11Device* device = Mo2System->DX11device.Get();
+
 
 	vertex vertices[4] = {};
 	unsigned int indices[3 * 2] = {};

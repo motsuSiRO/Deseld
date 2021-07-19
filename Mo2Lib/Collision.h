@@ -1,6 +1,6 @@
 #pragma once
 
-#define COLLSION_OLD
+//#define COLLSION_OLD
 #ifdef COLLSION_OLD
 #include "Physics.h"
 #include <map>
@@ -103,5 +103,10 @@ class contact
 {
 
 };
+
+INT generate_contact_sphere_sphere(SphereComponent* s0, SphereComponent* s1/*, std::vector<Contact>* contacts, FLOAT restitution*/);
+//INT generate_contact_sphere_plane(Sphere* sphere, Plane* plane, std::vector<Contact>* contacts, FLOAT restitution, BOOL half_space = TRUE);
+INT generate_contact_sphere_box(SphereComponent* sphere, BoxComponent* box/*, std::vector<Contact>* contacts, FLOAT restitution*/);
+//INT generate_contact_box_plane(Box* box, Plane* plane, std::vector<Contact>* contacts, FLOAT restitution);
 
 #endif

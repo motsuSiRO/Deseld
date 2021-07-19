@@ -18,6 +18,8 @@ public:
 	virtual void Update() {}
 	virtual void Draw() {}
 	virtual void ImGui();
+	virtual void OnHit() {}
+	virtual void OnTrigger() {}
 
 	using Super = Component;
 };
@@ -49,6 +51,8 @@ public:
 	void Start();
 	void Update(float elapsed);
 	void Draw();
+	void OnHit();
+	void OnTrigger();
 
 	bool selected = false;
 	void ImGui();

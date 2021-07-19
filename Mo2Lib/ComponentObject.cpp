@@ -41,6 +41,23 @@ void Object::Draw()
 	}
 }
 
+void Object::OnHit()
+{
+	for (auto com : component_list)
+	{
+		com->OnHit();
+	}
+}
+
+void Object::OnTrigger()
+{
+	for (auto com : component_list)
+	{
+		com->OnTrigger();
+	}
+}
+
+
 void Object::ImGui()
 {
 	if (selected)

@@ -5,6 +5,23 @@
 #include "Camera.h"
 #include "Bullet.h"
 
+//------------Component-----------------------
+#include "Physics.h"
+#include "PlayerControl.h"
+#include "Firearm.h"
+#include "ColliderComponents.h"
+//--------------------------------------------
+
+namespace GShip
+{
+	Physics2* physics;
+	Transform* trans;
+	PlayerControl* pctrl;
+	BoxComponent* box;
+	SphereComponent* sphere;
+}
+using namespace GShip;
+
 //-----------------------------------------------------
 //
 //		Constant term
@@ -34,24 +51,24 @@ class PL_Idle : public State<GhostShip03>
 
 	void Execute(GhostShip03* p)
 	{
-		if (p->pctrl->Pressed("Dodge"))
+/*		if (pctrl->Pressed("Dodge"))
 		{
 			fsm->ChangeState(GhostShip03::PL_DODGE);
 		}
-		else if (p->pctrl->dir_vec != 0)
+		else*/ if (pctrl->dir_vec != 0)
 		{
 			fsm->ChangeState(GhostShip03::PL_MOVE);
 		}
-		else if (p->pctrl->Pressed("Firstary"))
+		else if (pctrl->Pressed("Firstary"))
 		{
 			//if (p->gun->Shoot())
 			//{
 				Object* obj = new Object("Bullet");
 				Transform* t = obj->AddComponent<Transform>();
+				obj->Start();
 				t->translate = { CAM_LIST()->main_cam->GetEye() };
 				Bullet* b = obj->AddComponent<Bullet>();
 				b->forward = CAM_LIST()->main_cam->GetFront();
-
 				Mo2Lib::game.obj_list.emplace_back(obj);
 			//}
 			//fsm->ChangeState(GhostShip03::PL_AIM);
@@ -78,16 +95,16 @@ class PL_Move : public State<GhostShip03>
 	void Begin(GhostShip03* p)
 	{
 
-		p->physics->mass = INIT_MASS;
-		p->physics->limit_velocity = true;
-		p->physics->dynamic_friction = 10.f;
-		p->physics->MAX_VELOCITY = INIT_MAX_DASH_VELOCITY;
-		p->physics->MAX_MOVE_SPEED = MAX_WALK_SPEED;
+		physics->mass = INIT_MASS;
+		physics->limit_velocity = true;
+		physics->dynamic_friction = 10.f;
+		physics->MAX_VELOCITY = INIT_MAX_DASH_VELOCITY;
+		physics->MAX_MOVE_SPEED = MAX_WALK_SPEED;
 
-		move_speed = p->physics->MAX_MOVE_SPEED * p->physics->mass;
+		move_speed = physics->MAX_MOVE_SPEED * physics->mass;
 
 		Mo2Lib::Vec3 i_vec = p->InputDirection();
-		p->physics->AddForce(i_vec * move_speed);
+		physics->AddForce(i_vec * move_speed);
 	}
 
 	void Execute(GhostShip03* p)
@@ -96,7 +113,7 @@ class PL_Move : public State<GhostShip03>
 
 		p->LookForward();
 
-		p->anim.anim_spd = p->physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
+		p->anim.anim_spd = physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
 		p->anim.CallBlendAnim(GhostShip03::SPINE, GhostShip03::RUN, true, true);
 		//p->anim.CallBlendAnim(GhostShip03::HEAD, GhostShip03::RUN, true, true);
 		//p->anim.CallBlendAnim(GhostShip03::L_ARM, GhostShip03::IDLE, true, true);
@@ -105,11 +122,11 @@ class PL_Move : public State<GhostShip03>
 		//p->anim.CallBlendAnim(GhostShip03::R_FOOT, GhostShip03::RUN, true, true);
 
 
-		if (p->physics->velocity == 0)
+		if (physics->velocity == 0)
 		{
 			fsm->ChangeState(GhostShip03::PL_IDLE);
 		}
-		else if (p->pctrl->Pressed("Firstary"))
+		else if (pctrl->Pressed("Firstary"))
 		{
 			//if (p->gun->Shoot())
 			//{
@@ -141,8 +158,8 @@ class PL_Aim : public State<GhostShip03>
 	float timer;
 	void Begin(GhostShip03* p)
 	{
-		p->physics->MAX_VELOCITY = INIT_MAX_AIM_VELOCITY;
-		move_speed = p->physics->MAX_MOVE_SPEED * p->physics->mass;
+		physics->MAX_VELOCITY = INIT_MAX_AIM_VELOCITY;
+		move_speed = physics->MAX_MOVE_SPEED * physics->mass;
 		timer = 5.f;
 	}
 
@@ -154,7 +171,7 @@ class PL_Aim : public State<GhostShip03>
 
 		float range = 0.5f;
 
-		if (p->pctrl->Pressed("Firstary"))
+		if (pctrl->Pressed("Firstary"))
 		{
 			//if (p->gun->Shoot())
 			//{
@@ -225,7 +242,7 @@ class PL_Aim : public State<GhostShip03>
 		//		p->anim.CallRatioAnim(GhostShip03::R_FOOT, GhostShip03::MOVE_L, GhostShip03::MOVE_F, rate / DirectX::XM_PIDIV2);
 		//	}
 
-		if (p->physics->velocity == 0)
+		if (physics->velocity == 0)
 		{
 			fsm->ChangeState(GhostShip03::PL_IDLE);
 		}
@@ -247,14 +264,14 @@ class PL_Dodge : public State<GhostShip03>
 	float timer;
 	void Begin(GhostShip03* p)
 	{
-		p->physics->MAX_VELOCITY = INIT_MAX_VELOCITY * 1.5f;
-		p->physics->MAX_MOVE_SPEED = MAX_WALK_SPEED * 5.f;
+		physics->MAX_VELOCITY = INIT_MAX_VELOCITY * 1.5f;
+		physics->MAX_MOVE_SPEED = MAX_WALK_SPEED * 5.f;
 		timer = 0.5f;
 	}
 
 	void Execute(GhostShip03* p)
 	{
-		DirectX::XMMatrixRotationY(p->trans->rotate.y);
+		DirectX::XMMatrixRotationY(trans->rotate.y);
 
 		timer -= Mo2System->delta_time;
 		if (timer <= 0.f)
@@ -280,6 +297,8 @@ void GhostShip03::Start()
 	trans = parent->GetComponent<Transform>();
 	physics = parent->GetComponent<Physics2>();
 	pctrl = parent->GetComponent<PlayerControl>();
+	box = parent->GetComponent<BoxComponent>();
+	sphere = parent->GetComponent<SphereComponent>();
 	//gun = Parent->GetComponent<Firearm>();
 
 	fsm = std::make_unique<StateMachine<GhostShip03>>(this);
@@ -354,6 +373,9 @@ void GhostShip03::Update()
 	fsm->Update(parent->delta_time);
 
 	model->UpdateAnimation(&anim, parent->delta_time);
+
+	box->trans.translate = model->GetNodes()[0].GetWorldPos();
+	sphere->trans.translate = model->GetNodes()[8].GetWorldPos();
 	CAM_LIST()->main_cam->SetOrientation(trans->translate);
 }
 

@@ -10,8 +10,12 @@
 #include "Blender.h"
 #include "Input.h"
 #include "Firearm.h"
+#include "Physics.h"
+#include "PlayerControl.h"
+#include "Firearm.h"
 #include "GhostShip03.h"
 #include "Stage01.h"
+#include "ColliderComponents.h"
 //**********************************************
 //
 //		メインシーン
@@ -34,11 +38,15 @@ void SceneGame::Initialize()
 	obj->AddComponent<PlayerControl>();
 	//obj->AddComponent<Firearm>();
 	obj->AddComponent<GhostShip03>();
+	obj->AddComponent<BoxComponent>();
+	obj->AddComponent<SphereComponent>();
+	obj->Start();
 	Mo2Lib::game.obj_list.emplace_back(obj);
 
 	obj = new Object("Stage01");
 	obj->AddComponent<Transform>();
 	obj->AddComponent<Stage01>();
+	obj->Start();
 	Mo2Lib::game.obj_list.emplace_back(obj);
 
 	//obj_list.push_back(obj);
@@ -59,9 +67,10 @@ void SceneGame::Initialize()
 	point_sprite = std::make_unique<ShaderEx>(bIL);
 	point_sprite->Create(L"pointSprite_vs", L"pointSprite_gs", L"pointSprite_ps");
 
-	model = std::make_unique<GeoPrimitive>(device);
-	model->CreateSphere(device, 16, 16);
-	model->transform.scale = { 50.f, 50.f, 50.f };
+	//model = std::make_unique<GeoPrimitive>(device);
+	//model->CreateCube();
+	////model->CreateSphere(device, 16, 16);
+	//model->transform.scale = { 50.f, 50.f, 50.f };
 
 	sky_box = std::make_unique<SkyBox>(device);
 	
@@ -95,18 +104,18 @@ void SceneGame::Initialize()
 	model2 = std::make_unique<Mo2Lib::Model>(model_resource);
 
 
-	Mo2CD()->Initialize();
-	Mo2CD()->LoadFaceData(0, "./Data/Assets/Field/dezzart_square.fbx");
+	//Mo2CD()->Initialize();
+	//Mo2CD()->LoadFaceData(0, "./Data/Assets/Field/dezzart_square.fbx");
 
-	
-	Mo2CD()->face_map[0].transforms.resize(1);
-	static float margin = 100800.f;
-	//for (size_t i = 0; i < Mo2CD()->face_map[0].transforms.size(); ++i)
-	{
-		//Mo2CD()->face_map[0].transforms[0].translate = { -margin + margin * (i % 3), 0.f, -margin + margin * (i / 3) };
-		//Mo2CD()->face_map[0].transforms[0].rotate = DirectX::XMQuaternionRotationRollPitchYaw(0.f, DirectX::XMConvertToRadians(90.f) * (rand() % 4), 0.f);
-		Mo2CD()->face_map[0].transforms[0].scale = { 5.f, 50.f, 5.f };
-	}
+	//
+	//Mo2CD()->face_map[0].transforms.resize(1);
+	//static float margin = 100800.f;
+	////for (size_t i = 0; i < Mo2CD()->face_map[0].transforms.size(); ++i)
+	//{
+	//	//Mo2CD()->face_map[0].transforms[0].translate = { -margin + margin * (i % 3), 0.f, -margin + margin * (i / 3) };
+	//	//Mo2CD()->face_map[0].transforms[0].rotate = DirectX::XMQuaternionRotationRollPitchYaw(0.f, DirectX::XMConvertToRadians(90.f) * (rand() % 4), 0.f);
+	//	Mo2CD()->face_map[0].transforms[0].scale = { 5.f, 50.f, 5.f };
+	//}
 
 }
 
@@ -212,7 +221,7 @@ void SceneGame::Render()
 			DirectX::XMFLOAT4(0, -1, -1, 0)	// ライトの向き
 		);
 
-		Mo2Render().Draw(skybox_NoL.get(), *model);
+		//Mo2Render().Draw(skybox_NoL.get(), *model);
 
 
 		for (auto obj : Mo2Lib::game.obj_list)
@@ -225,11 +234,11 @@ void SceneGame::Render()
 		particleSys->Render(point_sprite.get(), &V, &P);
 
 #ifdef _DEBUG 
-		if (visiblity)
-		{
-			Mo2CD()->Render(context, view_projection,
-				DirectX::XMFLOAT4(0, -1, -1, 0));
-		}
+		//if (visiblity)
+		//{
+		//	Mo2CD()->Render(context, view_projection,
+		//		DirectX::XMFLOAT4(0, -1, -1, 0));
+		//}
 #endif
 
 		reticule->Render(context, view_projection);

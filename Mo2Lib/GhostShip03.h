@@ -1,21 +1,14 @@
 #pragma once
-#include "model.h"
+#include "Mo2Model.h"
 #include "Shader.h"
 #include "StateMachine.h"
 #include "Animation.h"
-
-#include "Physics.h"
-#include "PlayerControl.h"
-#include "Firearm.h"
-
+#include "ComponentObject.h"
 
 class GhostShip03 : public Component
 {
 public:
 	bool ismoving;
-	Physics2* physics;
-	Transform* trans;
-	PlayerControl* pctrl;
 	//Firearm* gun;
 	std::unique_ptr<StateMachine<GhostShip03>> fsm;
 	Mo2Lib::Animator anim;

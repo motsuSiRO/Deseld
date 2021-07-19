@@ -5,6 +5,7 @@
 #include <wrl.h>
 #include "Vector3D.h"
 #include <string>
+#include "Texture.h"
 
 class GeoPrimitive
 {
@@ -25,6 +26,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11Buffer> index_buffer;
 	Microsoft::WRL::ComPtr<ID3D11Buffer> constant_buffer;
 
+	std::shared_ptr<Texture> texture;
 
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> wireframe_rasterizer_state;
 	Microsoft::WRL::ComPtr<ID3D11RasterizerState> solid_rasterizer_state;
@@ -42,7 +44,7 @@ public:
 		const DirectX::XMFLOAT4& light_dir,
 		bool isSolid);
 
-	GeoPrimitive(ID3D11Device* device, std::wstring texture = L"");
+	GeoPrimitive(std::wstring texture = L"");
 	virtual ~GeoPrimitive()
 	{
 		//if (vertex_shader)vertex_shader->Release();
@@ -76,11 +78,11 @@ public:
 	DirectX::XMMATRIX BuildWorld();
 	bool CreateBuffers(ID3D11Device* device, vertex* vertices, int numV, u_int* indices, int numI);
 
-	bool CreateCube(ID3D11Device* device);
-	bool CreateBillBoard(ID3D11Device* device);
-	bool CreateSphere(ID3D11Device* device, u_int slices, u_int stacks);
-	bool CreateCylinder(ID3D11Device* device);
-	bool CreateCapsule(ID3D11Device* device);
+	bool CreateCube();
+	bool CreateBillBoard();
+	bool CreateSphere(u_int slices, u_int stacks);
+	//bool CreateCylinder(ID3D11Device* device);
+	//bool CreateCapsule(ID3D11Device* device);
 
 	void SetTransform(Mo2Lib::Transform t) { transform = t; }
 };

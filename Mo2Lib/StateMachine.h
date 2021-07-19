@@ -21,6 +21,7 @@ public:
 	virtual void Execute(entity_type*) {}
 	virtual void End(entity_type*) {}
 
+	std::string name;
 	virtual ~State() {}
 	void SetFSM(FSM_ptr _fsm) { fsm = _fsm; }
 };
@@ -33,8 +34,8 @@ private:
 	typedef std::shared_ptr<State<entity_type>> State_ptr;
 	std::unordered_map<int, State_ptr> state_list;
 
-	char* global_state_name;
-	char* current_state_name;
+	//char* global_state_name;
+	//char* current_state_name;
 
 	entity_type* owner;
 
@@ -46,8 +47,6 @@ public:
 
 	float dt;
 	StateMachine(entity_type* owner) :
-		global_state_name(""),
-		current_state_name(""),
 		dt(0.f),
 		owner(owner) {}
 
@@ -109,15 +108,21 @@ public:
 	{
 		static std::map<std::string, State_ptr> cache;
 		std::string s(typeid(*state.get()).name());
+		if (s.size() > 5)
+		{
+			s.erase(0, 6);
+		}
 
 		auto it = cache.find(s);
 		if (it != cache.end())
 		{
 			state_list[index] = it->second;
+			state_list[index]->name = s;
 			return *this;
 		}
 
 		state_list[index] = state;
+		state_list[index]->name = s;
 		cache.insert(std::make_pair(s, state));
 
 		return *this;
@@ -127,11 +132,11 @@ public:
 	//State<entity_type>* GetPreviousState() { return previous_state; }
 	//State<entity_type>* GetGlobalState() { return global_state; }
 	//char* GetGlobalName() { return global_state_name; }
-	//char* GetCurrentName() { return current_state_name; }
+	const char* GetCurrentName() { return state_list[current_state_index]->name.c_str(); }
 
-	//std::string GetName_CurrentState()const
+	//const char* GetName_CurrentState()const
 	//{
-	//	std::string s(typeid(*state_list[current_state_index].get()).name());
+	//	std::string s(typeid(state_list[current_state_index].get()).name());
 
 	//	//remove the 'class ' part from the front of the string
 	//	if (s.size() > 5)
@@ -139,7 +144,8 @@ public:
 	//		s.erase(0, 6);
 	//	}
 
-	//	return current_state_name;
+	//	return s.data();
+	//	//return current_state_name;
 	//}
 
 	//std::string GetName_GlobalState()const

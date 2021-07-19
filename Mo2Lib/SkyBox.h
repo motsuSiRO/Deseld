@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <string>
 #include "Shader.h"
+#include "Texture.h"
 
 //#define SkyBoxGenerate
 #ifdef SkyBoxGenerate
@@ -63,10 +64,10 @@ private:
 	//texture
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler_state;
 
-	typedef std::unordered_map<int, Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>> TexMap;
+	typedef std::unordered_map<int, std::shared_ptr<Texture>> TexMap;
 	TexMap tex_list;
-	typedef std::unordered_map<int, D3D11_TEXTURE2D_DESC> TexDesc;
-	TexDesc tex_desc;
+	//typedef std::unordered_map<int, D3D11_TEXTURE2D_DESC> TexDesc;
+	//TexDesc tex_desc;
 	int tex_num = 0;
 
 	//shader

@@ -44,17 +44,17 @@ class PL_Idle : public State<GhostShip03>
 		}
 		else if (p->pctrl->Pressed("Firstary"))
 		{
-			if (p->gun->Shoot())
-			{
-				Object* obj = new Object("Bullet");
-				Transform* t = obj->AddComponent<Transform>();
-				t->translate = { CAM_LIST()->main_cam->GetEye() };
-				Bullet* b = obj->AddComponent<Bullet>();
-				b->forward = CAM_LIST()->main_cam->GetFront();
+			//if (p->gun->Shoot())
+			//{
+			//	Object* obj = new Object("Bullet");
+			//	Transform* t = obj->AddComponent<Transform>();
+			//	t->translate = { CAM_LIST()->main_cam->GetEye() };
+			//	Bullet* b = obj->AddComponent<Bullet>();
+			//	b->forward = CAM_LIST()->main_cam->GetFront();
 
-				Mo2Lib::game.obj_list.emplace_back(obj);
-			}
-			fsm->ChangeState(GhostShip03::PL_AIM);
+			//	Mo2Lib::game.obj_list.emplace_back(obj);
+			//}
+			//fsm->ChangeState(GhostShip03::PL_AIM);
 		}
 
 		//for (int i = 0; i < GhostShip03::FULLBODY; i++)
@@ -111,16 +111,16 @@ class PL_Move : public State<GhostShip03>
 		}
 		else if (p->pctrl->Pressed("Firstary"))
 		{
-			if (p->gun->Shoot())
-			{
-				Object* obj = new Object("Bullet");
-				Transform * t = obj->AddComponent<Transform>();
-				t->translate = { CAM_LIST()->main_cam->GetEye() };
-				Bullet* b = obj->AddComponent<Bullet>();
-				b->forward = CAM_LIST()->main_cam->GetFront();
-				
-				Mo2Lib::game.obj_list.emplace_back(obj);
-			}
+			//if (p->gun->Shoot())
+			//{
+			//	Object* obj = new Object("Bullet");
+			//	Transform * t = obj->AddComponent<Transform>();
+			//	t->translate = { CAM_LIST()->main_cam->GetEye() };
+			//	Bullet* b = obj->AddComponent<Bullet>();
+			//	b->forward = CAM_LIST()->main_cam->GetFront();
+			//	
+			//	Mo2Lib::game.obj_list.emplace_back(obj);
+			//}
 			//fsm->ChangeState(GhostShip03::PL_AIM);
 		}
 
@@ -156,17 +156,17 @@ class PL_Aim : public State<GhostShip03>
 
 		if (p->pctrl->Pressed("Firstary"))
 		{
-			if (p->gun->Shoot())
-			{
-				Object* obj = new Object("Bullet");
-				Transform* t = obj->AddComponent<Transform>();
-				t->translate = { CAM_LIST()->main_cam->GetEye() };
-				Bullet* b = obj->AddComponent<Bullet>();
-				b->forward = CAM_LIST()->main_cam->GetFront();
+			//if (p->gun->Shoot())
+			//{
+			//	Object* obj = new Object("Bullet");
+			//	Transform* t = obj->AddComponent<Transform>();
+			//	t->translate = { CAM_LIST()->main_cam->GetEye() };
+			//	Bullet* b = obj->AddComponent<Bullet>();
+			//	b->forward = CAM_LIST()->main_cam->GetFront();
 
-				Mo2Lib::game.obj_list.emplace_back(obj);
-			}
-			fsm->ChangeState(GhostShip03::PL_AIM);
+			//	Mo2Lib::game.obj_list.emplace_back(obj);
+			//}
+			//fsm->ChangeState(GhostShip03::PL_AIM);
 		}
 
 		//if (DirectX::XM_2PI - range <= CAM_LIST()->main_cam->rotate.y || range > CAM_LIST()->main_cam->rotate.y)
@@ -280,7 +280,7 @@ void GhostShip03::Start()
 	trans = Parent->GetComponent<Transform>();
 	physics = Parent->GetComponent<Physics2>();
 	pctrl = Parent->GetComponent<PlayerControl>();
-	gun = Parent->GetComponent<Firearm>();
+	//gun = Parent->GetComponent<Firearm>();
 
 	fsm = std::make_unique<StateMachine<GhostShip03>>(this);
 	fsm->AddState(PL_IDLE, std::make_shared<PL_Idle>())
@@ -375,6 +375,7 @@ void GhostShip03::ImGui()
 		ImGui::Checkbox("Is_Moving", &ismoving);
 	}
 
+	ImGui::Text(fsm->GetCurrentName());
 
 }
 

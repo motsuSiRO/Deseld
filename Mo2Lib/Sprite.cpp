@@ -4,7 +4,8 @@
 #include "misc.h"
 
 // UNIT.04
-#include "texture.h"
+//#include "texture.h"
+#include "TextureLoader.h"
 
 // UNIT.02
 //sprite::sprite(ID3D11Device *device)
@@ -58,7 +59,8 @@ Sprite::Sprite(ID3D11Device* device, const wchar_t* file_name)
 	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 	// UNIT.04
-	hr = Texture::LoadFromFile(device, file_name, &shader_resource_view, &texture2d_desc);
+	//hr = Texture::LoadFromFile(device, file_name, &shader_resource_view, &texture2d_desc);
+	texture = Mo2Tex().Load(file_name);
 
 	D3D11_SAMPLER_DESC sampler_desc;
 	sampler_desc.Filter = D3D11_FILTER_MIN_MAG_MIP_POINT; //D3D11_FILTER_ANISOTROPIC
@@ -211,14 +213,16 @@ void Sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
 	DirectX::XMFLOAT4 color(r, g, b, a);
 	vertices[0].color = vertices[1].color = vertices[2].color = vertices[3].color = color;
 
-	vertices[0].texcoord.x = static_cast<FLOAT>(sx) / texture2d_desc.Width;
-	vertices[0].texcoord.y = static_cast<FLOAT>(sy) / texture2d_desc.Height;
-	vertices[1].texcoord.x = static_cast<FLOAT>(sx + sw) / texture2d_desc.Width;
-	vertices[1].texcoord.y = static_cast<FLOAT>(sy) / texture2d_desc.Height;
-	vertices[2].texcoord.x = static_cast<FLOAT>(sx) / texture2d_desc.Width;
-	vertices[2].texcoord.y = static_cast<FLOAT>(sy + sh) / texture2d_desc.Height;
-	vertices[3].texcoord.x = static_cast<FLOAT>(sx + sw) / texture2d_desc.Width;
-	vertices[3].texcoord.y = static_cast<FLOAT>(sy + sh) / texture2d_desc.Height;
+	float width = (float)texture->GetWidth();
+	float height = (float)texture->GetHeight();
+	vertices[0].texcoord.x = static_cast<FLOAT>(sx) / width;
+	vertices[0].texcoord.y = static_cast<FLOAT>(sy) / height;
+	vertices[1].texcoord.x = static_cast<FLOAT>(sx + sw) / width;
+	vertices[1].texcoord.y = static_cast<FLOAT>(sy) / height;
+	vertices[2].texcoord.x = static_cast<FLOAT>(sx) / width;
+	vertices[2].texcoord.y = static_cast<FLOAT>(sy + sh) / height;
+	vertices[3].texcoord.x = static_cast<FLOAT>(sx + sw) / width;
+	vertices[3].texcoord.y = static_cast<FLOAT>(sy + sh) / height;
 
 
 	immediate_context->Unmap(vertex_buffer.Get(), 0);
@@ -237,7 +241,8 @@ void Sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
 	immediate_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
 
 	// UNIT.04
-	immediate_context->PSSetShaderResources(0, 1, shader_resource_view.GetAddressOf());
+	//immediate_context->PSSetShaderResources(0, 1, shader_resource_view.GetAddressOf());
+	texture->Set(0);
 	immediate_context->PSSetSamplers(0, 1, sampler_state.GetAddressOf());
 
 
@@ -250,8 +255,8 @@ void Sprite::render(ID3D11DeviceContext* immediate_context, float dx, float dy, 
 
 void Sprite::textout(ID3D11DeviceContext* immediate_context, std::string s, float x, float y, float w, float h, float r, float g, float b, float a) const
 {
-	float sw = static_cast<float>(texture2d_desc.Width / 16);
-	float sh = static_cast<float>(texture2d_desc.Height / 16);
+	float sw = static_cast<float>(texture->GetWidth() / 16);
+	float sh = static_cast<float>(texture->GetHeight() / 16);
 	float cursor = 0;
 	for (auto c : s)
 	{

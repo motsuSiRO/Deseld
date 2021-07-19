@@ -81,7 +81,7 @@ protected:
 	float fov_y = DirectX::XMConvertToRadians(80.0f);	// ‰æŠp
 	float aspect = 1920.f / 1080.f;	// ‰æ–Ê”ä—¦
 	float near_z = 10.f;	// •\¦Å‹ß–Ê‚Ü‚Å‚Ì‹——£
-	float far_z = 5000.0f;	// •\¦Å‰“–Ê‚Ü‚Å‚Ì‹——£
+	float far_z = 10000.0f;	// •\¦Å‰“–Ê‚Ü‚Å‚Ì‹——£
 
 
 

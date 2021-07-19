@@ -6,8 +6,7 @@
 #include <wrl.h>
 
 #include "Misc.h"
-#include "Texture.h"
-
+#include "TextureLoader.h"
 using namespace fbxsdk;
 
 // FbxDouble2 → XMFLOAT2
@@ -585,6 +584,8 @@ void ModelResource::BuildMaterial(ID3D11Device* device, const char* dirname, Fbx
 	// ディフューズテクスチャ
 	if (fbxDiffuseProperty.IsValid())
 	{
+		material.tex = std::make_shared<Texture>();
+
 		int fbxTextureCount = fbxDiffuseProperty.GetSrcObjectCount<FbxFileTexture>();
 		if (fbxTextureCount > 0)
 		{
@@ -602,14 +603,16 @@ void ModelResource::BuildMaterial(ID3D11Device* device, const char* dirname, Fbx
 
 			// テクスチャ読み込み
 			//Microsoft::WRL::ComPtr<ID3D11Resource> resource;
-			Texture::LoadFromFile(device, wfilename, material.shader_resource_view.GetAddressOf(), nullptr);
+			//Texture::LoadFromFile(device, wfilename, material.shader_resource_view.GetAddressOf(), nullptr);
+			material.tex = Mo2Tex().Load(wfilename);
 			//HRESULT hr = DirectX::CreateWICTextureFromFile(device, wfilename, resource.GetAddressOf(), material.shader_resource_view.GetAddressOf());
 			//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		}
 		else
 		{
 			// ダミーテクスチャ読み込み
-			Texture::LoadFromFile(device, L"./Data/Assets/textures/dummy_texture.png", material.shader_resource_view.GetAddressOf(), nullptr);
+			//Texture::LoadFromFile(device, L"./Data/Assets/textures/dummy_texture.png", material.shader_resource_view.GetAddressOf(), nullptr);
+			material.tex = Mo2Tex().Load(L"./Data/Assets/textures/dummy_texture.png");
 			//Microsoft::WRL::ComPtr<ID3D11Resource> resource;
 			//HRESULT hr = DirectX::CreateWICTextureFromFile(device, L"./Data/Assets/textures/dummy_texture.png", resource.GetAddressOf(), material.shader_resource_view.GetAddressOf());
 			//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
@@ -840,14 +843,16 @@ void ModelResource::ConvertFromData(ID3D11Device* device, ModelData* m_data)
 
 			// テクスチャ読み込み
 			//Microsoft::WRL::ComPtr<ID3D11Resource> resource;
-			Texture::LoadFromFile(device, wfilename, material.shader_resource_view.GetAddressOf(), nullptr);
+			//Texture::LoadFromFile(device, wfilename, material.shader_resource_view.GetAddressOf(), nullptr);
+			material.tex = Mo2Tex().Load(wfilename);
 			//HRESULT hr = DirectX::CreateWICTextureFromFile(device, wfilename, resource.GetAddressOf(), material.shader_resource_view.GetAddressOf());
 			//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		}
 		else
 		{
 			// ダミーテクスチャ読み込み
-			Texture::LoadFromFile(device, L"./Data/Assets/textures/dummy_texture.png", material.shader_resource_view.GetAddressOf(), nullptr);
+			//Texture::LoadFromFile(device, L"./Data/Assets/textures/dummy_texture.png", material.shader_resource_view.GetAddressOf(), nullptr);
+			material.tex = Mo2Tex().Load(L"./Data/Assets/textures/dummy_texture.png");
 			//Microsoft::WRL::ComPtr<ID3D11Resource> resource;
 			//HRESULT hr = DirectX::CreateWICTextureFromFile(device, L"./Data/Assets/textures/dummy_texture.png", resource.GetAddressOf(), material.shader_resource_view.GetAddressOf());
 			//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));

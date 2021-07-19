@@ -6,10 +6,9 @@
 
 #include "misc.h"
 
-class Blender
+namespace BLEND_STATE
 {
-public:
-	enum BLEND_STATE
+	enum enumBLEND_STATE
 	{
 		NONE,
 		ALPHA,
@@ -23,10 +22,17 @@ public:
 		END
 	};
 
+}
 
-	Microsoft::WRL::ComPtr<ID3D11BlendState> states[END];
+class Blender
+{
+public:
 
-	void Init(ID3D11Device* device)
+
+
+	Microsoft::WRL::ComPtr<ID3D11BlendState> states[BLEND_STATE::END];
+
+	void Create(ID3D11Device* device)
 	{
 		HRESULT hr = S_OK;
 		D3D11_BLEND_DESC blend_desc = {};
@@ -44,7 +50,7 @@ public:
 		blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 		blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		hr = device->CreateBlendState(&blend_desc, states[NONE].GetAddressOf());
+		hr = device->CreateBlendState(&blend_desc, states[BLEND_STATE::NONE].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		// BS_ALPHA
 		blend_desc.AlphaToCoverageEnable = FALSE;
@@ -57,7 +63,7 @@ public:
 		blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 		blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		hr = device->CreateBlendState(&blend_desc, states[ALPHA].GetAddressOf());
+		hr = device->CreateBlendState(&blend_desc, states[BLEND_STATE::ALPHA].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		// BS_ADD
 		blend_desc.AlphaToCoverageEnable = FALSE;
@@ -70,7 +76,7 @@ public:
 		blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
 		blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		hr = device->CreateBlendState(&blend_desc, states[ADD].GetAddressOf());
+		hr = device->CreateBlendState(&blend_desc, states[BLEND_STATE::ADD].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		// BS_SUBTRACT
 		blend_desc.AlphaToCoverageEnable = FALSE;
@@ -83,7 +89,7 @@ public:
 		blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
 		blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		hr = device->CreateBlendState(&blend_desc, states[SUB].GetAddressOf());
+		hr = device->CreateBlendState(&blend_desc, states[BLEND_STATE::SUB].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		// BS_REPLACE
 		blend_desc.AlphaToCoverageEnable = FALSE;
@@ -96,7 +102,7 @@ public:
 		blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 		blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		hr = device->CreateBlendState(&blend_desc, states[REPLACE].GetAddressOf());
+		hr = device->CreateBlendState(&blend_desc, states[BLEND_STATE::REPLACE].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		// BS_MULTIPLY
 		blend_desc.AlphaToCoverageEnable = FALSE;
@@ -109,7 +115,7 @@ public:
 		blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 		blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		hr = device->CreateBlendState(&blend_desc, states[MULTIPLY].GetAddressOf());
+		hr = device->CreateBlendState(&blend_desc, states[BLEND_STATE::MULTIPLY].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		// BS_LIGHTEN
 		blend_desc.AlphaToCoverageEnable = FALSE;
@@ -122,7 +128,7 @@ public:
 		blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
 		blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MAX;
 		blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		hr = device->CreateBlendState(&blend_desc, states[LIGHTEN].GetAddressOf());
+		hr = device->CreateBlendState(&blend_desc, states[BLEND_STATE::LIGHTEN].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		// BS_DARKEN
 		blend_desc.AlphaToCoverageEnable = FALSE;
@@ -135,7 +141,7 @@ public:
 		blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ONE;
 		blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_MIN;
 		blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		hr = device->CreateBlendState(&blend_desc, states[DARKEN].GetAddressOf());
+		hr = device->CreateBlendState(&blend_desc, states[BLEND_STATE::DARKEN].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 		// BS_SCREEN
 		blend_desc.AlphaToCoverageEnable = FALSE;
@@ -148,21 +154,14 @@ public:
 		blend_desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_INV_SRC_ALPHA;
 		blend_desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 		blend_desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-		hr = device->CreateBlendState(&blend_desc, states[SCREEN].GetAddressOf());
+		hr = device->CreateBlendState(&blend_desc, states[BLEND_STATE::SCREEN].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
-private:
+
 	Blender() {}
 	~Blender() {}
 
-public:
 
-	static Blender* GetInstance()
-	{
-		static Blender ins;
-		return &ins;
-	}
 
 };
 
-#define Blender Blender::GetInstance()

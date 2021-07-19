@@ -3,7 +3,7 @@
 #include "model_renderer.h"
 #include "misc.h"
 #include "Blender.h"
-
+#include "Texture.h"
 
 void ModelRenderer::Initialize(ID3D11Device* device, ID3D11DeviceContext* _context)
 {
@@ -30,18 +30,18 @@ void ModelRenderer::Initialize(ID3D11Device* device, ID3D11DeviceContext* _conte
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 		// 入力レイアウト
-		D3D11_INPUT_ELEMENT_DESC input_element_desc[] =
-		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "WEIGHTSA",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "WEIGHTSB",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "BONESA",    0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "BONESB",    0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		};
-		hr = device->CreateInputLayout(input_element_desc, ARRAYSIZE(input_element_desc), cso_data.get(), cso_sz, m_input_layout.GetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+		//D3D11_INPUT_ELEMENT_DESC input_element_desc[] =
+		//{
+		//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		//	{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		//	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		//	{ "WEIGHTSA",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		//	{ "WEIGHTSB",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		//	{ "BONESA",    0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		//	{ "BONESB",    0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		//};
+		//hr = device->CreateInputLayout(input_element_desc, ARRAYSIZE(input_element_desc), cso_data.get(), cso_sz, m_input_layout.GetAddressOf());
+		//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 
 	// ピクセルシェーダー
@@ -102,34 +102,34 @@ void ModelRenderer::Initialize(ID3D11Device* device, ID3D11DeviceContext* _conte
 
 	// ブレンドステート
 	{
-		D3D11_BLEND_DESC desc;
-		::memset(&desc, 0, sizeof(desc));
-		desc.AlphaToCoverageEnable = false;
-		desc.IndependentBlendEnable = false;
-		desc.RenderTarget[0].BlendEnable = true;
-		desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-		desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+		//D3D11_BLEND_DESC desc;
+		//::memset(&desc, 0, sizeof(desc));
+		//desc.AlphaToCoverageEnable = false;
+		//desc.IndependentBlendEnable = false;
+		//desc.RenderTarget[0].BlendEnable = true;
+		//desc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+		//desc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+		//desc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+		//desc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+		//desc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+		//desc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+		//desc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-		HRESULT hr = device->CreateBlendState(&desc, m_blend_state.GetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+		//HRESULT hr = device->CreateBlendState(&desc, m_blend_state.GetAddressOf());
+		//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 
 	// 深度ステンシルステート
-	{
-		D3D11_DEPTH_STENCIL_DESC desc;
-		::memset(&desc, 0, sizeof(desc));
-		desc.DepthEnable = true;
-		desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		desc.DepthFunc = D3D11_COMPARISON_LESS;
+	//{
+	//	D3D11_DEPTH_STENCIL_DESC desc;
+	//	::memset(&desc, 0, sizeof(desc));
+	//	desc.DepthEnable = true;
+	//	desc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	//	desc.DepthFunc = D3D11_COMPARISON_LESS;
 
-		HRESULT hr = device->CreateDepthStencilState(&desc, m_depth_stencil_state.GetAddressOf());
-		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
-	}
+	//	HRESULT hr = device->CreateDepthStencilState(&desc, m_depth_stencil_state.GetAddressOf());
+	//	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
+	//}
 
 	 //ラスタライザーステート
 	//{
@@ -149,8 +149,8 @@ void ModelRenderer::Initialize(ID3D11Device* device, ID3D11DeviceContext* _conte
 	//	HRESULT hr = device->CreateRasterizerState(&desc, m_rasterizer_state.GetAddressOf());
 	//	_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	//}
-	rasterizer = std::make_unique<Rasterizer>();
-	rasterizer->Create(device);
+	//rasterizer = std::make_unique<Rasterizer>();
+	//rasterizer->Create(device);
 
 	// サンプラステート
 	{
@@ -207,12 +207,6 @@ void ModelRenderer::Initialize(ID3D11Device* device, ID3D11DeviceContext* _conte
 	}
 }
 
-void ModelRenderer::RSSet(int index)
-{
-	if (index >= Rasterizer::MODE_END)return;
-	context->RSSetState(rasterizer->states[index].Get());
-
-}
 
 // 描画開始
 void ModelRenderer::Begin(const DirectX::XMFLOAT3 eye_pos, const DirectX::XMFLOAT4X4& view_projection, const DirectX::XMFLOAT4& light_direction)
@@ -228,10 +222,13 @@ void ModelRenderer::Begin(const DirectX::XMFLOAT3 eye_pos, const DirectX::XMFLOA
 	context->VSSetConstantBuffers(0, ARRAYSIZE(constant_buffers), constant_buffers);
 	context->PSSetConstantBuffers(0, ARRAYSIZE(constant_buffers), constant_buffers);
 
-	const float blend_factor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
-	context->OMSetBlendState(m_blend_state.Get(), blend_factor, 0xFFFFFFFF);
-	RSSet(D3D11_CULL_BACK);
-	context->OMSetDepthStencilState(m_depth_stencil_state.Get(), 0);
+	//const float blend_factor[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	//context->OMSetBlendState(Blender->states[Blender->ALPHA].Get(), blend_factor, 0xFFFFFFFF);
+	Mo2System->SetBlendState(BLEND_STATE::ALPHA);
+
+	Mo2System->SetRSState(RS_STATE::RS_CULL_BUCK);
+	//context->OMSetDepthStencilState(m_depth_stencil_state.Get(), 0);
+	Mo2System->SetDSState(DS_STATE::D_TRUE_W_TRUE);
 	context->PSSetSamplers(0, 1, m_sampler_state.GetAddressOf());
 
 	// シーン用定数バッファ更新
@@ -298,7 +295,8 @@ void ModelRenderer::Draw(ShaderEx* shader, Mo2Lib::Model& model)
 			CbSubset cb_subset;
 			cb_subset.material_color = subset.material->color;
 			context->UpdateSubresource(m_cb_subset.Get(), 0, 0, &cb_subset, 0, 0);
-			context->PSSetShaderResources(0, 1, subset.material->shader_resource_view.Get() ? subset.material->shader_resource_view.GetAddressOf() : m_dummy_srv.GetAddressOf());
+			//context->PSSetShaderResources(0, 1, subset.material->shader_resource_view.Get() ? subset.material->tex.Get().GetAddressOf() : m_dummy_srv.GetAddressOf());
+			subset.material->tex.get()->Set(0);
 			context->PSSetSamplers(0, 1, m_sampler_state.GetAddressOf());
 			context->DrawIndexed(subset.index_count, subset.start_index, 0);
 		}

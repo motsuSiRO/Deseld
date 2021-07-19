@@ -14,7 +14,6 @@ class ModelRenderer : public Singleton<ModelRenderer>
 public:
 	friend class Singleton<ModelRenderer>; // Singleton でのインスタンス作成は許可
 	ID3D11DeviceContext* context;
-	std::unique_ptr<Rasterizer> rasterizer;
 
 	void Begin(const DirectX::XMFLOAT3 eye_pos, const DirectX::XMFLOAT4X4& view_projection, const DirectX::XMFLOAT4& light_direction);
 	void Draw(ShaderEx* shader, Mo2Lib::Model& model);
@@ -23,7 +22,6 @@ public:
 
 	void Initialize(ID3D11Device* device, ID3D11DeviceContext* context);
 
-	void RSSet(int index);
 protected:
 private:
 	ModelRenderer(){}
@@ -81,11 +79,11 @@ private:
 
 	Microsoft::WRL::ComPtr<ID3D11VertexShader>		m_vertex_shader;
 	Microsoft::WRL::ComPtr<ID3D11PixelShader>		m_pixel_shader;
-	Microsoft::WRL::ComPtr<ID3D11InputLayout>		m_input_layout;
+	//Microsoft::WRL::ComPtr<ID3D11InputLayout>		m_input_layout;
 
-	Microsoft::WRL::ComPtr<ID3D11BlendState>		m_blend_state;
-	Microsoft::WRL::ComPtr<ID3D11RasterizerState>	m_rasterizer_state;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilState>	m_depth_stencil_state;
+	//Microsoft::WRL::ComPtr<ID3D11BlendState>		m_blend_state;
+	//Microsoft::WRL::ComPtr<ID3D11RasterizerState>	m_rasterizer_state;
+	//Microsoft::WRL::ComPtr<ID3D11DepthStencilState>	m_depth_stencil_state;
 
 	Microsoft::WRL::ComPtr<ID3D11SamplerState>		m_sampler_state;
 	Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>	m_dummy_srv;

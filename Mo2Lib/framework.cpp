@@ -1,7 +1,6 @@
 #include "framework.h"
 #include "Scene.h"
 #include "Mo2GUI.h"
-#include "Blender.h"
 
 
 #include "Input.h"
@@ -24,7 +23,10 @@ bool FrameWork::Initialize()
 
 	hr = CreateDevice(current_windowed);
 
-	Blender->Init(DX11device.Get());
+
+	blender.Create(DX11device.Get());
+	rasterizer.Create(DX11device.Get());
+	depthstencilstate.Create(DX11device.Get());
 
 	SceneMgr.ChangeScene(new SceneTitle);
 

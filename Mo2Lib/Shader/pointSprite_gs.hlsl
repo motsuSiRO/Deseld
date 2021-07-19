@@ -19,31 +19,35 @@ void main(point GSInput In[1],
 	float4 posRT = pos + float4(w, h, 0.0, 0.0);
 	float4 posRB = pos + float4(w, -h, 0.0, 0.0);
 
+	
 	// 左上の点の位置(射影座標系)・UV・色を計算して出力
 	PSInput Out = (PSInput)0;
+
 	uint type = In[0].Color.r;
+	float t = type % 2;
+
 	float u = (type % 4)*0.25f;
 	float v = (type / 4)*0.25f;
 	Out.Color = float4(1, 1, 1, In[0].Color.a);
 	Out.Position = mul(Projection, posLT);
-	Out.Tex = float2(u, v);
+	Out.Tex = float3(u, v, t);
 	ParticleStream.Append(Out);
 
 	// 右上の点の位置(射影座標系)・UV・色を計算して出力
 	Out.Position = mul(Projection, posRT);
-	Out.Tex = float2(u + 0.25, v);
+	Out.Tex = float3(u + 0.25, v, t);
 	Out.Color = float4(1, 1, 1, In[0].Color.a);
 	ParticleStream.Append(Out);
 
 	// 左下の点の位置(射影座標系)・UV・色を計算して出力
 	Out.Position = mul(Projection, posLB);
-	Out.Tex = float2(u, v + 0.25);
+	Out.Tex = float3(u, v + 0.25, t);
 	Out.Color = float4(1, 1, 1, In[0].Color.a);
 	ParticleStream.Append(Out);
 
 	// 右下の点の位置(射影座標系)・UV・色を計算して出力
 	Out.Position = mul(Projection, posRB);
-	Out.Tex = float2(u + 0.25, v + 0.25);
+	Out.Tex = float3(u + 0.25, v + 0.25, t);
 	Out.Color = float4(1, 1, 1, In[0].Color.a);
 	ParticleStream.Append(Out);
 

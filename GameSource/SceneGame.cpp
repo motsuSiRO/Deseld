@@ -24,6 +24,7 @@
 
 void SceneGame::Initialize()
 {
+
 	ID3D11Device* device = Mo2System->DX11device.Get();;
 	ID3D11DeviceContext* context = Mo2System->DX11context.Get();
 
@@ -31,7 +32,7 @@ void SceneGame::Initialize()
 	obj->AddComponent<Transform>();
 	obj->AddComponent<Physics2>();
 	obj->AddComponent<PlayerControl>();
-	obj->AddComponent<Firearm>();
+	//obj->AddComponent<Firearm>();
 	obj->AddComponent<GhostShip03>();
 
 	//obj_list.push_back(obj);
@@ -49,15 +50,20 @@ void SceneGame::Initialize()
 	skybox_NoL = std::make_unique<ShaderEx>();
 	skybox_NoL->Create(L"NoLightObj_VS", L"NoLightObj_PS");
 
+	std::vector<D3D11_INPUT_ELEMENT_DESC> bIL(std::begin(billbord_input_element_desc), std::end(billbord_input_element_desc));
+	point_sprite = std::make_unique<ShaderEx>(bIL);
+	point_sprite->Create(L"pointSprite_vs", L"pointSprite_gs", L"pointSprite_ps");
+
 	//sphere = std::make_unique<GeoPrimitive>(device);
 	//sphere->CreateSphere(device, 16, 16);
 	//sphere->transform.scale = { 50.f, 50.f, 50.f };
 
 	sky_box = std::make_unique<SkyBox>(device);
 	
+	particleSys = std::make_unique<cParticleSystem>(10000);
 
 	CAM_LIST()->Init();
-	ModelRenderer::GetInstance().Initialize(device, context);
+	Mo2Render().Initialize(device, context);
 	//model_renderer = std::make_unique<ModelRenderer>(device, context);
 
 
@@ -125,6 +131,10 @@ void SceneGame::Update(float elapsed_time)
 		}
 	}
 	CAM_LIST()->Interpolation(elapsed_time);
+
+	particleSys->Update();
+
+	particleSys->Snow(DirectX::XMFLOAT3(0.f, 100.f, 0.f), 1);
 }
 
 
@@ -158,7 +168,7 @@ void SceneGame::Render()
 
 
 			P = CAM_LIST()->GetPerspective();
-			Sky_P = DirectX::XMMatrixPerspectiveFovLH(fov_y, aspect, 0.1f, 100000.f);
+			Sky_P = DirectX::XMMatrixPerspectiveFovLH(fov_y, aspect, 0.1f, 100.f);
 		}
 
 		// ビュー行列、プロジェクション行列を合成し行列データを取り出す。
@@ -185,13 +195,14 @@ void SceneGame::Render()
 			view_projection,
 			DirectX::XMFLOAT4(0, -1, -1, 0)	// ライトの向き
 		);
-		context->OMSetBlendState(Blender->states[Blender->ALPHA].Get(), nullptr, 0xFFFFFFFF);
+		Mo2System->SetBlendState(BLEND_STATE::ALPHA);
 
-		Mo2Render().RSSet(D3D11_CULL_FRONT);
+		//Mo2Render().RSSet(D3D11_CULL_FRONT);
+		Mo2System->SetRSState(RS_STATE::RS_CULL_FRONT);
 		sky_box->Render(Mo2System->DX11context.Get(), view_projection, true);
 		//Mo2Render().Draw(skybox_NoL.get(), *sky_box->sky);
-		Mo2Render().RSSet(D3D11_CULL_BACK);
-
+		//Mo2Render().RSSet(D3D11_CULL_BACK);
+		Mo2System->SetRSState(RS_STATE::RS_CULL_BUCK);
 
 		{
 			V = CAM_LIST()->GetView();
@@ -219,6 +230,7 @@ void SceneGame::Render()
 
 		Mo2Render().End();
 
+		particleSys->Render(point_sprite.get(), &V, &P);
 
 #ifdef _DEBUG 
 		if (visiblity)

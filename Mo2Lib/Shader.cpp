@@ -12,6 +12,7 @@
 
 HRESULT create_vs_from_cso(ID3D11Device* device, const char* cso_name, ID3D11VertexShader** vertex_shader, ID3D11InputLayout** input_layout, D3D11_INPUT_ELEMENT_DESC* input_element_desc, UINT num_elements)
 {
+
 	// UNIT.05
 	struct set_of_vertex_shader_and_input_layout
 	{
@@ -92,16 +93,6 @@ HRESULT create_ps_from_cso(ID3D11Device* device, const char* cso_name, ID3D11Pix
 }
 
 // 入力レイアウト
-D3D11_INPUT_ELEMENT_DESC input_element_desc[] =
-{
-	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT,    0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,       0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "WEIGHTSA",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "WEIGHTSB",  0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "BONESA",    0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	{ "BONESB",    0, DXGI_FORMAT_R32G32B32A32_UINT,  0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-};
 
 
 //------------------------------------------------
@@ -327,13 +318,13 @@ bool ShaderEx::Create(WCHAR* vsfilename, WCHAR* psfilename)
 {
 	ID3D11Device* device = Mo2System->DX11device.Get();
 	ID3D11DeviceContext* device_context = Mo2System->DX11context.Get();
-	UINT numElements = ARRAYSIZE(input_element_desc);
+	UINT numElements = (UINT)input_element_desc.size();
 	//ワイド文字からマルチバイト文字へ変換
 	char fullname[256];
 	memset(fullname, NULL, sizeof(fullname));
 	//wcstombs(fullname, vsfilename, wcslen(vsfilename));
 	sprintf(fullname, "%s%ws%s", "./Data/System/ShaderObjects/", vsfilename, ".cso");
-	create_vs_from_cso(device, fullname, VS.GetAddressOf(), VertexLayout.GetAddressOf(), input_element_desc, numElements);
+	create_vs_from_cso(device, fullname, VS.GetAddressOf(), VertexLayout.GetAddressOf(), input_element_desc.data(), numElements);
 
 	memset(fullname, NULL, sizeof(fullname));
 	//wcstombs(fullname, psfilename, wcslen(psfilename));
@@ -351,13 +342,13 @@ bool ShaderEx::Create(WCHAR* vsfilename, WCHAR* gsfilename, WCHAR* psfilename)
 {
 	ID3D11Device* device = Mo2System->DX11device.Get();
 	ID3D11DeviceContext* device_context = Mo2System->DX11context.Get();
-	UINT numElements = ARRAYSIZE(input_element_desc);
+	UINT numElements = (UINT)input_element_desc.size();
 	//ワイド文字からマルチバイト文字へ変換
 	char fullname[256];
 	memset(fullname, NULL, sizeof(fullname));
 	//wcstombs(fullname, vsfilename, wcslen(vsfilename));
 	sprintf(fullname, "%s%ws%s", "./Data/System/ShaderObjects/", vsfilename, ".cso");
-	create_vs_from_cso(device, fullname, VS.GetAddressOf(), VertexLayout.GetAddressOf(), input_element_desc, numElements);
+	create_vs_from_cso(device, fullname, VS.GetAddressOf(), VertexLayout.GetAddressOf(), input_element_desc.data(), numElements);
 
 	memset(fullname, NULL, sizeof(fullname));
 	//wcstombs(fullname, gsfilename, wcslen(gsfilename));
@@ -380,14 +371,14 @@ bool ShaderEx::Create(WCHAR* vsfilename, WCHAR* hsfilename, WCHAR* dsfilename, W
 {
 	ID3D11Device* device = Mo2System->DX11device.Get();
 	ID3D11DeviceContext* device_context = Mo2System->DX11context.Get();
-	UINT numElements = ARRAYSIZE(input_element_desc);
+	UINT numElements = (UINT)input_element_desc.size();
 
 	//ワイド文字からマルチバイト文字へ変換
 	char fullname[256];
 	memset(fullname, NULL, sizeof(fullname));
 	//wcstombs(fullname, vsfilename, wcslen(vsfilename));
 	sprintf(fullname, "%s%ws%s", "./Data/System/ShaderObjects/", vsfilename, ".cso");
-	create_vs_from_cso(device, fullname, VS.GetAddressOf(), VertexLayout.GetAddressOf(), input_element_desc, numElements);
+	create_vs_from_cso(device, fullname, VS.GetAddressOf(), VertexLayout.GetAddressOf(), input_element_desc.data(), numElements);
 
 	memset(fullname, NULL, sizeof(fullname));
 	//wcstombs(fullname, hsfilename, wcslen(hsfilename));
@@ -415,14 +406,14 @@ bool ShaderEx::Create(WCHAR* vsfilename, WCHAR* hsfilename, WCHAR* dsfilename, W
 {
 	ID3D11Device* device = Mo2System->DX11device.Get();
 	ID3D11DeviceContext* device_context = Mo2System->DX11context.Get();
-	UINT numElements = ARRAYSIZE(input_element_desc);
+	UINT numElements = (UINT)input_element_desc.size();
 
 	//ワイド文字からマルチバイト文字へ変換
 	char fullname[256];
 	memset(fullname, NULL, sizeof(fullname));
 	//wcstombs(fullname, vsfilename, wcslen(vsfilename));
 	sprintf(fullname, "%s%ws%s", "./Data/System/ShaderObjects/", vsfilename, ".cso");
-	create_vs_from_cso(device, "sprite_vs.cso", VS.GetAddressOf(), VertexLayout.GetAddressOf(), input_element_desc, numElements);
+	create_vs_from_cso(device, "sprite_vs.cso", VS.GetAddressOf(), VertexLayout.GetAddressOf(), input_element_desc.data(), numElements);
 
 	memset(fullname, NULL, sizeof(fullname));
 	//wcstombs(fullname, hsfilename, wcslen(hsfilename));

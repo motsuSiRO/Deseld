@@ -36,11 +36,11 @@
     <Filter Include="Code\Lib\Mo2System">
       <UniqueIdentifier>{c127e541-0e92-4a52-92c9-fcbe266c6b55}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Code\Lib\ModelStstem">
-      <UniqueIdentifier>{e4b71a6f-a0cb-4dbe-b77b-09e5b07f5892}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Code\Lib\MO2Texture">
       <UniqueIdentifier>{0eb9078c-06ba-40c3-808c-6ca1f89d3182}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Lib\ModelSystem">
+      <UniqueIdentifier>{e4b71a6f-a0cb-4dbe-b77b-09e5b07f5892}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -171,19 +171,19 @@
       <Filter>Code\Lib\Mo2System</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\Animation.cpp">
-      <Filter>Code\Lib\ModelStstem</Filter>
+      <Filter>Code\Lib\ModelSystem</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\model.cpp">
-      <Filter>Code\Lib\ModelStstem</Filter>
+      <Filter>Code\Lib\ModelSystem</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\model_data.cpp">
-      <Filter>Code\Lib\ModelStstem</Filter>
+      <Filter>Code\Lib\ModelSystem</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\model_renderer.cpp">
-      <Filter>Code\Lib\ModelStstem</Filter>
+      <Filter>Code\Lib\ModelSystem</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\model_resource.cpp">
-      <Filter>Code\Lib\ModelStstem</Filter>
+      <Filter>Code\Lib\ModelSystem</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\TextureLoader.cpp">
       <Filter>Code\Lib\MO2Texture</Filter>
@@ -192,6 +192,12 @@
       <Filter>Code\Lib\MO2Texture</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\InputLayout.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\ColliderComponents.cpp">
+      <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\ComponentObject.cpp">
       <Filter>Code\Lib</Filter>
     </ClCompile>
   </ItemGroup>
@@ -359,19 +365,19 @@
       <Filter>Code\Lib\Mo2System</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\model_resource.h">
-      <Filter>Code\Lib\ModelStstem</Filter>
+      <Filter>Code\Lib\ModelSystem</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\Animation.h">
-      <Filter>Code\Lib\ModelStstem</Filter>
+      <Filter>Code\Lib\ModelSystem</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\model.h">
-      <Filter>Code\Lib\ModelStstem</Filter>
+      <Filter>Code\Lib\ModelSystem</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\model_data.h">
-      <Filter>Code\Lib\ModelStstem</Filter>
+      <Filter>Code\Lib\ModelSystem</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\model_renderer.h">
-      <Filter>Code\Lib\ModelStstem</Filter>
+      <Filter>Code\Lib\ModelSystem</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\InputLayout.h">
       <Filter>Code\Lib</Filter>
@@ -381,6 +387,9 @@
     </ClInclude>
     <ClInclude Include="Mo2Lib\Texture.h">
       <Filter>Code\Lib\MO2Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\ColliderComponents.h">
+      <Filter>Code\Lib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

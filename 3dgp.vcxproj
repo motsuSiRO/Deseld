@@ -275,7 +275,9 @@
     <ClCompile Include="Mo2Lib\Bullet.cpp" />
     <ClCompile Include="Mo2Lib\Camera.cpp" />
     <ClCompile Include="Mo2Lib\CameraMovement.cpp" />
+    <ClCompile Include="Mo2Lib\ColliderComponents.cpp" />
     <ClCompile Include="Mo2Lib\Collision.cpp" />
+    <ClCompile Include="Mo2Lib\ComponentObject.cpp" />
     <ClCompile Include="Mo2Lib\Enemy.cpp" />
     <ClCompile Include="Mo2Lib\FaceLoader.cpp" />
     <ClCompile Include="Mo2Lib\fbx_loader.cpp" />
@@ -327,6 +329,7 @@
     <ClInclude Include="Mo2Lib\Bullet.h" />
     <ClInclude Include="Mo2Lib\Camera.h" />
     <ClInclude Include="Mo2Lib\CameraMovement.h" />
+    <ClInclude Include="Mo2Lib\ColliderComponents.h" />
     <ClInclude Include="Mo2Lib\Collision.h" />
     <ClInclude Include="Mo2Lib\ComponentObject.h" />
     <ClInclude Include="Mo2Lib\DepthStencilState.h" />

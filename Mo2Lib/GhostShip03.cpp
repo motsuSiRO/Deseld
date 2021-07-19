@@ -370,6 +370,7 @@ void GhostShip03::ImGui()
 	s = "##" + Parent->GetID();
 	ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Appearing);
 	str = "GhostShip03" + s;
+
 	if (ImGui::CollapsingHeader(str.c_str()))
 	{
 		ImGui::Checkbox("Is_Moving", &ismoving);

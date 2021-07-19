@@ -9,14 +9,16 @@ class Object;
 class Component
 {
 protected:
+	bool is_visible;
 public:
-	Component() {}
+	Component() :is_visible(true) {}
 	virtual ~Component() {}
 	Object* Parent;
 	virtual void Start() {}
 	virtual void Update() {}
 	virtual void Draw() {}
 	virtual void ImGui() {}
+
 };
 
 class Object : public GameEntity

@@ -307,6 +307,7 @@
     <ClCompile Include="Mo2Lib\Shader.cpp" />
     <ClCompile Include="Mo2Lib\SkyBox.cpp" />
     <ClCompile Include="Mo2Lib\Sprite.cpp" />
+    <ClCompile Include="Mo2Lib\Stage01.cpp" />
     <ClCompile Include="Mo2Lib\StateMachine.cpp" />
     <ClCompile Include="Mo2Lib\Texture.cpp" />
     <ClCompile Include="Mo2Lib\TextureLoader.cpp" />
@@ -352,7 +353,7 @@
     <ClInclude Include="Mo2Lib\Mo2Cerealize.h" />
     <ClInclude Include="Mo2Lib\Mo2Func.h" />
     <ClInclude Include="Mo2Lib\Mo2GUI.h" />
-    <ClInclude Include="Mo2Lib\model.h" />
+    <ClInclude Include="Mo2Lib\Mo2Model.h" />
     <ClInclude Include="Mo2Lib\model_data.h" />
     <ClInclude Include="Mo2Lib\model_renderer.h" />
     <ClInclude Include="Mo2Lib\model_resource.h" />
@@ -370,6 +371,7 @@
     <ClInclude Include="Mo2Lib\Singleton.h" />
     <ClInclude Include="Mo2Lib\SkyBox.h" />
     <ClInclude Include="Mo2Lib\Sprite.h" />
+    <ClInclude Include="Mo2Lib\Stage01.h" />
     <ClInclude Include="Mo2Lib\StateMachine.h" />
     <ClInclude Include="Mo2Lib\SteeringBehavior2D.h" />
     <ClInclude Include="Mo2Lib\Texture.h" />

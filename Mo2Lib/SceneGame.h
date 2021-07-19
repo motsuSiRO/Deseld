@@ -14,7 +14,7 @@
 class SceneGame :public Scene
 {
 private:
-	std::unique_ptr<Mo2Lib::Model>		model;
+	std::unique_ptr<GeoPrimitive>		model;
 	std::unique_ptr<Mo2Lib::Model>		model2;
 	std::unique_ptr<SkyBox>				sky_box;
 

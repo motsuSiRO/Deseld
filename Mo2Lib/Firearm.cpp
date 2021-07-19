@@ -18,7 +18,7 @@ void Firearm::Start()
 	mag.MAX_SIZE = 16;
 	MAX_MAGAGINE = 1;
 
-	trans = Parent->GetComponent<Transform>();
+	trans = parent->GetComponent<Transform>();
 
 
 	phong = std::make_shared<ShaderEx>();
@@ -39,16 +39,16 @@ void Firearm::Update()
 {
 	Cooling();
 
-	vertical_recoil -= ONCE_V_RECOIL * Parent->delta_time * (v_recoil_control * v_recoil_control);
+	vertical_recoil -= ONCE_V_RECOIL * parent->delta_time * (v_recoil_control * v_recoil_control);
 	Mo2Lib::Clamp(vertical_recoil, 0.f, MAX_V_RECOIL);
 
-	horizontal_recoil -= ONCE_H_RECOIL * Parent->delta_time * (h_recoil_control * h_recoil_control);
+	horizontal_recoil -= ONCE_H_RECOIL * parent->delta_time * (h_recoil_control * h_recoil_control);
 	Mo2Lib::Clamp(horizontal_recoil, 0.f, MAX_H_RECOIL);
 
 	if (!cooling)
 	{
-		v_recoil_control += Parent->delta_time * 15.f;
-		h_recoil_control += Parent->delta_time * 15.f;
+		v_recoil_control += parent->delta_time * 15.f;
+		h_recoil_control += parent->delta_time * 15.f;
 	}
 }
 
@@ -64,7 +64,7 @@ void Firearm::Draw()
 void Firearm::ImGui()
 {
 	std::string str, s;
-	s = "##" + Parent->GetID();
+	s = "##" + parent->GetID();
 	ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Appearing);
 	str = "GunParameter" + s;
 	if (ImGui::CollapsingHeader(str.c_str()))
@@ -113,7 +113,7 @@ bool Firearm::Shoot()
 
 void Firearm::Cooling()
 {
-	recast_time -= Parent->delta_time;
+	recast_time -= parent->delta_time;
 
 	if (recast_time <= 0.f)
 	{

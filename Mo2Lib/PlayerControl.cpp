@@ -58,7 +58,7 @@ void PlayerControl::ImGui()
 {
 
 	std::string str, s;
-	s = "##" + Parent->GetID();
+	s = "##" + parent->GetID();
 	ImGui::SetNextTreeNodeOpen(false, ImGuiCond_Appearing);
 	str = "PlayerControl" + s;
 	if (ImGui::CollapsingHeader(str.c_str()))

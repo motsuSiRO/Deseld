@@ -1,6 +1,6 @@
 #pragma once
 #include "Physics.h"
-#include "model.h"
+#include "Mo2Model.h"
 #include "Animation.h"
 #include "Vector3D.h"
 #include "StateMachine.h"

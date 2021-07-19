@@ -137,7 +137,7 @@ void Physics::PhysicsImGui(std::string s)
 
 void Physics2::Start()
 {
-	position = &Parent->GetComponent<Transform>()->translate;
+	position = &parent->GetComponent<Transform>()->translate;
 
 	mass = 1.f;
 	limit_velocity = false;
@@ -187,7 +187,7 @@ void Physics2::Deceleration()
 void Physics2::ImGui()
 {
 	std::string str;
-	std::string physics = "Physics" + Parent->GetID();
+	std::string physics = "Physics" + parent->GetID();
 	ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Appearing);
 	if (ImGui::CollapsingHeader(physics.c_str()))
 	{

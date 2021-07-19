@@ -15,7 +15,7 @@ void Bullet::Start()
 	model = std::make_unique<Mo2Lib::Model>(model_resource);
 
 
-	trans = Parent->GetComponent<Transform>();
+	trans = parent->GetComponent<Transform>();
 	model->color = { Mo2Lib::RandFloat(), Mo2Lib::RandFloat(), Mo2Lib::RandFloat(), 1.f };
 	trans->scale = { 1.f, 1.f, 1.f };
 	
@@ -28,7 +28,8 @@ void Bullet::Update()
 
 	if (trans->translate.x < 0)
 	{
-		Parent->destroy = true;
+		//parent->destroy = true;
+		parent->Destroy();
 		return;
 	}
 }

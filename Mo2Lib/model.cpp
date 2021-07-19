@@ -1,6 +1,6 @@
 
 #include "logger.h"
-#include "model.h"
+#include "Mo2Model.h"
 #include "misc.h"
 #include "Vector3D.h"
 #include "framework.h"

@@ -46,20 +46,20 @@ class PL_Idle : public State<GhostShip03>
 		{
 			//if (p->gun->Shoot())
 			//{
-			//	Object* obj = new Object("Bullet");
-			//	Transform* t = obj->AddComponent<Transform>();
-			//	t->translate = { CAM_LIST()->main_cam->GetEye() };
-			//	Bullet* b = obj->AddComponent<Bullet>();
-			//	b->forward = CAM_LIST()->main_cam->GetFront();
+				Object* obj = new Object("Bullet");
+				Transform* t = obj->AddComponent<Transform>();
+				t->translate = { CAM_LIST()->main_cam->GetEye() };
+				Bullet* b = obj->AddComponent<Bullet>();
+				b->forward = CAM_LIST()->main_cam->GetFront();
 
-			//	Mo2Lib::game.obj_list.emplace_back(obj);
+				Mo2Lib::game.obj_list.emplace_back(obj);
 			//}
 			//fsm->ChangeState(GhostShip03::PL_AIM);
 		}
 
 		//for (int i = 0; i < GhostShip03::FULLBODY; i++)
 		{
-			p->anim.CallBlendAnim(GhostShip03::SPINE                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                , GhostShip03::IDLE, true, true);
+			p->anim.CallBlendAnim(GhostShip03::SPINE, GhostShip03::IDLE, true, true);
 		}
 	}
 
@@ -277,9 +277,9 @@ class PL_Dodge : public State<GhostShip03>
 //---------------------------------------------------------------------
 void GhostShip03::Start()
 {
-	trans = Parent->GetComponent<Transform>();
-	physics = Parent->GetComponent<Physics2>();
-	pctrl = Parent->GetComponent<PlayerControl>();
+	trans = parent->GetComponent<Transform>();
+	physics = parent->GetComponent<Physics2>();
+	pctrl = parent->GetComponent<PlayerControl>();
 	//gun = Parent->GetComponent<Firearm>();
 
 	fsm = std::make_unique<StateMachine<GhostShip03>>(this);
@@ -351,9 +351,9 @@ void GhostShip03::Update()
 	ismoving = false;
 
 	//anim.anim_spd = physics->velocity.Length() / physics->MAX_VELOCITY;
-	fsm->Update(Parent->delta_time);
+	fsm->Update(parent->delta_time);
 
-	model->UpdateAnimation(&anim, Parent->delta_time);
+	model->UpdateAnimation(&anim, parent->delta_time);
 	CAM_LIST()->main_cam->SetOrientation(trans->translate);
 }
 
@@ -367,16 +367,23 @@ void GhostShip03::Draw()
 void GhostShip03::ImGui()
 {
 	std::string str, s;
-	s = "##" + Parent->GetID();
+	s = "##" + parent->GetID();
 	ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Appearing);
 	str = "GhostShip03" + s;
 
+
 	if (ImGui::CollapsingHeader(str.c_str()))
 	{
+		Super::ImGui();
+		ImGui::SameLine();
+		ImGui::Text("Visible");
+
 		ImGui::Checkbox("Is_Moving", &ismoving);
+
+		ImGui::Text("CurrentState");
+		ImGui::Text(fsm->GetCurrentName());
 	}
 
-	ImGui::Text(fsm->GetCurrentName());
 
 }
 

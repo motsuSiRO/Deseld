@@ -2,6 +2,8 @@
 #include "BinaryConversion.h"
 #include "framework.h"
 
+
+#ifdef COLLSION_OLD
 Collision* Mo2CD()//Collision Detection
 {
 	return Collision::GetInstance();
@@ -612,3 +614,11 @@ bool Collision::calcRaySphere(
 
 	return true;
 }
+
+#else
+
+
+
+
+
+#endif

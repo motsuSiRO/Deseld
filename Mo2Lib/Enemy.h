@@ -1,7 +1,7 @@
 #pragma once
 #include "Vector3D.h"
 #include "Physics.h"
-#include "model.h"
+#include "Mo2Model.h"
 #include <vector>
 #include <memory>
 #include <map>

@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <d3d11.h>
-#include "model.h"
+#include "Mo2Model.h"
 #include "GeoPrimitive.h"
 #include "Shader.h"
 #include <unordered_map>

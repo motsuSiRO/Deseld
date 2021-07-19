@@ -42,6 +42,9 @@
     <Filter Include="Code\Lib\ModelSystem">
       <UniqueIdentifier>{e4b71a6f-a0cb-4dbe-b77b-09e5b07f5892}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\InGame\Stage">
+      <UniqueIdentifier>{9a9d85ae-d18d-41d5-a0d4-c4a3741b8c06}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mo2Lib\Camera.cpp">
@@ -199,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="Mo2Lib\ComponentObject.cpp">
       <Filter>Code\Lib</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Stage01.cpp">
+      <Filter>Code\InGame\Stage</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -370,9 +376,6 @@
     <ClInclude Include="Mo2Lib\Animation.h">
       <Filter>Code\Lib\ModelSystem</Filter>
     </ClInclude>
-    <ClInclude Include="Mo2Lib\model.h">
-      <Filter>Code\Lib\ModelSystem</Filter>
-    </ClInclude>
     <ClInclude Include="Mo2Lib\model_data.h">
       <Filter>Code\Lib\ModelSystem</Filter>
     </ClInclude>
@@ -390,6 +393,12 @@
     </ClInclude>
     <ClInclude Include="Mo2Lib\ColliderComponents.h">
       <Filter>Code\Lib</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Mo2Model.h">
+      <Filter>Code\Lib\ModelSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Stage01.h">
+      <Filter>Code\InGame\Stage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

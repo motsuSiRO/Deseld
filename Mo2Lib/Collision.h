@@ -1,4 +1,7 @@
 #pragma once
+
+#define COLLSION_OLD
+#ifdef COLLSION_OLD
 #include "Physics.h"
 #include <map>
 #include <vector>
@@ -85,3 +88,20 @@ public:
 
 Collision* Mo2CD();//Collision Detection
 
+#else
+#include "ColliderComponents.h"
+
+class contact;
+class CollisionDetector
+{
+private:
+	std::vector<contact> contacts;
+};
+
+
+class contact
+{
+
+};
+
+#endif

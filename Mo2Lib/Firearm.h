@@ -1,7 +1,7 @@
 #pragma once
 #include "ComponentObject.h"
 #include "Mo2Cerealize.h"
-#include "model.h"
+#include "Mo2Model.h"
 #include "Shader.h"
 
 struct Magagine

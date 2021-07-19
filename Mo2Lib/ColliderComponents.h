@@ -4,6 +4,8 @@
 
 class ColliderComponent : public Component
 {
+protected:
+	std::unique_ptr<GeoPrimitive> primitive;
 public:
 	Mo2Lib::Transform trans;
 public:
@@ -13,13 +15,17 @@ public:
 	virtual void ImGui() {}
 
 	virtual Mo2Lib::Float3 GetDimension() const{}
+
+protected:
+	bool first_hit = true;
+public:
+	void (*OnHit)();
+	void (*OnTrigger)();
 };
 
 
 class BoxComponent : public ColliderComponent
 {
-private:
-	std::unique_ptr<GeoPrimitive> box;
 public:
 	void Start();
 	void Update();
@@ -34,8 +40,6 @@ public:
 
 class SphereComponent : public ColliderComponent
 {
-private:
-	std::unique_ptr<GeoPrimitive> sphere;
 public:
 	float r;
 public:

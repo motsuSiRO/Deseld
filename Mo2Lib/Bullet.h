@@ -1,6 +1,6 @@
 #pragma once
 #include "ComponentObject.h"
-#include "model.h"
+#include "Mo2Model.h"
 #include "Shader.h"
 
 class Bullet : public Component

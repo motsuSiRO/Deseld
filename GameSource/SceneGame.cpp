@@ -11,7 +11,7 @@
 #include "Input.h"
 #include "Firearm.h"
 #include "GhostShip03.h"
-
+#include "Stage01.h"
 //**********************************************
 //
 //		メインシーン
@@ -34,12 +34,17 @@ void SceneGame::Initialize()
 	obj->AddComponent<PlayerControl>();
 	//obj->AddComponent<Firearm>();
 	obj->AddComponent<GhostShip03>();
+	Mo2Lib::game.obj_list.emplace_back(obj);
+
+	obj = new Object("Stage01");
+	obj->AddComponent<Transform>();
+	obj->AddComponent<Stage01>();
+	Mo2Lib::game.obj_list.emplace_back(obj);
 
 	//obj_list.push_back(obj);
-	Mo2Lib::game.obj_list.emplace_back(obj);
-	//obj_list.emplace_back(new Object);
-	//obj_list.emplace_back(new Object);
-	//obj_list.emplace_back(new Object);
+	Mo2Lib::game.obj_list.emplace_back(new Object("target1"));
+	Mo2Lib::game.obj_list.emplace_back(new Object);
+	Mo2Lib::game.obj_list.emplace_back(new Object);
 
 	skinned_bp = std::make_unique<ShaderEx>();
 	skinned_bp->Create(L"SkinnedModel_VS", L"SkinnedModel_PS");
@@ -54,9 +59,9 @@ void SceneGame::Initialize()
 	point_sprite = std::make_unique<ShaderEx>(bIL);
 	point_sprite->Create(L"pointSprite_vs", L"pointSprite_gs", L"pointSprite_ps");
 
-	//sphere = std::make_unique<GeoPrimitive>(device);
-	//sphere->CreateSphere(device, 16, 16);
-	//sphere->transform.scale = { 50.f, 50.f, 50.f };
+	model = std::make_unique<GeoPrimitive>(device);
+	model->CreateSphere(device, 16, 16);
+	model->transform.scale = { 50.f, 50.f, 50.f };
 
 	sky_box = std::make_unique<SkyBox>(device);
 	
@@ -70,21 +75,13 @@ void SceneGame::Initialize()
 	reticule = std::make_unique<Reticule>();
 	reticule->Initialize();
 
+	
 	std::shared_ptr<ModelData> m_data = std::make_shared<ModelData>();
 	std::shared_ptr<ModelResource> model_resource = std::make_shared<ModelResource>();
 
 	const char* fbx_filename = "./Data/Assets/Field/dezzart_square.fbx";
 
-	if (!m_data->Load(fbx_filename, ModelData::BINARY))
-	{
-		m_data->SaveToFile();
-	}
-	model_resource->Load(device, m_data.get(), LOAD_SKINNED_MODEL);
-	model = std::make_unique<Mo2Lib::Model>(model_resource);
 
-
-	//DirectX::XMStoreFloat4(&model->rotate, DirectX::XMQuaternionRotationRollPitchYaw(DirectX::XMConvertToRadians(-90.f), 0.f, 0.f));
-	//model->scale = { 100.f, 100.f, 100.f };
 
 	fbx_filename = "./Data/Assets/enemy/gates_quad_mesh.fbx";
 	m_data->Clear();
@@ -102,7 +99,7 @@ void SceneGame::Initialize()
 	Mo2CD()->LoadFaceData(0, "./Data/Assets/Field/dezzart_square.fbx");
 
 	
-	Mo2CD()->face_map[0].transforms.resize(9);
+	Mo2CD()->face_map[0].transforms.resize(1);
 	static float margin = 100800.f;
 	//for (size_t i = 0; i < Mo2CD()->face_map[0].transforms.size(); ++i)
 	{
@@ -215,12 +212,7 @@ void SceneGame::Render()
 			DirectX::XMFLOAT4(0, -1, -1, 0)	// ライトの向き
 		);
 
-		//for (auto t : Mo2CD()->face_map[0].transforms)
-		{
-			model->SetTransform(Mo2CD()->face_map[0].transforms[0]);
-			Mo2Render().Draw(static_bp.get(), *model);
-		}
-		Mo2Render().Draw(skinned_bp.get(), *model2);
+		Mo2Render().Draw(skybox_NoL.get(), *model);
 
 
 		for (auto obj : Mo2Lib::game.obj_list)

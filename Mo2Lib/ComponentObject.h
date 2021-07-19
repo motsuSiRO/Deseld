@@ -8,17 +8,18 @@ class Object;
 
 class Component
 {
-protected:
+public:
 	bool is_visible;
 public:
 	Component() :is_visible(true) {}
 	virtual ~Component() {}
-	Object* Parent;
+	Object* parent;
 	virtual void Start() {}
 	virtual void Update() {}
 	virtual void Draw() {}
-	virtual void ImGui() {}
+	virtual void ImGui();
 
+	using Super = Component;
 };
 
 class Object : public GameEntity
@@ -27,69 +28,36 @@ public:
 	char tag[128] = "GameObject";
 	float delta_time;
 	bool destroy;
-	Object() : GameEntity() {}
-	Object(char* _tag) : GameEntity()
+
+private:
+	bool active;
+
+public:
+	Object() : GameEntity(), active(true) {}
+	Object(char* _tag) : GameEntity(), active(true)
 	{
 		strcpy_s(tag, 128, _tag);
 		destroy = false;
 	}
 	~Object() {
-		for (auto com : ComponentList)
+		for (auto com : component_list)
 			delete com;
 	}
 
-	std::list<Component*> ComponentList;
+	std::list<Component*> component_list;
 
-	void Update(float elapsed)
-	{
-		delta_time = elapsed;
-		auto buff = ComponentList;
-		for (auto com : buff)
-		{
-			com->Update();
-		}
-	}
-
-	void Draw()
-	{
-		for (auto com : ComponentList)
-		{
-			com->Draw();
-		}
-	}
+	void Start();
+	void Update(float elapsed);
+	void Draw();
 
 	bool selected = false;
-	void ImGui()
-	{
-		if (selected)
-		{
-			ImGui::SetNextWindowPos(ImVec2(1420.f, 0.f), ImGuiCond_Once);
-			ImGui::SetNextWindowSize(ImVec2(500.f, 1000.f), ImGuiCond_Once);
-			char _tag[128];
-			strcpy_s(_tag, 128, tag);
-			std::string str = "##";
-			str += tag;
-			if (ImGui::Begin(tag))
-			{
-				if (ImGui::InputText(str.c_str(), _tag, size_t(128), ImGuiInputTextFlags_EnterReturnsTrue))
-				{
-					strcpy_s(tag, 128, _tag);
-				}
-
-				for (auto& com : ComponentList)
-				{
-					com->ImGui();
-				}
-			}
-			ImGui::End();
-		}
-	}
+	void ImGui();
 
 	//オブジェクトが持っているコンポーネントを取得
 	template<class T>
 	T* GetComponent()
 	{
-		for (auto com : ComponentList) {
+		for (auto com : component_list) {
 			T* buff = dynamic_cast<T*>(com);
 			if (buff != nullptr)
 				return buff;
@@ -102,11 +70,13 @@ public:
 	T* AddComponent()
 	{
 		T* buff = new T();
-		buff->Parent = this;
-		ComponentList.push_back(buff);
+		buff->parent = this;
+		component_list.push_back(buff);
 		buff->Start();
 		return buff;
 	}
+
+	void Destroy();
 };
 
 class Transform : public Component
@@ -148,7 +118,7 @@ public:
 	void ImGui()
 	{
 		std::string str, s;
-		s = "##" + Parent->GetID();
+		s = "##" + parent->GetID();
 		ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Appearing);
 		str = "Transform" + s;
 		if (ImGui::CollapsingHeader(str.c_str()))

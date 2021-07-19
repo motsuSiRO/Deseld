@@ -13,7 +13,6 @@ class GhostShip03 : public Component
 {
 public:
 	bool ismoving;
-	int model_index;
 	Physics2* physics;
 	Transform* trans;
 	PlayerControl* pctrl;

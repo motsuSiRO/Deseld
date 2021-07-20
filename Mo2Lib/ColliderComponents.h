@@ -38,13 +38,13 @@ public:
 
 	Mo2Lib::Float3 GetDimension() const
 	{
-		return Mo2Lib::Float3(trans.scale / 2);
+		return Mo2Lib::Float3(trans.scale);
 	}
 };
 
 class SphereComponent : public ColliderComponent
 {
-public:
+private:
 	float r;
 public:
 	void Start();
@@ -57,5 +57,10 @@ public:
 	Mo2Lib::Float3 GetDimension() const
 	{
 		return Mo2Lib::Float3(r, r, r);
+	}
+
+	float GetRadius()
+	{
+		return trans.scale.Length() / 2;
 	}
 };

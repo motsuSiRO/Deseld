@@ -634,7 +634,7 @@ INT generate_contact_sphere_sphere(SphereComponent* s0, SphereComponent* s1)
 	Mo2Lib::Float3 n = p0 - p1;
 	FLOAT l = n.Length();
 	//D3DXVec3Normalize(&n, &n);
-	if (l < s0->r + s1->r)
+	if (l < s0->GetRadius() + s1->GetRadius())
 	{
 		//Contact contact;
 		//contact.normal = n;
@@ -714,7 +714,7 @@ INT generate_contact_sphere_box(SphereComponent* sphere, BoxComponent* box)
 	Mo2Lib::Float3 dist = closest_pt - sp;
 	FLOAT len = dist.Length();
 
-	if (len < sphere->r && len > FLT_EPSILON)
+	if (len < sphere->GetRadius() && len > FLT_EPSILON)
 	{
 		closest_pt = DirectX::XMVector3TransformCoord(closest_pt.ConvertToXMVECTOR(), boxM_space);
 

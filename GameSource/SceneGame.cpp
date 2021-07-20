@@ -50,9 +50,27 @@ void SceneGame::Initialize()
 	Mo2Lib::game.obj_list.emplace_back(obj);
 
 	//obj_list.push_back(obj);
-	Mo2Lib::game.obj_list.emplace_back(new Object("target1"));
-	Mo2Lib::game.obj_list.emplace_back(new Object);
-	Mo2Lib::game.obj_list.emplace_back(new Object);
+	obj = new Object("target1");
+	obj->AddComponent<Transform>();
+	obj->AddComponent<SphereComponent>();
+	obj->Start();
+	Mo2Lib::game.obj_list.emplace_back(obj);
+	obj = new Object("target2");
+	obj->AddComponent<Transform>();
+	obj->AddComponent<SphereComponent>();
+	obj->Start();
+	Mo2Lib::game.obj_list.emplace_back(obj);
+	obj = new Object("target3");
+	obj->AddComponent<Transform>();
+	SphereComponent* spr = obj->AddComponent<SphereComponent>();
+	spr->trans.translate = { 0.f, 150.f, 0.f };
+	obj->Start();
+	Mo2Lib::game.obj_list.emplace_back(obj);
+	obj = new Object("target4");
+	obj->AddComponent<Transform>();
+	obj->AddComponent<BoxComponent>();
+	obj->Start();
+	Mo2Lib::game.obj_list.emplace_back(obj);
 
 	skinned_bp = std::make_unique<ShaderEx>();
 	skinned_bp->Create(L"SkinnedModel_VS", L"SkinnedModel_PS");

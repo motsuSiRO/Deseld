@@ -31,13 +31,7 @@ public:
 		TPose = 0,
 		IDLE,
 		RUN,
-		MOVE_F,
-		MOVE_B,
-		MOVE_L,
-		MOVE_R,
-		DODGEROLL,
-		AIMUP,
-		AIMDOWN,
+		ATTACK,
 		MAX_ANIM,
 	};
 
@@ -61,7 +55,6 @@ public:
 	void MoveXZ(float speed);
 	Mo2Lib::Vec3 InputDirection();
 	void LookForward();
-	void CtrlFreeCam();
 private:
 	std::unique_ptr <Mo2Lib::Model> model;
 	std::shared_ptr<ShaderEx> phong;

@@ -347,11 +347,6 @@ void GhostShip03::Start()
 	anim.data[TPose].priority = 0;
 	anim.data[IDLE].priority = 1;
 	anim.data[RUN].priority = 2;
-	anim.data[MOVE_F].priority = 2;
-	anim.data[MOVE_B].priority = 2;
-	anim.data[MOVE_L].priority = 2;
-	anim.data[MOVE_R].priority = 2;
-	anim.data[DODGEROLL].priority = 4;
 
 
 
@@ -372,10 +367,11 @@ void GhostShip03::Update()
 
 	fsm->Update(parent->delta_time);
 
-	model->UpdateAnimation(&anim, parent->delta_time);
 
 	box->trans.translate = model->GetNodes()[0].GetWorldPos();
 	arm_pos = model->GetNodes()[26].GetWorldPos();
+	model->UpdateAnimation(&anim, parent->delta_time);
+
 	CAM_LIST()->main_cam->SetOrientation(trans->translate);
 }
 
@@ -492,68 +488,7 @@ void GhostShip03::LookForward()
 
 }
 
-void GhostShip03::CtrlFreeCam()
-{
-	//
-	////Xpad
-	//if (INPUT.RStickDeadzoneX(10000))
-	//{
-	//	cam_angle.y += INPUT.RStickVector().x * 0.1f;
 
-	//	if (cam_angle.y > DirectX::XM_2PI)
-	//	{
-	//		cam_angle.y -= DirectX::XM_2PI;
-	//	}
-	//	else if (cam_angle.y < 0.f)
-	//	{
-	//		cam_angle.y += DirectX::XM_2PI;
-	//	}
-
-	//}
-
-	//if (INPUT().RStickDeadzoneY(10000))
-	//{
-	//	cam_angle.x += INPUT.RStickVector().y * 0.1f;
-
-	//	if (cam_angle.x > HALF_CAM_ANGLE_X)
-	//	{
-	//		cam_angle.x = HALF_CAM_ANGLE_X;
-	//	}
-	//	else if (cam_angle.x < -HALF_CAM_ANGLE_X)
-	//	{
-	//		cam_angle.x = -HALF_CAM_ANGLE_X;
-	//	}
-
-	//}
-
-	////Mouse
-	//{
-	//	cam_angle.y += INPUT.mouse.d_x * 0.01f;
-
-	//	if (cam_angle.y > DirectX::XM_2PI)
-	//	{
-	//		cam_angle.y -= DirectX::XM_2PI;
-	//	}
-	//	else if (cam_angle.y < 0.f)
-	//	{
-	//		cam_angle.y += DirectX::XM_2PI;
-	//	}
-
-	//	cam_angle.x -= INPUT.mouse.d_y * 0.01f;
-
-	//	if (cam_angle.x > HALF_CAM_ANGLE_X)
-	//	{
-	//		cam_angle.x = HALF_CAM_ANGLE_X;
-	//	}
-	//	else if (cam_angle.x < -HALF_CAM_ANGLE_X)
-	//	{
-	//		cam_angle.x = -HALF_CAM_ANGLE_X;
-	//	}
-
-
-	//}
-
-}
 void GhostShip03::MoveXZ(float speed)
 {
 	if (!ismoving)physics->Deceleration();

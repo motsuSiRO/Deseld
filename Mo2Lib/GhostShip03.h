@@ -5,6 +5,11 @@
 #include "Animation.h"
 #include "ComponentObject.h"
 
+namespace GShip
+{
+	extern Mo2Lib::Float3 arm_pos;
+}
+
 class GhostShip03 : public Component
 {
 public:
@@ -56,6 +61,7 @@ public:
 	void MoveXZ(float speed);
 	Mo2Lib::Vec3 InputDirection();
 	void LookForward();
+	void CtrlFreeCam();
 private:
 	std::unique_ptr <Mo2Lib::Model> model;
 	std::shared_ptr<ShaderEx> phong;

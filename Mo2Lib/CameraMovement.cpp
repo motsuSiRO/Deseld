@@ -1,5 +1,6 @@
 #include "CameraMovement.h"
 #include "Input.h"
+#include "framework.h"
 //--------------------------------------------------------------------------------------
 //
 //		Debug
@@ -310,20 +311,61 @@ class FreeMovebyMouse : public State<Camera>
 
 class TPSFreeMove : public State<Camera>
 {
+	Mo2Lib::Float2 cam_angle;
+	const FLOAT HALF_CAM_ANGLE_X = DirectX::XMConvertToRadians(170.f);
+	const FLOAT HIGHT = 200.f;
 	void Begin(Camera* c)
 	{
 		c->SetFOV(80.f);
-
+		c->SetDistance(300.f);
 	}
 
 	void Execute(Camera* c)
 	{
+		FLOAT delta_time = Mo2System->delta_time;
+		//Mouse
+		{
+			cam_angle.y += INPUT.mouse.d_x * delta_time;
+
+			if (cam_angle.y > DirectX::XM_2PI)
+			{
+				cam_angle.y -= DirectX::XM_2PI;
+			}
+			else if (cam_angle.y < 0.f)
+			{
+				cam_angle.y += DirectX::XM_2PI;
+			}
+
+			cam_angle.x -= INPUT.mouse.d_y * delta_time;
+
+			if (cam_angle.x > HALF_CAM_ANGLE_X)
+			{
+				cam_angle.x = HALF_CAM_ANGLE_X;
+			}
+			else if (cam_angle.x < -HALF_CAM_ANGLE_X)
+			{
+				cam_angle.x = -HALF_CAM_ANGLE_X;
+			}
+		}
+
+		DirectX::XMMATRIX m;
+		m = DirectX::XMMatrixRotationRollPitchYaw(cam_angle.x, cam_angle.y, 0.f);
+
+		Mo2Lib::Float3 right = Mo2Lib::Float3(m.r[0].m128_f32[0], m.r[0].m128_f32[1], m.r[0].m128_f32[2]);
+		Mo2Lib::Float3 up = Mo2Lib::Float3(m.r[1].m128_f32[0], m.r[1].m128_f32[1], m.r[1].m128_f32[2]);
+		Mo2Lib::Float3 front = Mo2Lib::Float3(m.r[2].m128_f32[0], m.r[2].m128_f32[1], m.r[2].m128_f32[2]);
+
+		c->SetFront(front);
+		c->SetRight(right);
+		c->SetUp(up);
+
+
 		Mo2Lib::Float3 dist = Mo2Lib::Float3(c->GetDistance(), c->GetDistance(), c->GetDistance());
 		Mo2Lib::Float3 offset = Mo2Lib::Float3(c->GetDistance(), c->GetDistance(), c->GetDistance());
 		Mo2Lib::Float3 eye = c->GetOrientation() - c->GetFront() * offset;
 		Mo2Lib::Float3 focus = c->GetOrientation() - c->GetFront() * (dist - offset);
 
-		eye.y += 140.f;
+		eye.y += HIGHT;
 
 		c->SetEye(eye);
 		c->SetFocus(focus);

@@ -2,6 +2,8 @@
 #include "Scene.h"
 #include "Mo2GUI.h"
 
+#include "SceneLoad.h"
+#include "SceneGame.h"
 
 #include "Input.h"
 
@@ -28,7 +30,8 @@ bool FrameWork::Initialize()
 	rasterizer.Create(DX11device.Get());
 	depthstencilstate.Create(DX11device.Get());
 
-	SceneMgr.ChangeScene(new SceneTitle);
+	//SceneMgr.ChangeScene(new SceneTitle);
+	SceneMgr.ChangeScene(new SceneLoad(new SceneGame));
 
 	return true;
 }
@@ -172,7 +175,7 @@ void FrameWork::Render(float elapsed_time/*Elapsed seconds from last frame*/)
 	// 深度ステンシルビューを通して深度ステンシルテクスチャの深度情報とステンシル情報をクリアする。
 	DX11context->ClearDepthStencilView(depth_stencil_view.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 	// これから描画する情報の書き込む先を設定する。
-	DX11context->OMSetRenderTargets(1, render_target_view.GetAddressOf(), depth_stencil_view.Get());
+ 	DX11context->OMSetRenderTargets(1, render_target_view.GetAddressOf(), depth_stencil_view.Get());
 	
 
 	ImGui_ImplDX11_NewFrame();

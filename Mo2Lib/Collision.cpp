@@ -691,8 +691,8 @@ INT generate_contact_sphere_box(SphereComponent* sphere, BoxComponent* box)
 	//Contactの全てのメンバ変数に値をセットし、コンテナ(contacts)に追加する
 	DirectX::XMMATRIX boxM_space, R, T;
 	T = DirectX::XMMatrixTranslation(box->trans.translate.x, box->trans.translate.y, box->trans.translate.z);
-	DirectX::XMMatrixRotationQuaternion(box->trans.rotate.ConvertToXMVECTOR());
-	Mo2Lib::Float3 dimension = box->GetDimension();
+	R = DirectX::XMMatrixRotationQuaternion(box->trans.rotate.ConvertToXMVECTOR());
+	//Mo2Lib::Float3 dimension = box->GetDimension();
 	boxM_space = R * T;
 	DirectX::XMMATRIX Inverse_boxM_space;
 	Inverse_boxM_space = DirectX::XMMatrixInverse(NULL, boxM_space);
@@ -701,15 +701,16 @@ INT generate_contact_sphere_box(SphereComponent* sphere, BoxComponent* box)
 	sp = DirectX::XMVector3TransformCoord(sphere->trans.translate.ConvertToXMVECTOR(), Inverse_boxM_space);
 
 
+	FLOAT devide = 1.f;
 	Mo2Lib::Float3 closest_pt = sp;
-	if (closest_pt.x > box->trans.scale.x/2)closest_pt.x = box->trans.scale.x/2;
-	if (closest_pt.x < -box->trans.scale.x/2)closest_pt.x = -box->trans.scale.x/2;
+	if (closest_pt.x > box->trans.scale.x/devide)closest_pt.x = box->trans.scale.x/devide;
+	if (closest_pt.x < -box->trans.scale.x/devide)closest_pt.x = -box->trans.scale.x/devide;
 
-	if (closest_pt.y > box->trans.scale.y/2)closest_pt.y = box->trans.scale.y/2;
-	if (closest_pt.y < -box->trans.scale.y/2)closest_pt.y = -box->trans.scale.y/2;
+	if (closest_pt.y > box->trans.scale.y/devide)closest_pt.y = box->trans.scale.y/devide;
+	if (closest_pt.y < -box->trans.scale.y/devide)closest_pt.y = -box->trans.scale.y/devide;
 
-	if (closest_pt.z > box->trans.scale.z/2)closest_pt.z = box->trans.scale.z/2;
-	if (closest_pt.z < -box->trans.scale.z/2)closest_pt.z = -box->trans.scale.z/2;
+	if (closest_pt.z > box->trans.scale.z/devide)closest_pt.z = box->trans.scale.z/devide;
+	if (closest_pt.z < -box->trans.scale.z/devide)closest_pt.z = -box->trans.scale.z/devide;
 
 	Mo2Lib::Float3 dist = closest_pt - sp;
 	FLOAT len = dist.Length();

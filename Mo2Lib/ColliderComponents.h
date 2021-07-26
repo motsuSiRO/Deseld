@@ -38,7 +38,7 @@ public:
 
 	Mo2Lib::Float3 GetDimension() const
 	{
-		return Mo2Lib::Float3(trans.scale);
+		return Mo2Lib::Float3(trans.scale/2);
 	}
 };
 

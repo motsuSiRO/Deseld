@@ -62,9 +62,6 @@
     <ClCompile Include="Mo2Lib\logger.cpp">
       <Filter>Code\Lib</Filter>
     </ClCompile>
-    <ClCompile Include="Mo2Lib\main.cpp">
-      <Filter>Code\Lib</Filter>
-    </ClCompile>
     <ClCompile Include="Mo2Lib\Shader.cpp">
       <Filter>Code\Lib</Filter>
     </ClCompile>
@@ -205,6 +202,9 @@
     </ClCompile>
     <ClCompile Include="Mo2Lib\Stage01.cpp">
       <Filter>Code\InGame\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\main.cpp">
+      <Filter>Code\Lib\Mo2System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

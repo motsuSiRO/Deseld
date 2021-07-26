@@ -237,8 +237,8 @@ void ModelRenderer::Begin(const DirectX::XMFLOAT3 eye_pos, const DirectX::XMFLOA
 	cb_scene.cam.view_projection = view_projection;
 	cb_scene.light_direction = light_direction;
 	cb_scene.light_color = DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
-	cb_scene.fog_color = { 0.6f, 0.6f, 0.55f };
-	cb_scene.fog_near = 10.f;
+	cb_scene.fog_color = { 0.65f, 0.6f, 0.55f };
+	cb_scene.fog_near = 1000.f;
 	cb_scene.fog_far = 9000.f;
 	context->UpdateSubresource(m_cb_scene.Get(), 0, 0, &cb_scene, 0, 0);
 }

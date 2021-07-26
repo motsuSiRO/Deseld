@@ -42,7 +42,7 @@ void Camera::Update(float dt)
 {
 	fsm->Update(dt);
 
-	Mo2Lib::Float4x4 m;
+	//Mo2Lib::Float4x4 m;
 	//DirectX::XMStoreFloat4x4(&m, DirectX::XMMatrixRotationQuaternion(GetFixedQuaternion().ConvertToXMVECTOR()));
 
 	//m_right = DirectX::XMVectorSet(m._11, m._12, m._13, 0.f);
@@ -88,7 +88,7 @@ void MainCamera::Init()
 		.AddCamera(FM_TPS)
 		.AddCamera(AIM_TPS);
 
-	Set(FM_KEY);
+	Set(FM_TPS);
 
 
 }

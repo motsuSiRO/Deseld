@@ -14,6 +14,8 @@
 #include "PlayerControl.h"
 #include "Firearm.h"
 #include "GhostShip03.h"
+#include "TheEmblion.h"
+#include "GatesQuad.h"
 #include "Stage01.h"
 #include "ColliderComponents.h"
 //**********************************************
@@ -39,7 +41,6 @@ void SceneGame::Initialize()
 	//obj->AddComponent<Firearm>();
 	obj->AddComponent<GhostShip03>();
 	obj->AddComponent<BoxComponent>();
-	obj->AddComponent<SphereComponent>();
 	obj->Start();
 	Mo2Lib::game.obj_list.emplace_back(obj);
 
@@ -49,28 +50,15 @@ void SceneGame::Initialize()
 	obj->Start();
 	Mo2Lib::game.obj_list.emplace_back(obj);
 
-	//obj_list.push_back(obj);
-	obj = new Object("target1");
+	obj = new Object("GateQuad");
 	obj->AddComponent<Transform>();
-	obj->AddComponent<SphereComponent>();
-	obj->Start();
-	Mo2Lib::game.obj_list.emplace_back(obj);
-	obj = new Object("target2");
-	obj->AddComponent<Transform>();
-	obj->AddComponent<SphereComponent>();
-	obj->Start();
-	Mo2Lib::game.obj_list.emplace_back(obj);
-	obj = new Object("target3");
-	obj->AddComponent<Transform>();
-	SphereComponent* spr = obj->AddComponent<SphereComponent>();
-	spr->trans.translate = { 0.f, 150.f, 0.f };
-	obj->Start();
-	Mo2Lib::game.obj_list.emplace_back(obj);
-	obj = new Object("target4");
-	obj->AddComponent<Transform>();
+	obj->AddComponent<Physics2>();
+	//obj->AddComponent<Firearm>();
+	obj->AddComponent<GateQuad>();
 	obj->AddComponent<BoxComponent>();
 	obj->Start();
 	Mo2Lib::game.obj_list.emplace_back(obj);
+
 
 	skinned_bp = std::make_unique<ShaderEx>();
 	skinned_bp->Create(L"SkinnedModel_VS", L"SkinnedModel_PS");
@@ -91,7 +79,7 @@ void SceneGame::Initialize()
 	//model->transform.scale = { 50.f, 50.f, 50.f };
 
 	sky_box = std::make_unique<SkyBox>(device);
-	
+	sky_box->Set(2);
 	particleSys = std::make_unique<cParticleSystem>(10000);
 
 	CAM_LIST()->Init();
@@ -99,27 +87,7 @@ void SceneGame::Initialize()
 	//model_renderer = std::make_unique<ModelRenderer>(device, context);
 
 
-	reticule = std::make_unique<Reticule>();
-	reticule->Initialize();
 
-	
-	std::shared_ptr<ModelData> m_data = std::make_shared<ModelData>();
-	std::shared_ptr<ModelResource> model_resource = std::make_shared<ModelResource>();
-
-	const char* fbx_filename = "./Data/Assets/Field/dezzart_square.fbx";
-
-
-
-	fbx_filename = "./Data/Assets/enemy/gates_quad_mesh.fbx";
-	m_data->Clear();
-	model_resource = std::make_shared<ModelResource>();
-
-	if (!m_data->Load(fbx_filename, ModelData::BINARY))
-	{
-		m_data->SaveToFile();
-	}
-	model_resource->Load(device, m_data.get(), LOAD_SKINNED_MODEL);
-	model2 = std::make_unique<Mo2Lib::Model>(model_resource);
 
 
 	//Mo2CD()->Initialize();
@@ -158,7 +126,7 @@ void SceneGame::Update(float elapsed_time)
 
 	particleSys->Update();
 
-	particleSys->Snow(DirectX::XMFLOAT3(0.f, 100.f, 0.f), 1);
+	particleSys->Spark(DirectX::XMFLOAT3(0.f, 0.f, 100.f), 10);
 }
 
 
@@ -171,12 +139,6 @@ void SceneGame::Render()
 
 	// モデルの描画
 	{
-		// ビュー行列を作成
-		//DirectX::XMMATRIX V;
-		//{
-		//	V = CAM_LIST()->GetView();
-		//}
-
 		// プロジェクション行列を作成
 		DirectX::XMMATRIX P, Sky_P;
 		{
@@ -259,13 +221,15 @@ void SceneGame::Render()
 		//}
 #endif
 
-		reticule->Render(context, view_projection);
+		//reticule->Render(context, view_projection);
 
 
 	}
 
-
+#ifdef Debug
 	ImGui();
+
+#endif
 }
 
 
@@ -335,7 +299,7 @@ void SceneGame::ImGui()
 
 	if (Mo2Gui()->win_camera)CAM_LIST()->ImGui();
 
-	if (Mo2Gui()->win_reticule)reticule->ImGui();
+	//if (Mo2Gui()->win_reticule)reticule->ImGui();
 
 	if (Mo2Gui()->win_cursor)
 	{

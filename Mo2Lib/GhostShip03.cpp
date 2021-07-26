@@ -4,7 +4,7 @@
 #include "model_renderer.h"
 #include "Camera.h"
 #include "Bullet.h"
-
+#include "Input.h"
 //------------Component-----------------------
 #include "Physics.h"
 #include "PlayerControl.h"
@@ -14,11 +14,11 @@
 
 namespace GShip
 {
+	Mo2Lib::Float3 arm_pos;
 	Physics2* physics;
 	Transform* trans;
 	PlayerControl* pctrl;
 	BoxComponent* box;
-	SphereComponent* sphere;
 }
 using namespace GShip;
 
@@ -51,33 +51,33 @@ class PL_Idle : public State<GhostShip03>
 
 	void Execute(GhostShip03* p)
 	{
-/*		if (pctrl->Pressed("Dodge"))
-		{
-			fsm->ChangeState(GhostShip03::PL_DODGE);
-		}
-		else*/ if (pctrl->dir_vec != 0)
-		{
-			fsm->ChangeState(GhostShip03::PL_MOVE);
-		}
-		else if (pctrl->Pressed("Firstary"))
-		{
-			//if (p->gun->Shoot())
-			//{
-				Object* obj = new Object("Bullet");
-				Transform* t = obj->AddComponent<Transform>();
-				obj->Start();
-				t->translate = { CAM_LIST()->main_cam->GetEye() };
-				Bullet* b = obj->AddComponent<Bullet>();
-				b->forward = CAM_LIST()->main_cam->GetFront();
-				Mo2Lib::game.obj_list.emplace_back(obj);
-			//}
-			//fsm->ChangeState(GhostShip03::PL_AIM);
-		}
+		/*		if (pctrl->Pressed("Dodge"))
+				{
+					fsm->ChangeState(GhostShip03::PL_DODGE);
+				}
+				else*/ if (pctrl->dir_vec != 0)
+				{
+					fsm->ChangeState(GhostShip03::PL_MOVE);
+				}
+				else if (pctrl->Pressed("Firstary"))
+				{
+					//if (p->gun->Shoot())
+					//{
+					//Object* obj = new Object("Bullet");
+					//Transform* t = obj->AddComponent<Transform>();
+					//obj->Start();
+					//t->translate = { CAM_LIST()->main_cam->GetEye() };
+					//Bullet* b = obj->AddComponent<Bullet>();
+					//b->forward = CAM_LIST()->main_cam->GetFront();
+					//Mo2Lib::game.obj_list.emplace_back(obj);
+					//}
+					//fsm->ChangeState(GhostShip03::PL_AIM);
+				}
 
-		//for (int i = 0; i < GhostShip03::FULLBODY; i++)
-		{
-			p->anim.CallBlendAnim(GhostShip03::SPINE, GhostShip03::IDLE, true, true);
-		}
+				//for (int i = 0; i < GhostShip03::FULLBODY; i++)
+				{
+					p->anim.CallBlendAnim(GhostShip03::SPINE, GhostShip03::IDLE, true, true);
+				}
 	}
 
 	void End(GhostShip03* p)
@@ -298,7 +298,6 @@ void GhostShip03::Start()
 	physics = parent->GetComponent<Physics2>();
 	pctrl = parent->GetComponent<PlayerControl>();
 	box = parent->GetComponent<BoxComponent>();
-	sphere = parent->GetComponent<SphereComponent>();
 	//gun = Parent->GetComponent<Firearm>();
 
 	fsm = std::make_unique<StateMachine<GhostShip03>>(this);
@@ -370,12 +369,13 @@ void GhostShip03::Update()
 	ismoving = false;
 
 	//anim.anim_spd = physics->velocity.Length() / physics->MAX_VELOCITY;
+
 	fsm->Update(parent->delta_time);
 
 	model->UpdateAnimation(&anim, parent->delta_time);
 
 	box->trans.translate = model->GetNodes()[0].GetWorldPos();
-	sphere->trans.translate = model->GetNodes()[8].GetWorldPos();
+	arm_pos = model->GetNodes()[26].GetWorldPos();
 	CAM_LIST()->main_cam->SetOrientation(trans->translate);
 }
 
@@ -399,11 +399,20 @@ void GhostShip03::ImGui()
 		Super::ImGui();
 		ImGui::SameLine();
 		ImGui::Text("Visible");
+		ImGui::NewLine();
 
 		ImGui::Checkbox("Is_Moving", &ismoving);
+		ImGui::NewLine();
 
 		ImGui::Text("CurrentState");
 		ImGui::Text(fsm->GetCurrentName());
+
+		ImGui::NewLine();
+		for (size_t i = 0; i < model->GetNodes().size(); i++)
+		{
+			ImGui::Text("%d %s", i, model->GetNodes().at(i).name);
+		}
+
 	}
 
 
@@ -483,7 +492,68 @@ void GhostShip03::LookForward()
 
 }
 
+void GhostShip03::CtrlFreeCam()
+{
+	//
+	////Xpad
+	//if (INPUT.RStickDeadzoneX(10000))
+	//{
+	//	cam_angle.y += INPUT.RStickVector().x * 0.1f;
 
+	//	if (cam_angle.y > DirectX::XM_2PI)
+	//	{
+	//		cam_angle.y -= DirectX::XM_2PI;
+	//	}
+	//	else if (cam_angle.y < 0.f)
+	//	{
+	//		cam_angle.y += DirectX::XM_2PI;
+	//	}
+
+	//}
+
+	//if (INPUT().RStickDeadzoneY(10000))
+	//{
+	//	cam_angle.x += INPUT.RStickVector().y * 0.1f;
+
+	//	if (cam_angle.x > HALF_CAM_ANGLE_X)
+	//	{
+	//		cam_angle.x = HALF_CAM_ANGLE_X;
+	//	}
+	//	else if (cam_angle.x < -HALF_CAM_ANGLE_X)
+	//	{
+	//		cam_angle.x = -HALF_CAM_ANGLE_X;
+	//	}
+
+	//}
+
+	////Mouse
+	//{
+	//	cam_angle.y += INPUT.mouse.d_x * 0.01f;
+
+	//	if (cam_angle.y > DirectX::XM_2PI)
+	//	{
+	//		cam_angle.y -= DirectX::XM_2PI;
+	//	}
+	//	else if (cam_angle.y < 0.f)
+	//	{
+	//		cam_angle.y += DirectX::XM_2PI;
+	//	}
+
+	//	cam_angle.x -= INPUT.mouse.d_y * 0.01f;
+
+	//	if (cam_angle.x > HALF_CAM_ANGLE_X)
+	//	{
+	//		cam_angle.x = HALF_CAM_ANGLE_X;
+	//	}
+	//	else if (cam_angle.x < -HALF_CAM_ANGLE_X)
+	//	{
+	//		cam_angle.x = -HALF_CAM_ANGLE_X;
+	//	}
+
+
+	//}
+
+}
 void GhostShip03::MoveXZ(float speed)
 {
 	if (!ismoving)physics->Deceleration();

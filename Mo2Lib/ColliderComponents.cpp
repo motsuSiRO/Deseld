@@ -5,6 +5,7 @@
 
 void ColliderComponent::Start()
 {
+	is_visible = false;
 	primitive = std::make_unique<GeoPrimitive>();
 	nolight = std::make_unique<ShaderEx>();
 	nolight->Create(L"NoLightObj_VS", L"NoLightObj_PS");
@@ -20,7 +21,6 @@ void BoxComponent::Start()
 
 void BoxComponent::Update()
 {
-	primitive->color = { 1.f,1.f,1.f,1.f };
 	
 	bool detect = false;
 	for (auto obj : Mo2Lib::game.obj_list)
@@ -70,7 +70,6 @@ void BoxComponent::Draw()
 void BoxComponent::OnHit()
 {
 	primitive->color = { 1.f,1.f,0.f,1.f };
-	parent->Destroy();
 }
 
 void BoxComponent::OnTrigger()
@@ -93,15 +92,6 @@ void SphereComponent::Start()
 
 void SphereComponent::Update()
 {
-	primitive->color = { 1.f,1.f,1.f,1.f };
-	static int dir = 1;
-	static float rrrr = 0.f;
-	const float rad = 0.000025f;
-
-	trans.translate.x = dir * 100.f * cosf(rrrr);
-
-	rrrr += rad;
-	dir *= -1;
 
 	bool detect = false;
 	for (auto obj : Mo2Lib::game.obj_list)
@@ -171,7 +161,6 @@ void SphereComponent::Draw()
 void SphereComponent::OnHit()
 {
 	primitive->color = { 1.f,0.f,0.f,1.f };
-	parent->Destroy();
 }
 
 void SphereComponent::OnTrigger()

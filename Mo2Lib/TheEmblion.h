@@ -1,5 +1,8 @@
 #pragma once
 #include "Enemy.h"
+#include "Mo2Model.h"
+#include "ComponentObject.h"
+#include "Shader.h"
 
 enum THE_EMBLION_STATE
 {
@@ -13,21 +16,19 @@ enum THE_EMBLION_STATE
 	TheE_FALL_FIRE,
 };
 
-//enum THE_EMBLION_LOWSTATE
-//{
-//	TheE_APPROACH = 0,
-//	TheE_SIDEMOVE,
-//
-//	TheE_SPINATK,
-//	TheE_RAPID_FIRE,
-//	TheE_ENERGY_FIRE,
-//	TheE_FALL_FIRE,
-//
-//};
 
-class TheEmblion : public Enemy
+class TheEmblion : public Component
 {
 public:
-	void Init();
-	void Update(float dt);
+	Transform* trans;
+
+	void Start();
+	void Update();
+	void Draw();
+	void ImGui();
+
+private:
+	std::unique_ptr <Mo2Lib::Model> model;
+	std::shared_ptr<ShaderEx> phong;
+
 };

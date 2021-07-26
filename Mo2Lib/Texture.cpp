@@ -21,7 +21,7 @@ namespace Texture
 		//_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 
 
-	
+
 		//std::wstring full_path(file_name);
 		//int path_index = full_path.find_last_of(L"\\")+1;
 		//std::wstring name(full_path.substr(path_index, full_path.size() - path_index));
@@ -109,62 +109,134 @@ bool Texture::Load(const wchar_t* filename)
 	return true;
 }
 
-bool Texture::LoadArray(std::vector<const wchar_t*>& list)
+bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 {
 	ID3D11Device* device = Mo2System->DX11device.Get();
+	ID3D11DeviceContext* context = Mo2System->DX11context.Get();
+
+	//DirectX::TexMetadata metadata;
+	//DirectX::ScratchImage texture;
+	//HRESULT hr;
+
+	//std::vector<D3D11_SUBRESOURCE_DATA> srs_d;
+	//for (const wchar_t* filename : list)
+	//{
+	//	DirectX::ScratchImage img;
+	//	const DirectX::Image* mem;
+
+	//	// 画像ファイル読み込み DirectXTex
+	//	hr = LoadFromWICFile(filename, 0, &metadata, img);
+
+	//	assert(SUCCEEDED(hr));
+
+	//	mem = img.GetImages();
+
+	//	srs_d.emplace_back();
+	//	
+	//	srs_d.back().pSysMem = mem->pixels;
+	//	srs_d.back().SysMemPitch = mem->rowPitch;
+	//	srs_d.back().SysMemSlicePitch = mem->slicePitch;
+	//}
+	//Microsoft::WRL::ComPtr<ID3D11Texture2D> Texture2D;
+	////	テクスチャ作成
+	//ZeroMemory(&texture2d_desc, sizeof(texture2d_desc));
+	//texture2d_desc.Width = metadata.width;
+	//texture2d_desc.Height = metadata.height;
+	//texture2d_desc.MipLevels = 1;
+	//texture2d_desc.ArraySize = srs_d.size();
+	//texture2d_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	//texture2d_desc.SampleDesc.Count = 1;
+	//texture2d_desc.SampleDesc.Quality = 0;
+	//texture2d_desc.Usage = D3D11_USAGE_IMMUTABLE;
+	//texture2d_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	//texture2d_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+
+	//device->CreateTexture2D(&texture2d_desc, srs_d.data(), Texture2D.GetAddressOf());
+	//// 画像からシェーダリソースView
+
+	//D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
+	//ZeroMemory(&srvd, sizeof(srvd));
+	//srvd.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	//srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+	//srvd.Texture2DArray.MostDetailedMip = 0;
+	//srvd.Texture2DArray.MipLevels = texture2d_desc.MipLevels;
+	//srvd.Texture2DArray.ArraySize = texture2d_desc.ArraySize;
+
+	//hr = device->CreateShaderResourceView(Texture2D.Get(), &srvd, ShaderResourceView.GetAddressOf());
+	//assert(SUCCEEDED(hr));
+
+	HRESULT hr = E_FAIL;
+
+	ID3D11Texture2D* pTexture = NULL;
+
+	D3D11_TEXTURE2D_DESC desc;
+	::ZeroMemory(&desc, sizeof(D3D11_TEXTURE2D_DESC));
 
 	DirectX::TexMetadata metadata;
-	DirectX::ScratchImage texture;
-	HRESULT hr;
+	DirectX::ScratchImage img;
+	bool first_load = true;
 
-	std::vector<D3D11_SUBRESOURCE_DATA> srs_d;
 	for (const wchar_t* filename : list)
 	{
-		DirectX::ScratchImage img;
-		const DirectX::Image* mem;
 
-		// 画像ファイル読み込み DirectXTex
+		ID3D11Resource* pLoadedRes = NULL;
+		ID3D11Texture2D* pLoadedTexture2D = NULL;
+
+		// 画像ファイルを読み込んでテクスチャーを作成する
 		hr = LoadFromWICFile(filename, 0, &metadata, img);
-
 		assert(SUCCEEDED(hr));
 
-		mem = img.GetImages();
+		// 空テクスチャー作成
+		if (first_load)
+		{
+			// 画像ファイルを読み込んで作成したテクスチャーの情報を取得する
+			pLoadedTexture2D->GetDesc(&desc);
 
-		srs_d.emplace_back();
-		
-		srs_d.back().pSysMem = mem->pixels;
-		srs_d.back().SysMemPitch = mem->rowPitch;
-		srs_d.back().SysMemSlicePitch = mem->slicePitch;
+			desc.Usage = D3D11_USAGE_DEFAULT;
+			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+			desc.CPUAccessFlags = 0;
+			desc.ArraySize = list.size();
+			hr = device->CreateTexture2D(&desc, NULL, &pTexture);
+			assert(SUCCEEDED(hr));
+
+			first_load = false;
+		}
+
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+
+		// ファイルから画像ファイルを読み込んで作成したテクスチャーを、読み込みモードでマップする
+		hr = context->Map(pLoadedTexture2D, NULL, D3D11_MAP_READ, 0, &mappedResource);
+
+
+		// 空テクスチャーのサブリソースをファイルから画像ファイルを読み込んで作成したテクスチャーの内容で更新する
+		for (UINT iMip = 0; iMip < desc.MipLevels; iMip++)
+		{
+			//context->UpdateSubresource(pTexture,
+			//	D3D11CalcSubresource(iMip, i, desc.MipLevels),
+			//	NULL,
+			//	mappedResource.pData,
+			//	mappedResource.RowPitch,
+			//	0
+			//);
+		}
+		context->Unmap(pLoadedTexture2D, NULL);
+
+		//SAFE_RELEASE(pLoadedTexture2D);
+		//SAFE_RELEASE(pLoadedRes);
 	}
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> Texture2D;
-	//	テクスチャ作成
-	ZeroMemory(&texture2d_desc, sizeof(texture2d_desc));
-	texture2d_desc.Width = metadata.width;
-	texture2d_desc.Height = metadata.height;
-	texture2d_desc.MipLevels = 1;
-	texture2d_desc.ArraySize = srs_d.size();
-	texture2d_desc.Format = metadata.format;
-	texture2d_desc.SampleDesc.Count = 1;
-	texture2d_desc.SampleDesc.Quality = 0;
-	texture2d_desc.Usage = D3D11_USAGE_DEFAULT;
-	texture2d_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-	texture2d_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
-	D3D11_SUBRESOURCE_DATA* srs_d_copy = srs_d.data();
+	D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
+	ZeroMemory(&SRVDesc, sizeof(SRVDesc));
+	SRVDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+	SRVDesc.Texture2DArray.MipLevels = desc.MipLevels;
+	SRVDesc.Texture2DArray.ArraySize = list.size();
+	// シェーダーリソースビューを作成する
+	hr = device->CreateShaderResourceView(pTexture, &SRVDesc, ShaderResourceView.GetAddressOf());
 
-	device->CreateTexture2D(&texture2d_desc, srs_d.data(), Texture2D.GetAddressOf());
-	// 画像からシェーダリソースView
 
-	D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
-	ZeroMemory(&srvd, sizeof(srvd));
-	srvd.Format = metadata.format;
-	srvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-	srvd.Texture2D.MostDetailedMip = 0;
-	srvd.Texture2D.MipLevels = 1;
-
-	hr = device->CreateShaderResourceView(Texture2D.Get(), &srvd, ShaderResourceView.GetAddressOf());
-	assert(SUCCEEDED(hr));
-
+	hr = S_OK;
 
 	return true;
 }
@@ -319,7 +391,7 @@ bool Texture::Create(u_int width, u_int height, DXGI_FORMAT format)
 	texture2d_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	texture2d_desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 
-	
+
 	hr = device->CreateTexture2D(&texture2d_desc, NULL, Texture2D.GetAddressOf());
 	assert(SUCCEEDED(hr));
 

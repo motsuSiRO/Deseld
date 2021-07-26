@@ -1,80 +1,38 @@
 #include "TheEmblion.h"
 #include "StateMachine.h"
+#include "model_renderer.h"
 
-class TheE_Idle : State<Enemy>
+
+void TheEmblion::Start()
 {
-public:
-	void Begin(Enemy* e)
-	{
+	phong = std::make_shared<ShaderEx>();
+	phong->Create(L"model_vs", L"model_ps");
 
-	}
+	const char* fbx_filename;
+	std::shared_ptr<ModelResource> model_resource = std::make_shared<ModelResource>();
 
-	void Execute(Enemy* e)
-	{
-
-	}
-
-	void End(Enemy* e)
-	{
-
-	}
-};
+	fbx_filename = "./Data/Assets/enemy/the embulion02.fbx";
+	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_SKINNED_MODEL);
+	model = std::make_unique<Mo2Lib::Model>(model_resource);
+	model->InitializeAnimation();
 
 
+	trans = parent->GetComponent<Transform>();
+}
 
-class TheE_Approach : State<Enemy>
+void TheEmblion::Update()
 {
-public:
-	void Begin(Enemy* e)
-	{
 
-	}
+}
 
-	void Execute(Enemy* e)
-	{
-
-	}
-
-	void End(Enemy* e)
-	{
-
-	}
-};
-
-class TheE_SpinAtk : State<Enemy>
+void TheEmblion::Draw()
 {
-public:
-	void Begin(Enemy* e)
-	{
+	model->SetTransform(trans->translate, trans->GetFixedQuaternion(), trans->scale);
 
-	}
+	Mo2Render().Draw(phong.get(), *model);
+}
 
-	void Execute(Enemy* e)
-	{
-
-	}
-
-	void End(Enemy* e)
-	{
-
-	}
-};
-
-class TheE_RapidFire : State<Enemy>
+void TheEmblion::ImGui()
 {
-public:
-	void Begin(Enemy* e)
-	{
 
-	}
-
-	void Execute(Enemy* e)
-	{
-
-	}
-
-	void End(Enemy* e)
-	{
-
-	}
-};
+}

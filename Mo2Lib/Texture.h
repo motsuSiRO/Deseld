@@ -29,7 +29,7 @@ public:
 	Texture();
 	virtual ~Texture();
 	bool Load(const wchar_t* filename = nullptr);
-	bool LoadArray(std::vector<const wchar_t*>& flinames);
+	bool LoadArray(std::initializer_list<const wchar_t*> flinames);
 	bool LoadMipMap(const wchar_t* filename = nullptr);
 
 	void Set(UINT Slot = 0, BOOL flg = TRUE);

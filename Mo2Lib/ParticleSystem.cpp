@@ -1,7 +1,7 @@
 #include "ParticleSystem.h"
 #include "framework.h"
 #include "Blender.h"
-
+#include "Mo2Func.h"
 cParticleSystem::cParticleSystem(int num)
 {
 	ID3D11Device* device = Mo2System->DX11device.Get();
@@ -15,11 +15,12 @@ cParticleSystem::cParticleSystem(int num)
 	for (int i = 0; i < num_particles; i++) { data[i].type = -1;}
 	//パーティクル作成と画像ロード
 	texture = std::make_unique<Texture>();
-	std::vector<const wchar_t*> filename;
-	filename.push_back(L"./Data/Assets/Effect/Electric.png");
-	filename.push_back(L"./Data/Assets/Effect/Electric2.png");
-	texture->Load(filename[0]);
-
+	//std::vector<const wchar_t*> filename;
+	//filename.push_back(L"./Data/Assets/Effect/Electric.png");
+	//filename.push_back(L"./Data/Assets/Effect/Electric2.png");
+	//texture->LoadArray({ L"./Data/Assets/Effect/Electric.png",
+	//	L"./Data/Assets/Effect/Electric2.png" });
+	texture->Load(L"./Data/Assets/Effect/Flash.png");
 
 
 	//頂点バッファ作成
@@ -158,7 +159,7 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	device_context->PSSetConstantBuffers(0, 1, ConstantBuffer.GetAddressOf());
 
 	//ブレンドステート設定
-	Mo2System->SetBlendState(BLEND_STATE::ALPHA);
+	Mo2System->SetBlendState(BLEND_STATE::ADD);
 	//ラスタライザ―設定
 	Mo2System->SetRSState(RS_STATE::RS_CULL_FRONT);
 	//デプスステンシルステート設定
@@ -252,14 +253,15 @@ void cParticleSystem::Spark(DirectX::XMFLOAT3 pos, int max)
 		p.z = pos.z;
 
 		DirectX::XMFLOAT3 v = { 0,0,0 };
-		v.x = (rand() % 1001 - 500)*0.002f;
-		v.y = (rand() % 1001)*0.005f + 0.01f;
-		v.z = (rand() % 1001 - 500)*0.002f;
+		FLOAT rad = Mo2Lib::RandFloat() * 6.28f;
+		v.x = cosf(rad) * 5.f;
+		v.y = (rand() % 1001)*0.5f + 0.01f;
+		v.z = sinf(rad) * 5.f;
 
-		DirectX::XMFLOAT3 f = { 0,-1.9f,0 };
-		DirectX::XMFLOAT2 s = { .05f,.05f };
+		DirectX::XMFLOAT3 f = { -v.x * .7f,-v.y * 2.f, -v.z * .7f };
+		DirectX::XMFLOAT2 s = { 5.5f, 5.5f };
 
-		Set(2, 5, p, v, f, s);
+		Set(1, 0.5f, p, v, f, s);
 
 	}
 }

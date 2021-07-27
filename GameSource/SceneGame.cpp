@@ -73,18 +73,12 @@ void SceneGame::Initialize()
 	point_sprite = std::make_unique<ShaderEx>(bIL);
 	point_sprite->Create(L"pointSprite_vs", L"pointSprite_gs", L"pointSprite_ps");
 
-	//model = std::make_unique<GeoPrimitive>(device);
-	//model->CreateCube();
-	////model->CreateSphere(device, 16, 16);
-	//model->transform.scale = { 50.f, 50.f, 50.f };
-
 	sky_box = std::make_unique<SkyBox>(device);
 	sky_box->Set(2);
 	particleSys = std::make_unique<cParticleSystem>(10000);
 
 	CAM_LIST()->Init();
 	Mo2Render().Initialize(device, context);
-	//model_renderer = std::make_unique<ModelRenderer>(device, context);
 
 
 
@@ -126,7 +120,7 @@ void SceneGame::Update(float elapsed_time)
 
 	particleSys->Update();
 
-	particleSys->Spark(DirectX::XMFLOAT3(0.f, 0.f, 100.f), 10);
+	particleSys->Spark(GShip::arm_pos/*DirectX::XMFLOAT3(0.f, 0.f, 100.f)*/, 10);
 }
 
 
@@ -183,11 +177,11 @@ void SceneGame::Render()
 		);
 		Mo2System->SetBlendState(BLEND_STATE::ALPHA);
 
-		//Mo2Render().RSSet(D3D11_CULL_FRONT);
+
 		Mo2System->SetRSState(RS_STATE::RS_CULL_FRONT);
 		sky_box->Render(Mo2System->DX11context.Get(), view_projection, true);
-		//Mo2Render().Draw(skybox_NoL.get(), *sky_box->sky);
-		//Mo2Render().RSSet(D3D11_CULL_BACK);
+
+
 		Mo2System->SetRSState(RS_STATE::RS_CULL_BUCK);
 
 		{
@@ -211,22 +205,14 @@ void SceneGame::Render()
 
 		Mo2Render().End();
 
-		particleSys->Render(point_sprite.get(), &V, &P);
 
-#ifdef _DEBUG 
-		//if (visiblity)
-		//{
-		//	Mo2CD()->Render(context, view_projection,
-		//		DirectX::XMFLOAT4(0, -1, -1, 0));
-		//}
-#endif
+		particleSys->Render(point_sprite.get(), &(C*V), &P);
 
-		//reticule->Render(context, view_projection);
 
 
 	}
 
-#ifdef Debug
+#ifdef _DEBUG
 	ImGui();
 
 #endif

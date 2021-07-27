@@ -58,6 +58,7 @@ namespace Mo2Lib
 			DirectX::XMFLOAT4X4	world_transform;
 
 			Mo2Lib::Float3 GetWorldPos() { return Mo2Lib::Float3(world_transform._41, world_transform._42, world_transform._43); }
+			Mo2Lib::Float3 GetPos() { return Mo2Lib::Float3(transform.translate.x, transform.translate.y, transform.translate.z); }
 			void SetTransform(Mo2Lib::Transform t) { transform = t; }
 		};
 

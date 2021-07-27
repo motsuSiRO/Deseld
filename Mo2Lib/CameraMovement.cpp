@@ -312,12 +312,12 @@ class FreeMovebyMouse : public State<Camera>
 class TPSFreeMove : public State<Camera>
 {
 	Mo2Lib::Float2 cam_angle;
-	const FLOAT HALF_CAM_ANGLE_X = DirectX::XMConvertToRadians(170.f);
-	const FLOAT HIGHT = 200.f;
+	const FLOAT HALF_CAM_ANGLE_X = DirectX::XMConvertToRadians(65.f);
+	const FLOAT HIGHT = 150.f;
 	void Begin(Camera* c)
 	{
 		c->SetFOV(80.f);
-		c->SetDistance(300.f);
+		c->SetDistance(240.f);
 	}
 
 	void Execute(Camera* c)
@@ -325,7 +325,7 @@ class TPSFreeMove : public State<Camera>
 		FLOAT delta_time = Mo2System->delta_time;
 		//Mouse
 		{
-			cam_angle.y += INPUT.mouse.d_x * delta_time;
+			cam_angle.y -= INPUT.mouse.d_x * delta_time;
 
 			if (cam_angle.y > DirectX::XM_2PI)
 			{
@@ -336,7 +336,7 @@ class TPSFreeMove : public State<Camera>
 				cam_angle.y += DirectX::XM_2PI;
 			}
 
-			cam_angle.x -= INPUT.mouse.d_y * delta_time;
+			cam_angle.x += INPUT.mouse.d_y * delta_time;
 
 			if (cam_angle.x > HALF_CAM_ANGLE_X)
 			{

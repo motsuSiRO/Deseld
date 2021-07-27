@@ -368,9 +368,11 @@ void GhostShip03::Update()
 	fsm->Update(parent->delta_time);
 
 
-	box->trans.translate = model->GetNodes()[0].GetWorldPos();
-	arm_pos = model->GetNodes()[26].GetWorldPos();
 	model->UpdateAnimation(&anim, parent->delta_time);
+
+	box->trans.translate = model->GetNodes(0)->GetWorldPos();
+	box->trans.scale = { 30.f, 100.f, 30.f };
+	arm_pos = model->GetNodes(26)->GetWorldPos();
 
 	CAM_LIST()->main_cam->SetOrientation(trans->translate);
 }
@@ -404,11 +406,24 @@ void GhostShip03::ImGui()
 		ImGui::Text(fsm->GetCurrentName());
 
 		ImGui::NewLine();
+		if (ImGui::Button("Collider"))
+		{
+			for (auto com : parent->component_list)
+			{
+				if (dynamic_cast<ColliderComponent*>(com))
+				{
+					com->is_visible ^= (bool)1;
+				}
+			}
+		}
+
+		ImGui::NewLine();
 		for (size_t i = 0; i < model->GetNodes().size(); i++)
 		{
 			ImGui::Text("%d %s", i, model->GetNodes().at(i).name);
 		}
 
+		anim.AnimImGui(std::string(typeid(GhostShip03).name()));
 	}
 
 

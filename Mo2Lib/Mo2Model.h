@@ -63,6 +63,7 @@ namespace Mo2Lib
 		void CalculateWorldTransform();
 
 		std::vector<Animator::Node>& GetNodes() { return m_nodes; }
+		Animator::Node* GetNodes(int index) { return &m_nodes[index]; }
 		ModelResource* GetModelResource() { return m_model_resource.get(); }
 		void SetModelColor(DirectX::XMFLOAT4 color) { this->color = color; }
 		DirectX::XMMATRIX BulidWorld();

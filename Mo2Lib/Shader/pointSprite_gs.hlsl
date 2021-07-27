@@ -9,7 +9,7 @@ void main(point GSInput In[1],
 	inout TriangleStream<PSInput> ParticleStream)
 {
 	// 座標変換　(ワールド座標系　→　ビュー座標系)
-	float4 pos = mul(View, float4(In[0].Position, 1.0));
+	float4 pos = mul(float4(In[0].Position, 1.0), View);
 
 	// 点を面にする
 	float w = In[0].Size.x;
@@ -29,24 +29,24 @@ void main(point GSInput In[1],
 	float u = (type % 4)*0.25f;
 	float v = (type / 4)*0.25f;
 	Out.Color = float4(1, 1, 1, In[0].Color.a);
-	Out.Position = mul(Projection, posLT);
+	Out.Position = mul(posLT, Projection);
 	Out.Tex = float3(u, v, t);
 	ParticleStream.Append(Out);
 
 	// 右上の点の位置(射影座標系)・UV・色を計算して出力
-	Out.Position = mul(Projection, posRT);
+	Out.Position = mul(posRT, Projection);
 	Out.Tex = float3(u + 0.25, v, t);
 	Out.Color = float4(1, 1, 1, In[0].Color.a);
 	ParticleStream.Append(Out);
 
 	// 左下の点の位置(射影座標系)・UV・色を計算して出力
-	Out.Position = mul(Projection, posLB);
+	Out.Position = mul(posLB, Projection);
 	Out.Tex = float3(u, v + 0.25, t);
 	Out.Color = float4(1, 1, 1, In[0].Color.a);
 	ParticleStream.Append(Out);
 
 	// 右下の点の位置(射影座標系)・UV・色を計算して出力
-	Out.Position = mul(Projection, posRB);
+	Out.Position = mul(posRB, Projection);
 	Out.Tex = float3(u + 0.25, v + 0.25, t);
 	Out.Color = float4(1, 1, 1, In[0].Color.a);
 	ParticleStream.Append(Out);

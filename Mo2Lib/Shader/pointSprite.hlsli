@@ -44,8 +44,8 @@ struct PSInput
 
 cbuffer CBPerFrame : register(b0)
 {
-	matrix	View;			// ビュー変換行列
-	matrix	Projection;		// 透視変換行列
+	row_major matrix	View;			// ビュー変換行列
+	row_major matrix	Projection;		// 透視変換行列
 
 
 };

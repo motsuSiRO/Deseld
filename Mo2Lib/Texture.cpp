@@ -176,6 +176,9 @@ bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 	DirectX::TexMetadata metadata;
 	DirectX::ScratchImage img;
 	bool first_load = true;
+	int index = 0;
+
+
 
 	for (const wchar_t* filename : list)
 	{
@@ -191,7 +194,13 @@ bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 		if (first_load)
 		{
 			// 画像ファイルを読み込んで作成したテクスチャーの情報を取得する
-			pLoadedTexture2D->GetDesc(&desc);
+
+			desc.Width = metadata.width;
+			desc.Height = metadata.height;
+			desc.MipLevels = 1;
+			desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			desc.SampleDesc.Count = 1;
+			desc.SampleDesc.Quality = 0;
 
 			desc.Usage = D3D11_USAGE_DEFAULT;
 			desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
@@ -206,21 +215,21 @@ bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 
 		// ファイルから画像ファイルを読み込んで作成したテクスチャーを、読み込みモードでマップする
-		hr = context->Map(pLoadedTexture2D, NULL, D3D11_MAP_READ, 0, &mappedResource);
+		//hr = context->Map(pLoadedTexture2D, NULL, D3D11_MAP_READ, 0, &mappedResource);
 
 
 		// 空テクスチャーのサブリソースをファイルから画像ファイルを読み込んで作成したテクスチャーの内容で更新する
 		for (UINT iMip = 0; iMip < desc.MipLevels; iMip++)
 		{
-			//context->UpdateSubresource(pTexture,
-			//	D3D11CalcSubresource(iMip, i, desc.MipLevels),
-			//	NULL,
-			//	mappedResource.pData,
-			//	mappedResource.RowPitch,
-			//	0
-			//);
+			context->UpdateSubresource(pTexture,
+				D3D11CalcSubresource(iMip, index, desc.MipLevels),
+				NULL,
+				img.GetPixels(),
+				img.GetImages()->rowPitch,
+				0
+			);
 		}
-		context->Unmap(pLoadedTexture2D, NULL);
+		//context->Unmap(pLoadedTexture2D, NULL);
 
 		//SAFE_RELEASE(pLoadedTexture2D);
 		//SAFE_RELEASE(pLoadedRes);
@@ -237,6 +246,8 @@ bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 
 
 	hr = S_OK;
+
+	index++;
 
 	return true;
 }

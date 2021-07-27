@@ -218,17 +218,17 @@ bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 		//hr = context->Map(pLoadedTexture2D, NULL, D3D11_MAP_READ, 0, &mappedResource);
 
 
-		// 空テクスチャーのサブリソースをファイルから画像ファイルを読み込んで作成したテクスチャーの内容で更新する
-		for (UINT iMip = 0; iMip < desc.MipLevels; iMip++)
-		{
-			context->UpdateSubresource(pTexture,
-				D3D11CalcSubresource(iMip, index, desc.MipLevels),
-				NULL,
-				img.GetPixels(),
-				img.GetImages()->rowPitch,
-				0
-			);
-		}
+		//// 空テクスチャーのサブリソースをファイルから画像ファイルを読み込んで作成したテクスチャーの内容で更新する
+		//for (UINT iMip = 0; iMip < desc.MipLevels; iMip++)
+		//{
+		//	context->UpdateSubresource(pTexture,
+		//		D3D11CalcSubresource(iMip, index, desc.MipLevels),
+		//		NULL,
+		//		img.GetPixels(),
+		//		img.GetImages()->rowPitch,
+		//		0
+		//	);
+		//}
 		//context->Unmap(pLoadedTexture2D, NULL);
 
 		//SAFE_RELEASE(pLoadedTexture2D);

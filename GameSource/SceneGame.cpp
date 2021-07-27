@@ -50,11 +50,11 @@ void SceneGame::Initialize()
 	obj->Start();
 	Mo2Lib::game.obj_list.emplace_back(obj);
 
-	obj = new Object("GateQuad");
+	obj = new Object("TheEmblion");
 	obj->AddComponent<Transform>();
 	obj->AddComponent<Physics2>();
 	//obj->AddComponent<Firearm>();
-	obj->AddComponent<GateQuad>();
+	obj->AddComponent<TheEmblion>();
 	obj->AddComponent<BoxComponent>();
 	obj->Start();
 	Mo2Lib::game.obj_list.emplace_back(obj);

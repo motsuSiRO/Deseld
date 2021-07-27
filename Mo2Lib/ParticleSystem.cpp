@@ -18,9 +18,9 @@ cParticleSystem::cParticleSystem(int num)
 	//std::vector<const wchar_t*> filename;
 	//filename.push_back(L"./Data/Assets/Effect/Electric.png");
 	//filename.push_back(L"./Data/Assets/Effect/Electric2.png");
-	texture->LoadArray({ L"./Data/Assets/Effect/Flash.png",
-		L"./Data/Assets/Effect/Smork.png" });
-	//texture->Load(L"./Data/Assets/Effect/Flash.png");
+	//texture->LoadArray({ L"./Data/Assets/Effect/Flash.png",
+	//	L"./Data/Assets/Effect/Smork.png" });
+	texture->Load(L"./Data/Assets/Effect/Flash.png");
 
 
 	//頂点バッファ作成

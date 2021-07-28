@@ -6,7 +6,8 @@
 //--------------------------------------------
 //	テクスチャ
 //--------------------------------------------
-Texture2DArray<float4> DiffuseTexture : register(t0);
+Texture2D DiffuseTexture : register(t0);
+
 
 SamplerState DecalSampler : register(s0);
 

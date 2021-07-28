@@ -120,7 +120,7 @@ void SceneGame::Update(float elapsed_time)
 
 	particleSys->Update();
 
-	particleSys->Spark(GShip::arm_pos/*DirectX::XMFLOAT3(0.f, 0.f, 100.f)*/, 10);
+	particleSys->Snow(GShip::arm_pos/*DirectX::XMFLOAT3(0.f, 0.f, 100.f)*/, 1);
 }
 
 

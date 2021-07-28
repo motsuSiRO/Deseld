@@ -5,7 +5,7 @@
 //--------------------------------------------
 float4 main(PSInput input) : SV_Target
 {
-	float4 color = DiffuseTexture.Sample(DecalSampler, input.Tex) *input.Color;
+	float4 color = DiffuseTexture.Sample(DecalSampler, input.Tex.xy) *input.Color;
 	return color;
 }
 

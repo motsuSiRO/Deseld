@@ -114,29 +114,44 @@ bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 	ID3D11Device* device = Mo2System->DX11device.Get();
 	ID3D11DeviceContext* context = Mo2System->DX11context.Get();
 
-	//DirectX::TexMetadata metadata;
-	//DirectX::ScratchImage texture;
-	//HRESULT hr;
+#if 1
+	DirectX::TexMetadata metadata;
+	DirectX::ScratchImage texture;
+	std::vector<DirectX::Image> mem;
+	
+	HRESULT hr;
 
-	//std::vector<D3D11_SUBRESOURCE_DATA> srs_d;
-	//for (const wchar_t* filename : list)
-	//{
-	//	DirectX::ScratchImage img;
-	//	const DirectX::Image* mem;
+	std::vector<D3D11_SUBRESOURCE_DATA> srs_d;
+	for (const wchar_t* filename : list)
+	{
+		DirectX::ScratchImage img;
 
-	//	// 画像ファイル読み込み DirectXTex
-	//	hr = LoadFromWICFile(filename, 0, &metadata, img);
+		// 画像ファイル読み込み DirectXTex
+		//hr = LoadFromWICFile(filename, 0, &metadata, img);
+		hr = LoadFromDDSFile(filename, 0, &metadata, img);
 
-	//	assert(SUCCEEDED(hr));
+		assert(SUCCEEDED(hr));
 
-	//	mem = img.GetImages();
+		mem.push_back(*img.GetImages());
 
-	//	srs_d.emplace_back();
-	//	
-	//	srs_d.back().pSysMem = mem->pixels;
-	//	srs_d.back().SysMemPitch = mem->rowPitch;
-	//	srs_d.back().SysMemSlicePitch = mem->slicePitch;
-	//}
+		//srs_d.emplace_back();
+		//
+		//srs_d.back().pSysMem = mem->pixels;
+		//srs_d.back().SysMemPitch = mem->rowPitch;
+		//srs_d.back().SysMemSlicePitch = mem->slicePitch;
+
+		wchar_t fname[_MAX_PATH];
+		::_wsplitpath_s(filename, nullptr, 0, nullptr, 0, fname, _MAX_PATH, nullptr, 0);
+		std::wstring str =  L"./Data/Assets/Effect/";
+		str += fname;
+		str += L".dds";
+		DirectX::SaveToDDSFile(mem.back(), 0, str.c_str());
+	}
+	
+
+	hr = texture.InitializeArrayFromImages(mem.data(), mem.size());
+	assert(SUCCEEDED(hr));
+	
 	//Microsoft::WRL::ComPtr<ID3D11Texture2D> Texture2D;
 	////	テクスチャ作成
 	//ZeroMemory(&texture2d_desc, sizeof(texture2d_desc));
@@ -151,9 +166,16 @@ bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 	//texture2d_desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	//texture2d_desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
 
+	hr = DirectX::CreateShaderResourceView(device,
+		texture.GetImages(),
+		texture.GetImageCount(),
+		texture.GetMetadata(),
+		ShaderResourceView.GetAddressOf());
+	assert(SUCCEEDED(hr));
+
 
 	//device->CreateTexture2D(&texture2d_desc, srs_d.data(), Texture2D.GetAddressOf());
-	//// 画像からシェーダリソースView
+	// 画像からシェーダリソースView
 
 	//D3D11_SHADER_RESOURCE_VIEW_DESC srvd;
 	//ZeroMemory(&srvd, sizeof(srvd));
@@ -166,6 +188,7 @@ bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 	//hr = device->CreateShaderResourceView(Texture2D.Get(), &srvd, ShaderResourceView.GetAddressOf());
 	//assert(SUCCEEDED(hr));
 
+#else
 	HRESULT hr = E_FAIL;
 
 	ID3D11Texture2D* pTexture = NULL;
@@ -248,6 +271,8 @@ bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 	hr = S_OK;
 
 	index++;
+
+#endif
 
 	return true;
 }

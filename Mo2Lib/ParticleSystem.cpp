@@ -18,8 +18,8 @@ cParticleSystem::cParticleSystem(int num)
 	//std::vector<const wchar_t*> filename;
 	//filename.push_back(L"./Data/Assets/Effect/Electric.png");
 	//filename.push_back(L"./Data/Assets/Effect/Electric2.png");
-	//texture->LoadArray({ L"./Data/Assets/Effect/Flash.png",
-	//	L"./Data/Assets/Effect/Smork.png" });
+	//texture->LoadArray({ L"./Data/Assets/Effect/Smork.dds", 
+	//	L"./Data/Assets/Effect/Flash.dds" });
 	texture->Load(L"./Data/Assets/Effect/Flash.png");
 
 
@@ -133,7 +133,7 @@ void cParticleSystem::Update()
 		//	if (data[i].type > 12)data[i].type = 0;
 		//	data[i].anim_timer -= next_timer;
 		//}
-		data[i].alpha = data[i].timer*data[i].timer*data[i].timer*data[i].timer;
+		data[i].alpha = min(1.0f, data[i].timer*data[i].timer*data[i].timer*data[i].timer);
 		if (data[i].timer <= 0) data[i].type = -1;
 	}
 }
@@ -159,7 +159,7 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	device_context->PSSetConstantBuffers(0, 1, ConstantBuffer.GetAddressOf());
 
 	//ブレンドステート設定
-	Mo2System->SetBlendState(BLEND_STATE::ADD);
+	Mo2System->SetBlendState(BLEND_STATE::ALPHA);
 	//ラスタライザ―設定
 	Mo2System->SetRSState(RS_STATE::RS_CULL_FRONT);
 	//デプスステンシルステート設定
@@ -239,7 +239,7 @@ void cParticleSystem::Snow(DirectX::XMFLOAT3 pos, /*float r,*/ int max)
 		DirectX::XMFLOAT3 f = { 0,0,0 };
 		DirectX::XMFLOAT2 s = { 1.f, 1.f };
 
-		Set(Mo2Lib::RandInt(0, 10), 10, p, v, f, s);
+		Set(1, 10, p, v, f, s);
 
 	}
 }

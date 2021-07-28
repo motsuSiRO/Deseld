@@ -32,6 +32,7 @@ public:
 	const Mo2Lib::Float3& GetFront() const { return m_front; }
 	DirectX::XMVECTOR GetFront_VEC() const { return m_front.ConvertToXMVECTOR(); }
 	const float& GetDistance() const { return m_distance; }
+	const float& GetAnglerY() const { return angler_y; }
 	const Mo2Lib::Float3& GetOrientation() const { return m_orientation; }
 
 	const DirectX::XMMATRIX GetView() const;
@@ -63,7 +64,7 @@ public:
 	void SetAspect(float as) { aspect = as; }
 	void SetNearZ(float _near)  {  near_z = _near; }
 	void SetFarZ(float _far)  { far_z = _far; }
-
+	void SetAnglerY(float angle) { angler_y = angle; }
 	std::unique_ptr<StateMachine<Camera>> fsm;
 
 protected:
@@ -74,6 +75,7 @@ protected:
 	Mo2Lib::Float3	m_right = { 1.f, 0.f, 0.f };
 	Mo2Lib::Float3	m_front = { 0.f, 0.f, 1.f };
 	float				m_distance = 100.0f;
+	float			angler_y = 0.f;
 
 
 

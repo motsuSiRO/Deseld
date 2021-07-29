@@ -40,14 +40,11 @@ void SceneGame::Initialize()
 	obj->AddComponent<PlayerControl>();
 	//obj->AddComponent<Firearm>();
 	obj->AddComponent<GhostShip03>();
-	obj->AddComponent<BoxComponent>();
-	obj->Start();
 	Mo2Lib::game.obj_list.emplace_back(obj);
 
 	obj = new Object("Stage01");
 	obj->AddComponent<Transform>();
 	obj->AddComponent<Stage01>();
-	obj->Start();
 	Mo2Lib::game.obj_list.emplace_back(obj);
 
 	obj = new Object("TheEmblion");
@@ -55,8 +52,6 @@ void SceneGame::Initialize()
 	obj->AddComponent<Physics2>();
 	//obj->AddComponent<Firearm>();
 	obj->AddComponent<TheEmblion>();
-	obj->AddComponent<BoxComponent>();
-	obj->Start();
 	Mo2Lib::game.obj_list.emplace_back(obj);
 
 

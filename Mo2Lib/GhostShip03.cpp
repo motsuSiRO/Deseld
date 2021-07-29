@@ -297,7 +297,7 @@ void GhostShip03::Start()
 	trans = parent->GetComponent<Transform>();
 	physics = parent->GetComponent<Physics2>();
 	pctrl = parent->GetComponent<PlayerControl>();
-	box = parent->GetComponent<BoxComponent>();
+	box = parent->AddComponent<BoxComponent>();
 	//gun = Parent->GetComponent<Firearm>();
 
 	fsm = std::make_unique<StateMachine<GhostShip03>>(this);

@@ -11,7 +11,7 @@ void TheEmblion::Start()
 	const char* fbx_filename;
 	std::shared_ptr<ModelResource> model_resource = std::make_shared<ModelResource>();
 
-	fbx_filename = "./Data/Assets/enemy/the emblion.fbx";
+	fbx_filename = "./Data/Assets/enemy/the embulion.fbx";
 	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_SKINNED_MODEL);
 	model = std::make_unique<Mo2Lib::Model>(model_resource);
 	model->InitializeAnimation();
@@ -34,5 +34,14 @@ void TheEmblion::Draw()
 
 void TheEmblion::ImGui()
 {
+	std::string str, s;
+	s = "##" + parent->GetID();
+	ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Appearing);
+	str = "The Emblion" + s;
 
+
+	if (ImGui::CollapsingHeader(str.c_str()))
+	{
+
+	}
 }

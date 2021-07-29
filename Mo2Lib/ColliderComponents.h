@@ -14,7 +14,7 @@ public:
 	virtual void Start();
 	virtual void Update() {}
 	virtual void Draw() {}
-	virtual void ImGui() {}
+	virtual void ImGui();
 	virtual void OnHit() {}
 	virtual void OnTrigger() {}
 

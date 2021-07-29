@@ -11,6 +11,12 @@ void ColliderComponent::Start()
 	nolight->Create(L"NoLightObj_VS", L"NoLightObj_PS");
 }
 
+void ColliderComponent::ImGui()
+{
+	
+	
+}
+
 void BoxComponent::Start()
 {
 	Collider::Start();

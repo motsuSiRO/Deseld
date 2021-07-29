@@ -51,7 +51,7 @@ namespace Mo2Lib
 		void PlayRatioAnim(int layer_index, int anim_first, int anim_second, float blend_rate, bool force = true);
 		void PlayRatioDefAnim(int layer_index, int anim_first, int anim_second, float blend_rate, bool force = true);
 		Animator& AddLayer(int first, int last);
-		void InitializeAnimation();
+		void InitializeAnimation(int anim_index = 0);
 		void UpdateAnimation(Animator* anim_data, float elapsed_time);
 		void NormalAnimation(Animator* anim_data, float elapsed_time);
 		void AddAnimation(Animator* anim_data, int call_index, float elapsed_time);

@@ -22,7 +22,7 @@ public:
 	{
 		PL_IDLE = 0,
 		PL_MOVE,
-		PL_AIM,
+		PL_ATK,
 		PL_DODGE,
 	};
 
@@ -32,20 +32,10 @@ public:
 		IDLE,
 		RUN,
 		ATTACK,
+		DODGE,
 		MAX_ANIM,
 	};
 
-	enum ANIM_LAYER
-	{
-		//FULLBODY,
-		SPINE,
-		HEAD,
-		L_ARM,
-		R_ARM,
-		L_FOOT,
-		R_FOOT,
-		FULLBODY,
-	};
 
 	void Start();
 	void Update();
@@ -55,6 +45,8 @@ public:
 	void MoveXZ(float speed);
 	Mo2Lib::Vec3 InputDirection();
 	void LookForward();
+
+	Mo2Lib::Model* GetModel() { return model.get(); }
 private:
 	std::unique_ptr <Mo2Lib::Model> model;
 	std::shared_ptr<ShaderEx> phong;

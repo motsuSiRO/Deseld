@@ -306,11 +306,23 @@ void SceneGame::ImGui()
 		SetCursorPos((int)(viewport.Width / 2.f), (int)(viewport.Height / 2.f));
 	}
 
-
-
+	static bool ShowCollider = false;
+	if (ImGui::Button("Collider"))
+	{
+		ShowCollider ^= (bool)1;
+	}
 	for (auto obj : Mo2Lib::game.obj_list)
 	{
 		obj->ImGui();
+
+		for (auto com : obj->component_list)
+		{
+			if (dynamic_cast<ColliderComponent*>(com))
+			{
+				com->is_visible = ShowCollider;
+			}
+		}
+
 	}
 
 

@@ -1,7 +1,14 @@
 #include "TheEmblion.h"
 #include "StateMachine.h"
 #include "model_renderer.h"
+#include "ColliderComponents.h"
 
+namespace TheE
+{
+	Transform* trans;
+	BoxComponent* hitbox[3];
+};
+using namespace TheE;
 
 void TheEmblion::Start()
 {
@@ -18,11 +25,15 @@ void TheEmblion::Start()
 
 
 	trans = parent->GetComponent<Transform>();
+	trans->scale = { 3.f, 3.f, 3.f };
+
+	hitbox[0] = parent->AddComponent<BoxComponent>();
+
 }
 
 void TheEmblion::Update()
 {
-
+	hitbox[0]->trans.translate = model->GetNodes(1)->GetWorldPos();
 }
 
 void TheEmblion::Draw()

@@ -46,38 +46,29 @@ class PL_Idle : public State<GhostShip03>
 {
 	void Begin(GhostShip03* p)
 	{
-
+		p->anim.data.anim_spd = physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
 	}
 
 	void Execute(GhostShip03* p)
 	{
-		/*		if (pctrl->Pressed("Dodge"))
-				{
-					fsm->ChangeState(GhostShip03::PL_DODGE);
-				}
-				else*/ if (pctrl->dir_vec != 0)
-				{
-					fsm->ChangeState(GhostShip03::PL_MOVE);
-				}
-				else if (pctrl->Pressed("Firstary"))
-				{
-					//if (p->gun->Shoot())
-					//{
-					//Object* obj = new Object("Bullet");
-					//Transform* t = obj->AddComponent<Transform>();
-					//obj->Start();
-					//t->translate = { CAM_LIST()->main_cam->GetEye() };
-					//Bullet* b = obj->AddComponent<Bullet>();
-					//b->forward = CAM_LIST()->main_cam->GetFront();
-					//Mo2Lib::game.obj_list.emplace_back(obj);
-					//}
-					//fsm->ChangeState(GhostShip03::PL_AIM);
-				}
 
-				//for (int i = 0; i < GhostShip03::FULLBODY; i++)
-				{
-					p->anim.CallBlendAnim(GhostShip03::SPINE, GhostShip03::IDLE, true, true);
-				}
+		if (pctrl->dir_vec != 0)
+		{
+			fsm->ChangeState(GhostShip03::PL_MOVE);
+		}
+		else if (pctrl->Pressed("Firstary"))
+		{
+			fsm->ChangeState(GhostShip03::PL_ATK);
+
+		}
+		else if (pctrl->Pressed("Dodge"))
+		{
+			fsm->ChangeState(GhostShip03::PL_DODGE);
+		}
+		else
+		{
+			p->anim.PlayBlendAnim(GhostShip03::IDLE);
+		}
 	}
 
 	void End(GhostShip03* p)
@@ -94,6 +85,7 @@ class PL_Move : public State<GhostShip03>
 
 	void Begin(GhostShip03* p)
 	{
+		p->anim.data.anim_spd = physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
 
 		physics->mass = INIT_MASS;
 		physics->limit_velocity = true;
@@ -109,38 +101,26 @@ class PL_Move : public State<GhostShip03>
 
 	void Execute(GhostShip03* p)
 	{
+		p->LookForward();
 		p->MoveXZ(move_speed);
 
-		p->LookForward();
 
-		p->anim.anim_spd = physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
-		p->anim.CallBlendAnim(GhostShip03::SPINE, GhostShip03::RUN, true, true);
-		//p->anim.CallBlendAnim(GhostShip03::HEAD, GhostShip03::RUN, true, true);
-		//p->anim.CallBlendAnim(GhostShip03::L_ARM, GhostShip03::IDLE, true, true);
-		//p->anim.CallBlendAnim(GhostShip03::R_ARM, GhostShip03::IDLE, true, true);
-		//p->anim.CallBlendAnim(GhostShip03::L_FOOT, GhostShip03::RUN, true, true);
-		//p->anim.CallBlendAnim(GhostShip03::R_FOOT, GhostShip03::RUN, true, true);
+		p->anim.data.anim_spd = physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
+		p->anim.PlayBlendAnim(GhostShip03::RUN, true, true);
 
 
-		if (physics->velocity == 0)
+		if (pctrl->dir_vec.LengthSq() <= 0)
 		{
 			fsm->ChangeState(GhostShip03::PL_IDLE);
 		}
 		else if (pctrl->Pressed("Firstary"))
 		{
-			//if (p->gun->Shoot())
-			//{
-			//	Object* obj = new Object("Bullet");
-			//	Transform * t = obj->AddComponent<Transform>();
-			//	t->translate = { CAM_LIST()->main_cam->GetEye() };
-			//	Bullet* b = obj->AddComponent<Bullet>();
-			//	b->forward = CAM_LIST()->main_cam->GetFront();
-			//	
-			//	Mo2Lib::game.obj_list.emplace_back(obj);
-			//}
-			//fsm->ChangeState(GhostShip03::PL_AIM);
+			fsm->ChangeState(GhostShip03::PL_ATK);
 		}
-
+		else if (pctrl->Pressed("Dodge"))
+		{
+			fsm->ChangeState(GhostShip03::PL_DODGE);
+		}
 
 	}
 
@@ -152,105 +132,38 @@ class PL_Move : public State<GhostShip03>
 };
 
 
-class PL_Aim : public State<GhostShip03>
+class PL_Attack : public State<GhostShip03>
 {
 	float move_speed = 0.f;
 	float timer;
 	void Begin(GhostShip03* p)
 	{
-		physics->MAX_VELOCITY = INIT_MAX_AIM_VELOCITY;
-		move_speed = physics->MAX_MOVE_SPEED * physics->mass;
-		timer = 5.f;
+		p->anim.data.anim_spd = 1.f;
+		p->anim.PlayBlendAnim(GhostShip03::ATTACK, false);
 	}
 
 	void Execute(GhostShip03* p)
 	{
-		timer -= Mo2System->delta_time;
+		//p->anim.data.anim_spd += 1.f + Mo2System->delta_time;
 
-		p->MoveXZ(move_speed);
-
-		float range = 0.5f;
-
-		if (pctrl->Pressed("Firstary"))
+		if (pctrl->Pressed("Dodge"))
 		{
-			//if (p->gun->Shoot())
-			//{
-			//	Object* obj = new Object("Bullet");
-			//	Transform* t = obj->AddComponent<Transform>();
-			//	t->translate = { CAM_LIST()->main_cam->GetEye() };
-			//	Bullet* b = obj->AddComponent<Bullet>();
-			//	b->forward = CAM_LIST()->main_cam->GetFront();
-
-			//	Mo2Lib::game.obj_list.emplace_back(obj);
-			//}
-			//fsm->ChangeState(GhostShip03::PL_AIM);
+			fsm->ChangeState(GhostShip03::PL_DODGE);
 		}
 
-		//if (DirectX::XM_2PI - range <= CAM_LIST()->main_cam->rotate.y || range > CAM_LIST()->main_cam->rotate.y)
-		//{//前
-		//	p->anim.CallRatioDefAnim(GhostShip03::SPINE, GhostShip03::MOVE_F, GhostShip03::TPose, 0.f);
-		//	p->anim.CallRatioDefAnim(GhostShip03::L_FOOT, GhostShip03::MOVE_F, GhostShip03::TPose, 0.f);
-		//	p->anim.CallRatioDefAnim(GhostShip03::R_FOOT, GhostShip03::MOVE_F, GhostShip03::TPose, 0.f);
-		//}
-		//else if (DirectX::XM_PIDIV2 - range <= CAM_LIST()->main_cam->rotate.y && DirectX::XM_PIDIV2 + range > CAM_LIST()->main_cam->rotate.y)
-		//{//右
-		//	p->anim.CallRatioDefAnim(GhostShip03::SPINE, GhostShip03::MOVE_R, GhostShip03::TPose, 0.f);
-		//	p->anim.CallRatioDefAnim(GhostShip03::L_FOOT, GhostShip03::MOVE_R, GhostShip03::TPose, 0.f);
-		//	p->anim.CallRatioDefAnim(GhostShip03::R_FOOT, GhostShip03::MOVE_R, GhostShip03::TPose, 0.f);
-		//}
-		//else if (DirectX::XM_PI - range <= CAM_LIST()->main_cam->rotate.y && DirectX::XM_PI + range > CAM_LIST()->main_cam->rotate.y)
-		//{//後
-		//	p->anim.CallRatioDefAnim(GhostShip03::SPINE, GhostShip03::MOVE_B, GhostShip03::TPose, 0.f);
-		//	p->anim.CallRatioDefAnim(GhostShip03::L_FOOT, GhostShip03::MOVE_B, GhostShip03::TPose, 0.f);
-		//	p->anim.CallRatioDefAnim(GhostShip03::R_FOOT, GhostShip03::MOVE_B, GhostShip03::TPose, 0.f);
-		//}
-		//else if (DirectX::XM_PI + DirectX::XM_PIDIV2 - range <= CAM_LIST()->main_cam->rotate.y && DirectX::XM_PI + DirectX::XM_PIDIV2 + range > CAM_LIST()->main_cam->rotate.y)
-		//{//左
-		//	p->anim.CallRatioDefAnim(GhostShip03::SPINE, GhostShip03::MOVE_L, GhostShip03::TPose, 0.f);
-		//	p->anim.CallRatioDefAnim(GhostShip03::L_FOOT, GhostShip03::MOVE_L, GhostShip03::TPose, 0.f);
-		//	p->anim.CallRatioDefAnim(GhostShip03::R_FOOT, GhostShip03::MOVE_L, GhostShip03::TPose, 0.f);
-		//}
-		//else
-		//{
-		//	float rate = 0.f;
-		//	if (0.f <= CAM_LIST()->main_cam->rotate.y && DirectX::XM_PIDIV2 > CAM_LIST()->main_cam->rotate.y)
-		//	{//前右
-		//		p->anim.CallRatioAnim(GhostShip03::SPINE, GhostShip03::MOVE_F, GhostShip03::MOVE_R, CAM_LIST()->main_cam->rotate.y / DirectX::XM_PIDIV2);
-		//		p->anim.CallRatioAnim(GhostShip03::L_FOOT, GhostShip03::MOVE_F, GhostShip03::MOVE_R, CAM_LIST()->main_cam->rotate.y / DirectX::XM_PIDIV2);
-		//		p->anim.CallRatioAnim(GhostShip03::R_FOOT, GhostShip03::MOVE_F, GhostShip03::MOVE_R, CAM_LIST()->main_cam->rotate.y / DirectX::XM_PIDIV2);
-		//	}
-		//	else if (DirectX::XM_PIDIV2 <= CAM_LIST()->main_cam->rotate.y && DirectX::XM_PI > CAM_LIST()->main_cam->rotate.y)
-		//	{//後右
-		//		rate = CAM_LIST()->main_cam->rotate.y - DirectX::XM_PIDIV2;
-		//		p->anim.CallRatioAnim(GhostShip03::SPINE, GhostShip03::MOVE_R, GhostShip03::MOVE_B, rate / DirectX::XM_PIDIV2);
-		//		p->anim.CallRatioAnim(GhostShip03::L_FOOT, GhostShip03::MOVE_R, GhostShip03::MOVE_B, rate / DirectX::XM_PIDIV2);
-		//		p->anim.CallRatioAnim(GhostShip03::R_FOOT, GhostShip03::MOVE_R, GhostShip03::MOVE_B, rate / DirectX::XM_PIDIV2);
-
-		//	}
-		//	else if (DirectX::XM_PI <= CAM_LIST()->main_cam->rotate.y && DirectX::XM_PI + DirectX::XM_PIDIV2 > CAM_LIST()->main_cam->rotate.y)
-		//	{//後左
-		//		rate = CAM_LIST()->main_cam->rotate.y - DirectX::XM_PI;
-		//		p->anim.CallRatioAnim(GhostShip03::SPINE, GhostShip03::MOVE_B, GhostShip03::MOVE_L, rate / DirectX::XM_PIDIV2);
-		//		p->anim.CallRatioAnim(GhostShip03::L_FOOT, GhostShip03::MOVE_B, GhostShip03::MOVE_L, rate / DirectX::XM_PIDIV2);
-		//		p->anim.CallRatioAnim(GhostShip03::R_FOOT, GhostShip03::MOVE_B, GhostShip03::MOVE_L, rate / DirectX::XM_PIDIV2);
-		//	}
-		//	else
-		//	{//前左
-		//		rate = CAM_LIST()->main_cam->rotate.y - (DirectX::XM_PI + DirectX::XM_PIDIV2);
-		//		p->anim.CallRatioAnim(GhostShip03::SPINE, GhostShip03::MOVE_L, GhostShip03::MOVE_F, rate / DirectX::XM_PIDIV2);
-		//		p->anim.CallRatioAnim(GhostShip03::L_FOOT, GhostShip03::MOVE_L, GhostShip03::MOVE_F, rate / DirectX::XM_PIDIV2);
-		//		p->anim.CallRatioAnim(GhostShip03::R_FOOT, GhostShip03::MOVE_L, GhostShip03::MOVE_F, rate / DirectX::XM_PIDIV2);
-		//	}
-
-		if (physics->velocity == 0)
+		if (p->anim.data.end_anim)
 		{
-			fsm->ChangeState(GhostShip03::PL_IDLE);
+			if (pctrl->dir_vec != 0)
+			{
+				fsm->ChangeState(GhostShip03::PL_MOVE);
+			}
+
+			else if (pctrl->dir_vec.LengthSq() == 0.f)
+			{
+				fsm->ChangeState(GhostShip03::PL_IDLE);
+			}
+
 		}
-		if (timer <= 0.f)
-		{
-			fsm->ChangeState(GhostShip03::PL_AIM);
-		}
-		//}
 	}
 	void End(GhostShip03* p)
 	{
@@ -267,16 +180,33 @@ class PL_Dodge : public State<GhostShip03>
 		physics->MAX_VELOCITY = INIT_MAX_VELOCITY * 1.5f;
 		physics->MAX_MOVE_SPEED = MAX_WALK_SPEED * 5.f;
 		timer = 0.5f;
+
+		p->anim.data.anim_spd = physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
+		p->anim.PlayAnim(GhostShip03::DODGE, false);
 	}
 
 	void Execute(GhostShip03* p)
 	{
-		DirectX::XMMatrixRotationY(trans->rotate.y);
-
-		timer -= Mo2System->delta_time;
-		if (timer <= 0.f)
+		p->LookForward();
+		Mo2Lib::Float3 dir = { sinf(trans->rotate.y), 0.f, cosf(trans->rotate.y) };
+		physics->AddForce(dir * physics->MAX_MOVE_SPEED * physics->mass);
+		
+		
+		if (p->anim.data.end_anim)
 		{
-			fsm->ChangeState(GhostShip03::PL_DODGE);
+			if (pctrl->dir_vec != 0)
+			{
+				p->anim.PlayAnim(GhostShip03::RUN, true);
+				fsm->ChangeState(GhostShip03::PL_MOVE);
+			}
+
+			else if (pctrl->dir_vec.LengthSq() == 0.f)
+			{
+				physics->velocity = { 0.f,0.f,0.f };
+				p->anim.PlayAnim(GhostShip03::IDLE, true);
+				fsm->ChangeState(GhostShip03::PL_IDLE);
+			}
+
 		}
 	}
 
@@ -303,7 +233,7 @@ void GhostShip03::Start()
 	fsm = std::make_unique<StateMachine<GhostShip03>>(this);
 	fsm->AddState(PL_IDLE, std::make_shared<PL_Idle>())
 		.AddState(PL_MOVE, std::make_shared<PL_Move>())
-		.AddState(PL_AIM, std::make_shared<PL_Aim>())
+		.AddState(PL_ATK, std::make_shared<PL_Attack>())
 		.AddState(PL_DODGE, std::make_shared<PL_Dodge>());
 
 	fsm->SetCurrentState(PL_IDLE);
@@ -325,37 +255,24 @@ void GhostShip03::Start()
 	fbx_filename = "./Data/Assets/GhostShip/Sword Run.fbx";
 	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
 	fbx_filename = "./Data/Assets/GhostShip/Sword Slash.fbx";
-	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION, true);
+	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
+	fbx_filename = "./Data/Assets/GhostShip/Rolling.fbx";
+	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
 	//fbx_filename = "./Data/Assets/GhostShip/Pistol WalkBackward.fbx";
 	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
 	//fbx_filename = "./Data/Assets/GhostShip/Pistol sideStepL.fbx";
 	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
 	//fbx_filename = "./Data/Assets/GhostShip/Pistol sideStepR.fbx";
 	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	//fbx_filename = "./Data/Assets/GhostShip/Rolling.fbx";
-	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
 	//fbx_filename = "./Data/Assets/GhostShip/Pistol AimUp.fbx";
 	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
 	//fbx_filename = "./Data/Assets/GhostShip/Pistol AimDown.fbx";
 	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
 	model = std::make_unique<Mo2Lib::Model>(model_resource);
-	model->InitializeAnimation();
+	model->InitializeAnimation(GhostShip03::IDLE);
 
-	anim.prev_nodes.resize(model->m_nodes.size());
+	anim.Initialize();
 
-	anim.data.resize(MAX_ANIM);
-	anim.data[TPose].priority = 0;
-	anim.data[IDLE].priority = 1;
-	anim.data[RUN].priority = 2;
-
-
-
-	//anim.AddLayer(0, 3);
-	//anim.AddLayer(4, 6);
-	//anim.AddLayer(7, 22);
-	//anim.AddLayer(23, 38);
-	//anim.AddLayer(39, 43);
-	anim.AddLayer(0, anim.prev_nodes.size());
 
 }
 
@@ -363,7 +280,8 @@ void GhostShip03::Update()
 {
 	ismoving = false;
 
-	//anim.anim_spd = physics->velocity.Length() / physics->MAX_VELOCITY;
+	//anim.data.anim_spd = physics->velocity.Length() / physics->MAX_VELOCITY;
+	physics->Deceleration();
 
 	fsm->Update(parent->delta_time);
 
@@ -371,6 +289,7 @@ void GhostShip03::Update()
 	model->UpdateAnimation(&anim, parent->delta_time);
 
 	box->trans.translate = model->GetNodes(0)->GetWorldPos();
+	box->trans.rotate = DirectX::XMQuaternionRotationMatrix(DirectX::XMLoadFloat4x4(&model->GetNodes(0)->world_transform));
 	box->trans.scale = { 30.f, 100.f, 30.f };
 	arm_pos = model->GetNodes(26)->GetWorldPos();
 
@@ -406,16 +325,6 @@ void GhostShip03::ImGui()
 		ImGui::Text(fsm->GetCurrentName());
 
 		ImGui::NewLine();
-		if (ImGui::Button("Collider"))
-		{
-			for (auto com : parent->component_list)
-			{
-				if (dynamic_cast<ColliderComponent*>(com))
-				{
-					com->is_visible ^= (bool)1;
-				}
-			}
-		}
 
 		ImGui::NewLine();
 		for (size_t i = 0; i < model->GetNodes().size(); i++)
@@ -506,8 +415,6 @@ void GhostShip03::LookForward()
 
 void GhostShip03::MoveXZ(float speed)
 {
-	if (!ismoving)physics->Deceleration();
-
 	Mo2Lib::Vec3 i_vec = InputDirection();
 	physics->AddForce(i_vec * speed);
 

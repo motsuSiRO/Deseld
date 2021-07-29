@@ -20,7 +20,6 @@ enum THE_EMBLION_STATE
 class TheEmblion : public Component
 {
 public:
-	Transform* trans;
 
 	void Start();
 	void Update();

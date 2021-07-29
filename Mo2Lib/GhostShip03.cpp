@@ -452,13 +452,13 @@ Mo2Lib::Vec3 GhostShip03::InputDirection()
 		if (key_vec != 0)
 		{
 			ismoving = true;
-			angle = acosf(key_vec.Dot(zero) /*/ zero.Length()*/);
+			angle = acosf(key_vec.Dot(zero));
 			if (key_vec.Cross(zero) < 0.f)
 			{
 				angle = DirectX::XM_2PI - angle;
 			}
 
-			//angle += cam_angle.y;
+			angle -= CAM_LIST()->main_cam->GetAnglerY();
 
 			if (DirectX::XM_2PI < angle)
 			{

@@ -335,6 +335,7 @@ class TPSFreeMove : public State<Camera>
 			{
 				cam_angle.y += DirectX::XM_2PI;
 			}
+			c->SetAnglerY(cam_angle.y);
 
 			cam_angle.x += INPUT.mouse.d_y * delta_time;
 

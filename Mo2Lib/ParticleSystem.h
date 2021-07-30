@@ -3,6 +3,7 @@
 
 #include "Texture.h"
 #include "Shader.h"
+#include "Mo2Func.h"
 
 class cParticleSystem
 {
@@ -11,20 +12,24 @@ private:
 	struct ParticleData
 	{
 		float x, y, z;
+		float angle_z;
 		float w, h;
 		float vx, vy, vz;
 		float ax, ay, az;
 		float alpha;
 		float anim_timer;
 		float timer;
+		int dimension;
 		int type;
+
+		void (*Update)();
 	};
 
 	struct VERTEX
 	{
 		XMFLOAT3 Pos;	//位置
 		XMFLOAT3 Normal;//法線
-		XMFLOAT2 Tex;	//UV座標
+		XMFLOAT3 Tex;	//UV座標
 		XMFLOAT4 Color;	//頂点色
 	};
 
@@ -65,10 +70,11 @@ public:
 	void Set(
 		int type,
 		float timer,
-		DirectX::XMFLOAT3 p,
-		DirectX::XMFLOAT3 v = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT3 f = DirectX::XMFLOAT3(0.0f, 0.0f, 0.0f),
-		DirectX::XMFLOAT2 size = DirectX::XMFLOAT2(1.0f, 1.0f)
+		Mo2Lib::Float3 p,
+		int dimension = 1,
+		Mo2Lib::Float3 v = Mo2Lib::Float3(0.0f, 0.0f, 0.0f),
+		Mo2Lib::Float3 f = Mo2Lib::Float3(0.0f, 0.0f, 0.0f),
+		Mo2Lib::Float3 size = Mo2Lib::Float3(1.0f, 1.0f, 0.f) //Z_PARAM : rotate_z
 	);
 
 	void cParticleSystem::Snow(DirectX::XMFLOAT3 pos,/* float r,*/ int max);

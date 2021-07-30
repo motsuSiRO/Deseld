@@ -278,6 +278,7 @@
     <ClCompile Include="Mo2Lib\ColliderComponents.cpp" />
     <ClCompile Include="Mo2Lib\Collision.cpp" />
     <ClCompile Include="Mo2Lib\ComponentObject.cpp" />
+    <ClCompile Include="Mo2Lib\Effect.cpp" />
     <ClCompile Include="Mo2Lib\Enemy.cpp" />
     <ClCompile Include="Mo2Lib\FaceLoader.cpp" />
     <ClCompile Include="Mo2Lib\fbx_loader.cpp" />
@@ -334,6 +335,7 @@
     <ClInclude Include="Mo2Lib\Collision.h" />
     <ClInclude Include="Mo2Lib\ComponentObject.h" />
     <ClInclude Include="Mo2Lib\DepthStencilState.h" />
+    <ClInclude Include="Mo2Lib\Effect.h" />
     <ClInclude Include="Mo2Lib\Enemy.h" />
     <ClInclude Include="Mo2Lib\FaceLoader.h" />
     <ClInclude Include="Mo2Lib\fbx_loader.h" />

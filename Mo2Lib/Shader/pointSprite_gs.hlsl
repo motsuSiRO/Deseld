@@ -10,10 +10,29 @@ void main(point GSInput In[1],
 {
 	// 座標変換　(ワールド座標系　→　ビュー座標系)
 	float4 pos = mul(float4(In[0].Position, 1.0), View);
-
-	// 点を面にする
 	float w = In[0].Size.x;
 	float h = In[0].Size.y;
+	float c = cos(In[0].Size.z);
+	float s = sin(In[0].Size.z);
+
+	//rx = x0;
+	//ry = y0;
+	//x0 = cos * rx + -sin * ry;
+	//y0 = sin * rx + cos * ry;
+	//rx = x1;
+	//ry = y1;
+	//x1 = cos * rx + -sin * ry;
+	//y1 = sin * rx + cos * ry;
+	//rx = x2;
+	//ry = y2;
+	//x2 = cos * rx + -sin * ry;
+	//y2 = sin * rx + cos * ry;
+	//rx = x3;
+	//ry = y3;
+	//x3 = cos * rx + -sin * ry;
+	//y3 = sin * rx + cos * ry;
+
+	// 点を面にする
 	float4 posLT = pos + float4(-w, h, 0.0, 0.0);
 	float4 posLB = pos + float4(-w, -h, 0.0, 0.0);
 	float4 posRT = pos + float4(w, h, 0.0, 0.0);

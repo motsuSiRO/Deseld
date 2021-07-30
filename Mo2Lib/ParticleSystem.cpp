@@ -180,7 +180,8 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 		v[n].Pos.y = data[i].y;
 		v[n].Pos.z = data[i].z;
 		v[n].Tex.x = data[i].w;
-		v[n].Tex.y = data[i].h;		  
+		v[n].Tex.y = data[i].h;
+		v[n].Tex.z = data[i].angle_z;
 		v[n].Color.x = (float)data[i].type;
 		v[n].Color.y = v[n].Color.z = 1.0f;
 		v[n].Color.w = data[i].alpha;
@@ -204,11 +205,12 @@ void cParticleSystem::Render(Shader* shader, const XMMATRIX* view, const XMMATRI
 	shader->Inactivate();
 }
 
-void cParticleSystem::Set(int type,float timer, DirectX::XMFLOAT3 p, DirectX::XMFLOAT3 v, DirectX::XMFLOAT3 f, DirectX::XMFLOAT2 size)
+void cParticleSystem::Set(int type,float timer, Mo2Lib::Float3 p, int div, Mo2Lib::Float3 v, Mo2Lib::Float3 f, Mo2Lib::Float3 size)
 {
 	for (int i = 0; i < num_particles; i++) {
 		if (data[i].type >= 0) continue;
 		data[i].type = type;
+		data[i].dimension = div;
 		data[i].x = p.x;
 		data[i].y = p.y;
 		data[i].z = p.z;
@@ -220,8 +222,9 @@ void cParticleSystem::Set(int type,float timer, DirectX::XMFLOAT3 p, DirectX::XM
 		data[i].az = f.z;
 		data[i].w = size.x;
 		data[i].h = size.y;
+		data[i].angle_z = size.z;
 		data[i].alpha = 1.0f;
-		data[i].timer = timer;
+		data[i].timer = data[i].anim_timer = timer;
 		break;
 	}
 }
@@ -229,17 +232,17 @@ void cParticleSystem::Set(int type,float timer, DirectX::XMFLOAT3 p, DirectX::XM
 void cParticleSystem::Snow(DirectX::XMFLOAT3 pos, /*float r,*/ int max)
 {
 	for (int i = 0; i < max; i++) {
-		DirectX::XMFLOAT3 p;
+		Mo2Lib::Float3 p;
 		p.x = pos.x + (rand() % 1001 - 500) * 0.1f;
 		p.y = pos.y;
 		p.z = pos.z + (rand() % 1001 - 500) * 0.1f;
 
-		DirectX::XMFLOAT3 v = { 0,0,0 };
+		Mo2Lib::Float3 v = { 0,0,0 };
 		v.y = -(rand() % 1001)*0.002f - 0.002f;
-		DirectX::XMFLOAT3 f = { 0,0,0 };
-		DirectX::XMFLOAT2 s = { 1.f, 1.f };
+		Mo2Lib::Float3 f = { 0,0,0 };
+		Mo2Lib::Float3 s = { 10.f, 100.f, DirectX::XMConvertToRadians(45.f) };
 
-		Set(1, 10, p, v, f, s);
+		Set(1, 10, p, 1, v, f, s);
 
 	}
 }
@@ -247,21 +250,21 @@ void cParticleSystem::Snow(DirectX::XMFLOAT3 pos, /*float r,*/ int max)
 void cParticleSystem::Spark(DirectX::XMFLOAT3 pos, int max)
 {
 	for (int i = 0; i < max; i++) {
-		DirectX::XMFLOAT3 p;
+		Mo2Lib::Float3 p;
 		p.x = pos.x;
 		p.y = pos.y;
 		p.z = pos.z;
 
-		DirectX::XMFLOAT3 v = { 0,0,0 };
+		Mo2Lib::Float3 v = { 0,0,0 };
 		FLOAT rad = Mo2Lib::RandFloat() * 6.28f;
 		v.x = cosf(rad) * 5.f;
 		v.y = (rand() % 1001)*0.5f + 0.01f;
 		v.z = sinf(rad) * 5.f;
 
-		DirectX::XMFLOAT3 f = { -v.x * .7f,-v.y * 2.f, -v.z * .7f };
-		DirectX::XMFLOAT2 s = { 5.5f, 5.5f };
+		Mo2Lib::Float3 f = { -v.x * .7f,-v.y * 2.f, -v.z * .7f };
+		Mo2Lib::Float3 s = { 5.5f, 5.5f, DirectX::XMConvertToRadians(45.f) };
 
-		Set(1, 0.5f, p, v, f, s);
+		Set(1, 0.5f, p, 1, v, f, s);
 
 	}
 }

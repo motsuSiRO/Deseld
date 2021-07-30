@@ -45,6 +45,9 @@
     <Filter Include="Code\InGame\Stage">
       <UniqueIdentifier>{9a9d85ae-d18d-41d5-a0d4-c4a3741b8c06}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\InGame\Effect">
+      <UniqueIdentifier>{2e6d17cf-5769-4881-9b50-9c63e95466fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mo2Lib\Camera.cpp">
@@ -164,9 +167,6 @@
     <ClCompile Include="ExternalLib\ImGui\imgui_widgets.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="Mo2Lib\ParticleSystem.cpp">
-      <Filter>Code\Lib</Filter>
-    </ClCompile>
     <ClCompile Include="Mo2Lib\framework.cpp">
       <Filter>Code\Lib\Mo2System</Filter>
     </ClCompile>
@@ -205,6 +205,12 @@
     </ClCompile>
     <ClCompile Include="Mo2Lib\main.cpp">
       <Filter>Code\Lib\Mo2System</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\ParticleSystem.cpp">
+      <Filter>Code\InGame\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Effect.cpp">
+      <Filter>Code\InGame\Effect</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -355,9 +361,6 @@
     <ClInclude Include="ExternalLib\ImGui\imstb_truetype.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="Mo2Lib\ParticleSystem.h">
-      <Filter>Code\Lib</Filter>
-    </ClInclude>
     <ClInclude Include="Mo2Lib\Blender.h">
       <Filter>Code\Lib\Mo2System</Filter>
     </ClInclude>
@@ -399,6 +402,12 @@
     </ClInclude>
     <ClInclude Include="Mo2Lib\Stage01.h">
       <Filter>Code\InGame\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\ParticleSystem.h">
+      <Filter>Code\InGame\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Effect.h">
+      <Filter>Code\InGame\Effect</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

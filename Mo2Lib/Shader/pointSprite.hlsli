@@ -19,7 +19,7 @@ struct VSInput
 {
 	float3 Position : POSITION;
 	float3 Normal   : NORMAL;
-	float2 Size     : TEXCOORD;
+	float3 Size     : TEXCOORD;
 	float4 Color    : COLOR;
 };
 
@@ -27,7 +27,7 @@ struct GSInput
 {
 	float3 Position : POSITION;
 	float3 Normal   : NORMAL;
-	float2 Size     : TEXCOORD;
+	float3 Size     : TEXCOORD;
 	float4 Color    : COLOR;
 };
 

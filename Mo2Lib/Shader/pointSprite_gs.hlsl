@@ -15,28 +15,35 @@ void main(point GSInput In[1],
 	float c = cos(In[0].Size.z);
 	float s = sin(In[0].Size.z);
 
-	//rx = x0;
-	//ry = y0;
-	//x0 = cos * rx + -sin * ry;
-	//y0 = sin * rx + cos * ry;
-	//rx = x1;
-	//ry = y1;
-	//x1 = cos * rx + -sin * ry;
-	//y1 = sin * rx + cos * ry;
-	//rx = x2;
-	//ry = y2;
-	//x2 = cos * rx + -sin * ry;
-	//y2 = sin * rx + cos * ry;
-	//rx = x3;
-	//ry = y3;
-	//x3 = cos * rx + -sin * ry;
-	//y3 = sin * rx + cos * ry;
+	//float rad = PI + In[0].Size.z;
+	//float x = cos(rad) - sin(rad);
+	//rad = PI * 1.5 + In[0].Size.z;
+	//float y = sin(rad) + cos(rad);
+	//float4 posLT = pos + float4(w * x, h * y, 0.0, 0.0);
+
+	//rad = PI * 1.5 + In[0].Size.z;
+	//x = cos(rad) - sin(rad);
+	//rad = PI * 2.0 + In[0].Size.z;
+	//y = sin(rad) + cos(rad);
+	//float4 posLB = pos + float4(w * x, h * y, 0.0, 0.0);
+
+	//rad = PI * 1.5 + In[0].Size.z;
+	//x = cos(rad) - sin(rad);
+	//rad = PI * 2.0 + In[0].Size.z;
+	//y = sin(rad) + cos(rad);
+	//float4 posRT = pos + float4(w * x, h * y, 0.0, 0.0);
+
+	//rad = In[0].Size.z;
+	//x = cos(rad) - sin(rad);
+	//rad = PI * 0.5 + In[0].Size.z;
+	//y = sin(rad) + cos(rad);
+	//float4 posRB = pos + float4(w * x, h * y, 0.0, 0.0);
 
 	// 点を面にする
-	float4 posLT = pos + float4(-w, h, 0.0, 0.0);
-	float4 posLB = pos + float4(-w, -h, 0.0, 0.0);
-	float4 posRT = pos + float4(w, h, 0.0, 0.0);
-	float4 posRB = pos + float4(w, -h, 0.0, 0.0);
+	float4 posLT = pos + float4(-w * (c - s), h * (s + c), 0.0, 0.0);
+	float4 posLB = pos + float4(-w * (c - s), -h * (s + c), 0.0, 0.0);
+	float4 posRT = pos + float4(w * (c - s), h * (s + c), 0.0, 0.0);
+	float4 posRB = pos + float4(w * (c - s), -h * (s + c), 0.0, 0.0);
 
 	
 	// 左上の点の位置(射影座標系)・UV・色を計算して出力

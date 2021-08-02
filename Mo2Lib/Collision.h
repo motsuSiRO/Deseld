@@ -91,18 +91,14 @@ Collision* Mo2CD();//Collision Detection
 #else
 #include "ColliderComponents.h"
 
-class contact;
-class CollisionDetector
-{
-private:
-	std::vector<contact> contacts;
-};
+//class contact;
+//class CollisionDetector
+//{
+//private:
+//	std::vector<contact> contacts;
+//};
 
 
-class contact
-{
-
-};
 
 INT generate_contact_sphere_sphere(SphereComponent* s0, SphereComponent* s1/*, std::vector<Contact>* contacts, FLOAT restitution*/);
 //INT generate_contact_sphere_plane(Sphere* sphere, Plane* plane, std::vector<Contact>* contacts, FLOAT restitution, BOOL half_space = TRUE);

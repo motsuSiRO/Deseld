@@ -3,6 +3,7 @@
 #include "Mo2Model.h"
 #include "ComponentObject.h"
 #include "Shader.h"
+#include "Animation.h"
 
 enum THE_EMBLION_STATE
 {
@@ -29,5 +30,5 @@ public:
 private:
 	std::unique_ptr <Mo2Lib::Model> model;
 	std::shared_ptr<ShaderEx> phong;
-
+	Mo2Lib::Animator anim;
 };

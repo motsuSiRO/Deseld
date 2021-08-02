@@ -51,6 +51,8 @@ cbuffer CBPerFrame : register(b0)
 
 };
 
+#define PI 3.14159265
+
 //#define type 7
 //#define size 0.1
 

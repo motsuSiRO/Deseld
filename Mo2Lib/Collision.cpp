@@ -35,7 +35,7 @@ void Collision::Render(ID3D11DeviceContext* context,
 	for (auto it : cd_list)
 	{
 		sphere->color = it.rotate;
-		
+
 		it.rotate = DirectX::XMQuaternionIdentity();
 		sphere->SetTransform(it);
 
@@ -633,14 +633,20 @@ INT generate_contact_sphere_sphere(SphereComponent* s0, SphereComponent* s1)
 
 	Mo2Lib::Float3 n = p0 - p1;
 	FLOAT l = n.Length();
+	FLOAT len = s0->GetRadius() + s1->GetRadius();
 	//D3DXVec3Normalize(&n, &n);
-	if (l < s0->GetRadius() + s1->GetRadius())
+	if (l < len)
 	{
+
 		//Contact contact;
 		//contact.normal = n;
-		//contact.penetration = s0->r + s1->r - l;
+		float con = len - l;
+		s0->contact.penetration = 0.f;
+		s1->contact.penetration = con *2;
 		////contact.point = p1 + 0.5f * l * n;
-		//contact.point = p1 + (s1->r - (0.5f * contact.penetration)) * n;
+		
+		s0->contact.point = s1->contact.point = p0 + ((p1 - p0) / 2);
+		//s0->contact.point = s1->contact.point = p1 + n * (s1->GetRadius() - (0.5f * con));
 		//contact.body[0] = s0;
 		//contact.body[1] = s1;
 		//contact.restitution = restitution;
@@ -703,14 +709,14 @@ INT generate_contact_sphere_box(SphereComponent* sphere, BoxComponent* box)
 
 	FLOAT devide = 1.f;
 	Mo2Lib::Float3 closest_pt = sp;
-	if (closest_pt.x > box->trans.scale.x/devide)closest_pt.x = box->trans.scale.x/devide;
-	if (closest_pt.x < -box->trans.scale.x/devide)closest_pt.x = -box->trans.scale.x/devide;
+	if (closest_pt.x > box->trans.scale.x / devide)closest_pt.x = box->trans.scale.x / devide;
+	if (closest_pt.x < -box->trans.scale.x / devide)closest_pt.x = -box->trans.scale.x / devide;
 
-	if (closest_pt.y > box->trans.scale.y/devide)closest_pt.y = box->trans.scale.y/devide;
-	if (closest_pt.y < -box->trans.scale.y/devide)closest_pt.y = -box->trans.scale.y/devide;
+	if (closest_pt.y > box->trans.scale.y / devide)closest_pt.y = box->trans.scale.y / devide;
+	if (closest_pt.y < -box->trans.scale.y / devide)closest_pt.y = -box->trans.scale.y / devide;
 
-	if (closest_pt.z > box->trans.scale.z/devide)closest_pt.z = box->trans.scale.z/devide;
-	if (closest_pt.z < -box->trans.scale.z/devide)closest_pt.z = -box->trans.scale.z/devide;
+	if (closest_pt.z > box->trans.scale.z / devide)closest_pt.z = box->trans.scale.z / devide;
+	if (closest_pt.z < -box->trans.scale.z / devide)closest_pt.z = -box->trans.scale.z / devide;
 
 	Mo2Lib::Float3 dist = closest_pt - sp;
 	FLOAT len = dist.Length();
@@ -806,6 +812,72 @@ INT generate_contact_sphere_box(SphereComponent* sphere, BoxComponent* box)
 //	return contacts_used;
 //}
 
+//void Contact::resolve()
+//{
+//	assert(penetration > 0);
+//
+//	//David Baraff[1997] An Introduction to Physically Based Modeling:Rigid Body Simulation II - Nonpenetration Constraints pp.40-47
+//	//Baraff[1997]の式(8-1)(8-2)(8-3)から衝突前の相対速度(vrel)を求める
+//	FLOAT vrel = 0;
+//
+//	//(8-1)
+//	D3DXVECTOR3 pdota;
+//	D3DXVec3Cross(&pdota, &body[0]->old_angular_velocity, &(point - body[0]->position));
+//	pdota += body[0]->old_linear_velocity;
+//
+//	//(8-2)
+//	D3DXVECTOR3 pdotb;
+//	D3DXVec3Cross(&pdotb, &body[1]->old_angular_velocity, &(point - body[1]->position));
+//	pdotb += body[1]->old_linear_velocity;
+//
+//	//(8-3)
+//	vrel = D3DXVec3Dot(&normal, &(pdota - pdotb));
+//
+//	//Baraff[1997]の式(8-18)の分子(numerator)を求める
+//	FLOAT numerator = 0;
+//	numerator = -(1 + restitution) * vrel;
+//
+//	//Baraff[1997]の式(8-18)の分母(denominator)を求める
+//	FLOAT denominator = 0;
+//	FLOAT term1 = body[0]->inverse_mass();
+//	FLOAT term2 = body[1]->inverse_mass();
+//	D3DXVECTOR3 ra = point - body[0]->position;
+//	D3DXVECTOR3 rb = point - body[1]->position;
+//	D3DXVECTOR3 ta, tb;
+//	D3DXVec3Cross(&ta, &ra, &normal);
+//	D3DXVec3Cross(&tb, &rb, &normal);
+//	D3DXVec3TransformCoord(&ta, &ta, &body[0]->inverse_inertia_tensor());
+//	D3DXVec3TransformCoord(&tb, &tb, &body[1]->inverse_inertia_tensor());
+//	D3DXVec3Cross(&ta, &ta, &ra);
+//	D3DXVec3Cross(&tb, &tb, &rb);
+//	FLOAT term3 = D3DXVec3Dot(&normal, &ta);
+//	FLOAT term4 = D3DXVec3Dot(&normal, &tb);
+//	denominator = term1 + term2 + term3 + term4;
+//
+//	//Baraff[1997]の式(8-18)の撃力(j)を求める
+//	FLOAT j = 0;
+//	j = numerator / denominator;
+//
+//	//Baraff[1997]の式(8-12)より各剛体の並進速度(linear_velocity)と角速度(angular_velocity)を更新する
+//	D3DXVECTOR3 impulse = j * normal;
+//
+//	body[0]->linear_velocity += impulse * body[0]->inverse_mass();
+//	D3DXVec3Cross(&ta, &ra, &impulse);
+//	D3DXVec3TransformCoord(&ta, &ta, &body[0]->inverse_inertia_tensor());
+//	body[0]->angular_velocity += ta;
+//
+//	body[1]->linear_velocity -= impulse * body[1]->inverse_mass();
+//	D3DXVec3Cross(&tb, &rb, &impulse);
+//	D3DXVec3TransformCoord(&tb, &tb, &body[1]->inverse_inertia_tensor());
+//	body[1]->angular_velocity -= tb;
+//
+//	//めり込み量の解決
+//	if (penetFlg)
+//	{
+//		body[0]->position += penetration * (body[1]->inertial_mass / (body[0]->inertial_mass + body[1]->inertial_mass)) * normal;
+//		body[1]->position -= penetration * (body[0]->inertial_mass / (body[0]->inertial_mass + body[1]->inertial_mass)) * normal;
+//	}
+//}
 
 
 #endif

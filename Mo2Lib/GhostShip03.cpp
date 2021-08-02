@@ -19,6 +19,7 @@ namespace GShip
 	Transform* trans;
 	PlayerControl* pctrl;
 	BoxComponent* box;
+	SphereComponent* s0;
 }
 using namespace GShip;
 
@@ -228,6 +229,7 @@ void GhostShip03::Start()
 	physics = parent->GetComponent<Physics2>();
 	pctrl = parent->GetComponent<PlayerControl>();
 	box = parent->AddComponent<BoxComponent>();
+	s0 = parent->AddComponent<SphereComponent>();
 	//gun = Parent->GetComponent<Firearm>();
 
 	fsm = std::make_unique<StateMachine<GhostShip03>>(this);
@@ -291,6 +293,10 @@ void GhostShip03::Update()
 	box->trans.translate = model->GetNodes(0)->GetWorldPos();
 	box->trans.rotate = DirectX::XMQuaternionRotationMatrix(DirectX::XMLoadFloat4x4(&model->GetNodes(0)->world_transform));
 	box->trans.scale = { 30.f, 100.f, 30.f };
+
+	s0->trans.translate = trans->translate;
+	s0->trans.scale = { 30.f, 30.f, 30.f };
+
 	arm_pos = model->GetNodes(26)->GetWorldPos();
 
 	CAM_LIST()->main_cam->SetOrientation(trans->translate);

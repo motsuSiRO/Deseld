@@ -3,6 +3,27 @@
 #include "GeoPrimitive.h"
 #include "Shader.h"
 
+struct Contact
+{
+
+	//Contact() : point(0, 0, 0), normal(0, 0, 0), penetration(0), restitution(0)
+	//{
+	//	body[0] = body[1] = 0;
+	//}
+
+	//RigidBody* body[2];
+
+	Mo2Lib::Float3 point;	//ÚG“_
+	//D3DXVECTOR3 normal; //„‘Ì0(body[0])‚©‚çŒ©‚½ÚG–Ê‚Ì–@ü
+	FLOAT penetration;	//‚ß‚è‚İ—Ê
+	//FLOAT restitution;	//”½”­ŒW”
+	//bool penetFlg;
+
+	//void resolve();	//ÚG‚Ì‰ğÁ
+
+};
+
+
 class ColliderComponent : public Component
 {
 protected:
@@ -11,6 +32,8 @@ protected:
 public:
 	Mo2Lib::Transform trans;
 public:
+	Contact contact;
+	
 	virtual void Start();
 	virtual void Update() {}
 	virtual void Draw() {}
@@ -47,6 +70,7 @@ class SphereComponent : public ColliderComponent
 private:
 	float r;
 public:
+
 	void Start();
 	void Update();
 	void Draw();

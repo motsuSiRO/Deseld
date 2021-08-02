@@ -75,7 +75,7 @@ void BoxComponent::Draw()
 
 void BoxComponent::OnHit()
 {
-	primitive->color = { 1.f,1.f,0.f,1.f };
+
 }
 
 void BoxComponent::OnTrigger()
@@ -166,7 +166,11 @@ void SphereComponent::Draw()
 
 void SphereComponent::OnHit()
 {
-	primitive->color = { 1.f,0.f,0.f,1.f };
+	Transform* trans = parent->GetComponent<Transform>();
+	Mo2Lib::Float3 vec;
+	vec = trans->translate - contact.point;
+	vec.Normalize();
+	trans->translate += vec * contact.penetration;
 }
 
 void SphereComponent::OnTrigger()

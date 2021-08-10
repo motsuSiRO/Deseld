@@ -1,6 +1,7 @@
 #include "BinaryConversion.h"
 #include "Mo2Cerealize.h"
 #include <fstream>
+#include <direct.h>
 
 bool BinarySkinmeshInput(const char* file_path, ModelData* data, int _mode)
 {
@@ -79,7 +80,16 @@ bool BinarySkinmeshOutput(const char* file_path, ModelData* data)
 	}
 	ofs.close();
 
-	::_makepath_s(f_path, 256, nullptr, "./Data/Assets/JSON/", filename, ".json");
+	::_makepath_s(dirname, 256, nullptr, "./Data/Assets/JSON/", filename, nullptr);
+	struct stat statBuf;
+	if (stat(dirname, &statBuf) != 0)
+	{
+		_mkdir(dirname);
+	}
+
+	std::string str = filename;
+	str += "_Node";
+	::_makepath_s(f_path, 256, nullptr, dirname, str.c_str(), ".json");
 
 	ofs.open(f_path, std::ios::binary);
 	if (!ofs)
@@ -90,9 +100,61 @@ bool BinarySkinmeshOutput(const char* file_path, ModelData* data)
 
 	{
 		cereal::JSONOutputArchive o_archive(ofs);
-		o_archive(cereal::make_nvp(filename, *data));
+		o_archive(cereal::make_nvp(filename, data->nodes));
 	}
 	ofs.close();
+
+	str = filename;
+	str += "_Mesh";
+	::_makepath_s(f_path, 256, nullptr, dirname, str.c_str(), ".json");
+
+	ofs.open(f_path, std::ios::binary);
+	if (!ofs)
+	{
+		ofs.close();
+		return false;
+	}
+
+	{
+		cereal::JSONOutputArchive o_archive(ofs);
+		o_archive(cereal::make_nvp(filename, data->meshes));
+	}
+	ofs.close();
+
+	str = filename;
+	str += "_Material";
+	::_makepath_s(f_path, 256, nullptr, dirname, str.c_str(), ".json");
+
+	ofs.open(f_path, std::ios::binary);
+	if (!ofs)
+	{
+		ofs.close();
+		return false;
+	}
+
+	{
+		cereal::JSONOutputArchive o_archive(ofs);
+		o_archive(cereal::make_nvp(filename, data->materials));
+	}
+	ofs.close();
+
+	str = filename;
+	str += "_Animation";
+	::_makepath_s(f_path, 256, nullptr, dirname, str.c_str(), ".json");
+
+	ofs.open(f_path, std::ios::binary);
+	if (!ofs)
+	{
+		ofs.close();
+		return false;
+	}
+
+	{
+		cereal::JSONOutputArchive o_archive(ofs);
+		o_archive(cereal::make_nvp(filename, data->animations));
+	}
+	ofs.close();
+
 
 	return true;
 }

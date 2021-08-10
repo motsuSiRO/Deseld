@@ -149,6 +149,8 @@ void Physics2::Start()
 
 void Physics2::Update()
 {
+	move_speed = MAX_MOVE_SPEED * mass;
+
 	acceleration = (resultant / mass);
 
 	velocity += acceleration * Mo2System->delta_time;
@@ -176,6 +178,11 @@ void Physics2::AddVelocity(const Mo2Lib::Vec3& vec)
 void Physics2::AddAcceleration(const Mo2Lib::Vec3& vec)
 {
 	acceleration += vec;
+}
+
+void Physics2::AddMoveSpeed(const Mo2Lib::Vec3& vec)
+{
+	resultant += vec * move_speed;
 }
 
 void Physics2::Deceleration()

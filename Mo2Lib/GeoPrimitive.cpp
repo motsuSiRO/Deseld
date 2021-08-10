@@ -75,6 +75,7 @@ GeoPrimitive::GeoPrimitive(std::wstring texture)
 	ID3D11Device* device = Mo2System->DX11device.Get();
 
 	//	情報初期値
+	is_solid = true;
 	transform.translate = Mo2Lib::Float3(0, 0, 0);
 	transform.rotate = Mo2Lib::Float4(0, 0, 0, 1);
 	transform.scale = Mo2Lib::Float3(1, 1, 1);
@@ -178,19 +179,8 @@ GeoPrimitive::GeoPrimitive(std::wstring texture)
 }
 
 
-void GeoPrimitive::render(
-	ID3D11DeviceContext* context, bool isSolid)
+void GeoPrimitive::render(ID3D11DeviceContext* context)
 {
-	//cbuffer cb;
-	//cb.view_projection = view_projection;
-	//DirectX::XMStoreFloat4x4(&cb.world, BuildWorld());
-	//cb.light_direction = light_dir;
-	//cb.material_color = color;
-
-
-	//context->UpdateSubresource(constant_buffer.Get(), 0, nullptr, &cb, 0, 0);
-	//context->VSSetConstantBuffers(0, 1, constant_buffer.GetAddressOf());
-
 
 	// 頂点バッファのバインド
 	UINT stride = sizeof(vertex);
@@ -200,45 +190,27 @@ void GeoPrimitive::render(
 	//	インデックスバッファのバインド
 	context->IASetIndexBuffer(index_buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-	//	プリミティブモードの設定
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	////	入力レイアウトのバインド
-	//context->IASetInputLayout(input_layout.Get());
-
-	if (isSolid)
+	if (is_solid)
 	{
 		//	プリミティブモードの設定
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		//	ラスタライザーの設定
-		//context->RSSetState(solid_rasterizer_state.Get());
+		Mo2System->SetRSState(RS_STATE::RS_CULL_BACK);
 	}
 	else
 	{
 		//	プリミティブモードの設定
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 		//	ラスタライザーの設定
-		//context->RSSetState(wireframe_rasterizer_state.Get());
+		Mo2System->SetRSState(RS_STATE::RS_WIREFRAME);
 	}
 
-	////	シェーダー(2種)の設定
-	//context->VSSetShader(vertex_shader.Get(), nullptr, 0);
-	//context->PSSetShader(pixel_shader.Get(), nullptr, 0);
-
-	//if (tex_link)
-	//{
 	texture->Set(0);
-	//	context->PSSetShaderResources(0, 1, &shader_resource_view);
-	//	context->PSSetSamplers(0, 1, &sampler_state);
-	//}
-
-	//	深度テストの設定
-	//context->OMSetDepthStencilState(depth_stencil_state.Get(), 0);
 
 	//	プリミティブの描画(index付き)
 	context->DrawIndexed(numIndices, 0, 0);
 
-
+	Mo2System->SetRSState(RS_STATE::RS_CULL_BACK);
 }
 
 void GeoPrimitive::render(

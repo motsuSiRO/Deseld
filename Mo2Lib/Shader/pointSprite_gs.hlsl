@@ -15,40 +15,24 @@ void main(point GSInput In[1],
 	float c = cos(In[0].Size.z);
 	float s = sin(In[0].Size.z);
 
-	//float rad = PI + In[0].Size.z;
-	//float x = cos(rad) - sin(rad);
-	//rad = PI * 1.5 + In[0].Size.z;
-	//float y = sin(rad) + cos(rad);
-	//float4 posLT = pos + float4(w * x, h * y, 0.0, 0.0);
+	float rad = In[0].Size.z;
+	float x = -w * cos(rad) - h * sin(rad);
+	float y = -w * sin(rad) + h * cos(rad);
+	float4 posLT = pos + float4(x, y, 0.0, 0.0);
 
-	//rad = PI * 1.5 + In[0].Size.z;
-	//x = cos(rad) - sin(rad);
-	//rad = PI * 2.0 + In[0].Size.z;
-	//y = sin(rad) + cos(rad);
-	//float4 posLB = pos + float4(w * x, h * y, 0.0, 0.0);
+	x = -w * cos(rad) - (-h) * sin(rad);
+	y = -w * sin(rad) + (-h) * cos(rad);
+	float4 posLB = pos + float4(x, y, 0.0, 0.0);
 
-	//rad = PI * 1.5 + In[0].Size.z;
-	//x = cos(rad) - sin(rad);
-	//rad = PI * 2.0 + In[0].Size.z;
-	//y = sin(rad) + cos(rad);
-	//float4 posRT = pos + float4(w * x, h * y, 0.0, 0.0);
+	x = w * cos(rad) - h * sin(rad);
+	y = w * sin(rad) + h * cos(rad);
+	float4 posRT = pos + float4(x, y, 0.0, 0.0);
 
-	//rad = In[0].Size.z;
-	//x = cos(rad) - sin(rad);
-	//rad = PI * 0.5 + In[0].Size.z;
-	//y = sin(rad) + cos(rad);
-	//float4 posRB = pos + float4(w * x, h * y, 0.0, 0.0);
-
-	// 点を面にする
-	float4 posLT = pos + float4(-w * (c - s), h * (s + c), 0.0, 0.0);
-	float4 posLB = pos + float4(-w * (c - s), -h * (s + c), 0.0, 0.0);
-	float4 posRT = pos + float4(w * (c - s), h * (s + c), 0.0, 0.0);
-	float4 posRB = pos + float4(w * (c - s), -h * (s + c), 0.0, 0.0);
-
+	x = w * cos(rad) - (-h) * sin(rad);
+	y = w * sin(rad) + (-h) * cos(rad);
+	float4 posRB = pos + float4(x, y, 0.0, 0.0);
 	
-	// 左上の点の位置(射影座標系)・UV・色を計算して出力
 	PSInput Out = (PSInput)0;
-
 
 	uint type = In[0].Color.r;
 	float t = 0;
@@ -56,6 +40,7 @@ void main(point GSInput In[1],
 
 	float u = (type % 4)*slice;
 	float v = (type / 4)*slice;
+	// 左上の点の位置(射影座標系)・UV・色を計算して出力
 	Out.Color = float4(1, 1, 1, In[0].Color.a);
 	Out.Position = mul(posLT, Projection);
 	Out.Tex = float3(u, v, t);

@@ -133,6 +133,7 @@ void cParticleSystem::Update()
 		//	if (data[i].type > 12)data[i].type = 0;
 		//	data[i].anim_timer -= next_timer;
 		//}
+		//data[i].angle_z += time;
 		data[i].alpha = min(1.0f, data[i].timer*data[i].timer*data[i].timer*data[i].timer);
 		if (data[i].timer <= 0) data[i].type = -1;
 	}
@@ -240,9 +241,9 @@ void cParticleSystem::Snow(DirectX::XMFLOAT3 pos, /*float r,*/ int max)
 		Mo2Lib::Float3 v = { 0,0,0 };
 		v.y = -(rand() % 1001)*0.002f - 0.002f;
 		Mo2Lib::Float3 f = { 0,0,0 };
-		Mo2Lib::Float3 s = { 10.f, 100.f, DirectX::XMConvertToRadians(45.f) };
+		Mo2Lib::Float3 s = { 10.f, 100.f, DirectX::XMConvertToRadians(0.f) };
 
-		Set(1, 10, p, 1, v, f, s);
+		Set(0, 10, p, 1, v, f, s);
 
 	}
 }
@@ -262,7 +263,7 @@ void cParticleSystem::Spark(DirectX::XMFLOAT3 pos, int max)
 		v.z = sinf(rad) * 5.f;
 
 		Mo2Lib::Float3 f = { -v.x * .7f,-v.y * 2.f, -v.z * .7f };
-		Mo2Lib::Float3 s = { 5.5f, 5.5f, DirectX::XMConvertToRadians(45.f) };
+		Mo2Lib::Float3 s = { 5.5f, 5.5f, DirectX::XMConvertToRadians(0.f) };
 
 		Set(1, 0.5f, p, 1, v, f, s);
 

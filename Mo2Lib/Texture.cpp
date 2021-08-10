@@ -61,11 +61,11 @@ namespace Texture
 #include "framework.h"
 #include "Texture.h"
 //#include "Sampler.h"
-#if _DEBUG
-#pragma comment ( lib, "ExternalLib/DirectXTex/DirectXTexD.lib")
-#else
-#pragma comment ( lib, "ExternalLib/DirectXTex/DirectXTex.lib")
-#endif
+//#if _DEBUG
+//#pragma comment ( lib, "ExternalLib/DirectXTex/DirectXTexD.lib")
+//#else
+//#pragma comment ( lib, "ExternalLib/DirectXTex/DirectXTex.lib")
+//#endif
 
 
 Texture::Texture() :ShaderResourceView(nullptr)
@@ -87,7 +87,7 @@ bool Texture::Load(const wchar_t* filename)
 	// 画像ファイル読み込み DirectXTex
 	DirectX::TexMetadata metadata;
 	DirectX::ScratchImage image;
-	HRESULT hr = LoadFromWICFile(filename, 0, &metadata, image);
+	HRESULT hr = LoadFromWICFile(filename, (DirectX::WIC_FLAGS)0, &metadata, image);
 
 	assert(SUCCEEDED(hr));
 
@@ -128,7 +128,7 @@ bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 
 		// 画像ファイル読み込み DirectXTex
 		//hr = LoadFromWICFile(filename, 0, &metadata, img);
-		hr = LoadFromDDSFile(filename, 0, &metadata, img);
+		hr = LoadFromDDSFile(filename, (DirectX::DDS_FLAGS)0, &metadata, img);
 
 		assert(SUCCEEDED(hr));
 
@@ -145,7 +145,7 @@ bool Texture::LoadArray(std::initializer_list<const wchar_t*> list)
 		std::wstring str =  L"./Data/Assets/Effect/";
 		str += fname;
 		str += L".dds";
-		DirectX::SaveToDDSFile(mem.back(), 0, str.c_str());
+		DirectX::SaveToDDSFile(mem.back(), (DirectX::DDS_FLAGS)0, str.c_str());
 	}
 	
 
@@ -285,7 +285,7 @@ bool Texture::LoadMipMap(const wchar_t* filename)
 	// 画像ファイル読み込み DirectXTex
 	DirectX::TexMetadata metadata;
 	DirectX::ScratchImage image;
-	HRESULT hr = LoadFromWICFile(filename, 0, &metadata, image);
+	HRESULT hr = LoadFromWICFile(filename, (DirectX::WIC_FLAGS)0, &metadata, image);
 	assert(SUCCEEDED(hr));
 
 
@@ -296,7 +296,7 @@ bool Texture::LoadMipMap(const wchar_t* filename)
 		image.GetImageCount(),
 		image.GetMetadata(),
 		DirectX::TEX_FILTER_DEFAULT,
-		0,						//ミップマップをすべて作る
+		(DirectX::TEX_FILTER_FLAGS)0,						//ミップマップをすべて作る
 		mipChain);
 
 	// 画像からシェーダリソースView

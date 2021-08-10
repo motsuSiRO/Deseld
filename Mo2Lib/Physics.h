@@ -101,6 +101,7 @@ public:
 	bool limit_velocity;
 	float mass;
 	float dynamic_friction;
+	float move_speed;
 	float MAX_MOVE_SPEED;
 	float MAX_VELOCITY;
 
@@ -115,6 +116,7 @@ public:
 
 	void AddForce(const Mo2Lib::Vec3& force);
 
+	void AddMoveSpeed(const Mo2Lib::Vec3& force);
 	void Deceleration();
 
 };

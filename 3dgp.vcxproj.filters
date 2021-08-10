@@ -36,24 +36,27 @@
     <Filter Include="Code\Lib\Mo2System">
       <UniqueIdentifier>{c127e541-0e92-4a52-92c9-fcbe266c6b55}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Code\Lib\MO2Texture">
-      <UniqueIdentifier>{0eb9078c-06ba-40c3-808c-6ca1f89d3182}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Code\Lib\ModelSystem">
-      <UniqueIdentifier>{e4b71a6f-a0cb-4dbe-b77b-09e5b07f5892}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Code\InGame\Stage">
       <UniqueIdentifier>{9a9d85ae-d18d-41d5-a0d4-c4a3741b8c06}</UniqueIdentifier>
     </Filter>
     <Filter Include="Code\InGame\Effect">
       <UniqueIdentifier>{2e6d17cf-5769-4881-9b50-9c63e95466fa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Code\Lib\Mo2Render">
+      <UniqueIdentifier>{6d2ce6f8-af74-464d-a671-c868b6c310bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Lib\Mo2Render\ModelSystem">
+      <UniqueIdentifier>{e4b71a6f-a0cb-4dbe-b77b-09e5b07f5892}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Lib\Mo2Render\Mo2Texture">
+      <UniqueIdentifier>{0eb9078c-06ba-40c3-808c-6ca1f89d3182}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Lib\Mo2Collision">
+      <UniqueIdentifier>{f8306ee5-a1de-46bc-974c-ffa9cde7e22b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Mo2Lib\Camera.cpp">
-      <Filter>Code\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="Mo2Lib\fbx_loader.cpp">
       <Filter>Code\Lib</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\GeoPrimitive.cpp">
@@ -102,9 +105,6 @@
       <Filter>Code\InGame\Charactor</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\Bullet.cpp">
-      <Filter>Code\InGame</Filter>
-    </ClCompile>
-    <ClCompile Include="Mo2Lib\Collision.cpp">
       <Filter>Code\InGame</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\Firearm.cpp">
@@ -171,30 +171,27 @@
       <Filter>Code\Lib\Mo2System</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\Animation.cpp">
-      <Filter>Code\Lib\ModelSystem</Filter>
+      <Filter>Code\Lib\Mo2Render\ModelSystem</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\model.cpp">
-      <Filter>Code\Lib\ModelSystem</Filter>
+      <Filter>Code\Lib\Mo2Render\ModelSystem</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\model_data.cpp">
-      <Filter>Code\Lib\ModelSystem</Filter>
+      <Filter>Code\Lib\Mo2Render\ModelSystem</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\model_renderer.cpp">
-      <Filter>Code\Lib\ModelSystem</Filter>
+      <Filter>Code\Lib\Mo2Render\ModelSystem</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\model_resource.cpp">
-      <Filter>Code\Lib\ModelSystem</Filter>
+      <Filter>Code\Lib\Mo2Render\ModelSystem</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\TextureLoader.cpp">
-      <Filter>Code\Lib\MO2Texture</Filter>
+      <Filter>Code\Lib\Mo2Render\Mo2Texture</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\Texture.cpp">
-      <Filter>Code\Lib\MO2Texture</Filter>
+      <Filter>Code\Lib\Mo2Render\Mo2Texture</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\InputLayout.cpp">
-      <Filter>Code\Lib</Filter>
-    </ClCompile>
-    <ClCompile Include="Mo2Lib\ColliderComponents.cpp">
       <Filter>Code\Lib</Filter>
     </ClCompile>
     <ClCompile Include="Mo2Lib\ComponentObject.cpp">
@@ -212,12 +209,15 @@
     <ClCompile Include="Mo2Lib\Effect.cpp">
       <Filter>Code\InGame\Effect</Filter>
     </ClCompile>
+    <ClCompile Include="Mo2Lib\ColliderComponents.cpp">
+      <Filter>Code\Lib\Mo2Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Mo2Lib\Collision.cpp">
+      <Filter>Code\Lib\Mo2Collision</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mo2Lib\Camera.h">
-      <Filter>Code\Lib</Filter>
-    </ClInclude>
-    <ClInclude Include="Mo2Lib\fbx_loader.h">
       <Filter>Code\Lib</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\GeoPrimitive.h">
@@ -287,9 +287,6 @@
       <Filter>Code\Lib</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\Bullet.h">
-      <Filter>Code\InGame</Filter>
-    </ClInclude>
-    <ClInclude Include="Mo2Lib\Collision.h">
       <Filter>Code\InGame</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\Firearm.h">
@@ -374,31 +371,28 @@
       <Filter>Code\Lib\Mo2System</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\model_resource.h">
-      <Filter>Code\Lib\ModelSystem</Filter>
+      <Filter>Code\Lib\Mo2Render\ModelSystem</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\Animation.h">
-      <Filter>Code\Lib\ModelSystem</Filter>
+      <Filter>Code\Lib\Mo2Render\ModelSystem</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\model_data.h">
-      <Filter>Code\Lib\ModelSystem</Filter>
+      <Filter>Code\Lib\Mo2Render\ModelSystem</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\model_renderer.h">
-      <Filter>Code\Lib\ModelSystem</Filter>
+      <Filter>Code\Lib\Mo2Render\ModelSystem</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\InputLayout.h">
       <Filter>Code\Lib</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\TextureLoader.h">
-      <Filter>Code\Lib\MO2Texture</Filter>
+      <Filter>Code\Lib\Mo2Render\Mo2Texture</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\Texture.h">
-      <Filter>Code\Lib\MO2Texture</Filter>
-    </ClInclude>
-    <ClInclude Include="Mo2Lib\ColliderComponents.h">
-      <Filter>Code\Lib</Filter>
+      <Filter>Code\Lib\Mo2Render\Mo2Texture</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\Mo2Model.h">
-      <Filter>Code\Lib\ModelSystem</Filter>
+      <Filter>Code\Lib\Mo2Render\ModelSystem</Filter>
     </ClInclude>
     <ClInclude Include="Mo2Lib\Stage01.h">
       <Filter>Code\InGame\Stage</Filter>
@@ -408,6 +402,12 @@
     </ClInclude>
     <ClInclude Include="Mo2Lib\Effect.h">
       <Filter>Code\InGame\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\ColliderComponents.h">
+      <Filter>Code\Lib\Mo2Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Mo2Lib\Collision.h">
+      <Filter>Code\Lib\Mo2Collision</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

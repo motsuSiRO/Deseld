@@ -11,7 +11,7 @@ void PlayerControl::Start()
 
 	AddIAction("Firstary", L_CLICK);
 	AddIAction("Secondary", R_CLICK);
-	AddIAction("Skill1", M_CLICK);
+	AddIAction("Skill1", M_CLICK, DIK_Q);
 	AddIAction("Front", DIK_W, DIK_UP);
 	AddIAction("Back", DIK_S, DIK_DOWN);
 	AddIAction("Left", DIK_A, DIK_LEFT);

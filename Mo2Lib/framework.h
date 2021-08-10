@@ -35,13 +35,13 @@ public:
 	float delta_time;
 
 private:
-	Blender blender;
-	Rasterizer rasterizer;
-	DepthStencilState depthstencilstate;
+	std::unique_ptr<Blender> blender;
+	std::unique_ptr<Rasterizer> rasterizer;
+	std::unique_ptr<DepthStencilState> depthstencilstate;
 public:
-	void SetBlendState(int state) { DX11context->OMSetBlendState(blender.states[state].Get(), nullptr, 0xFFFFFFFF); }
-	void SetRSState(int state) { DX11context->RSSetState(rasterizer.states[state].Get()); }
-	void SetDSState(int state) { DX11context->OMSetDepthStencilState(depthstencilstate.states[state].Get(), 0); }
+	void SetBlendState(int state) { DX11context->OMSetBlendState(blender->states[state].Get(), nullptr, 0xFFFFFFFF); }
+	void SetRSState(int state) { DX11context->RSSetState(rasterizer->states[state].Get()); }
+	void SetDSState(int state) { DX11context->OMSetDepthStencilState(depthstencilstate->states[state].Get(), 0); }
 
 	Microsoft::WRL::ComPtr<ID3D11Device>			DX11device;//
 	Microsoft::WRL::ComPtr<ID3D11DeviceContext>		DX11context;//

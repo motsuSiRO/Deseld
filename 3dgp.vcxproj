@@ -135,8 +135,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTK.lib;xaudio2.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;libfbxsdk-md.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DirectXTK-master\Bin\Desktop_2015\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTex.lib;xaudio2.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;libfbxsdk-md.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DIrectXTex\Bin\Desktop_2019\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)\Data\System\ShaderObjects\%(Filename).cso</ObjectFileOutput>
@@ -158,8 +158,8 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTK.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DirectXTK-master\Bin\Desktop_2015\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DIrectXTex\Bin\Desktop_2019\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ShaderModel>5.0</ShaderModel>
@@ -183,8 +183,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTK.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DirectXTK-master\Bin\Desktop_2015\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTex.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DIrectXTex\Bin\Desktop_2019\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)\Data\System\ShaderObjects\%(Filename).cso</ObjectFileOutput>
@@ -209,8 +209,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTK.lib;libfbxsdk-md.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Effekseer.lib;EffekseerRendererDX11.lib;EffekseerSoundXAudio2.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DirectXTK-master\Bin\Desktop_2015\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTex.lib;libfbxsdk-md.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;Effekseer.lib;EffekseerRendererDX11.lib;EffekseerSoundXAudio2.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DIrectXTex\Bin\Desktop_2019\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
     <FxCompile>
       <ObjectFileOutput>$(ProjectDir)\Data\System\ShaderObjects\%(Filename).cso</ObjectFileOutput>
@@ -234,8 +234,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTK.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DirectXTK-master\Bin\Desktop_2015\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DIrectXTex\Bin\Desktop_2019\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDebug|x64'">
@@ -255,8 +255,8 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTK.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DirectXTK-master\Bin\Desktop_2015\$(Platform)\$(Configuration)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DIrectXTex\Bin\Desktop_2019\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -281,7 +281,6 @@
     <ClCompile Include="Mo2Lib\Effect.cpp" />
     <ClCompile Include="Mo2Lib\Enemy.cpp" />
     <ClCompile Include="Mo2Lib\FaceLoader.cpp" />
-    <ClCompile Include="Mo2Lib\fbx_loader.cpp" />
     <ClCompile Include="Mo2Lib\Firearm.cpp" />
     <ClCompile Include="Mo2Lib\framework.cpp" />
     <ClCompile Include="Mo2Lib\GameOption.cpp" />
@@ -338,7 +337,6 @@
     <ClInclude Include="Mo2Lib\Effect.h" />
     <ClInclude Include="Mo2Lib\Enemy.h" />
     <ClInclude Include="Mo2Lib\FaceLoader.h" />
-    <ClInclude Include="Mo2Lib\fbx_loader.h" />
     <ClInclude Include="Mo2Lib\Firearm.h" />
     <ClInclude Include="Mo2Lib\framework.h" />
     <ClInclude Include="Mo2Lib\GameEntity.h" />

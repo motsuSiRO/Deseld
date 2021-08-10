@@ -9,13 +9,15 @@ void GateQuad::Start()
 	phong = std::make_shared<ShaderEx>();
 	phong->Create(L"model_vs", L"model_ps");
 
-	const char* fbx_filename;
-	std::shared_ptr<ModelResource> model_resource = std::make_shared<ModelResource>();
+	std::shared_ptr<ModelResource> model_resource;
+	Mo2Lib::ModelLoader::GetInstance().Setup(true);
 
-	fbx_filename = "./Data/Assets/enemy/gates_quad_mesh.fbx";
-	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_SKINNED_MODEL);
+	Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/enemy/gates_quad.fbx");
+
+	model_resource = Mo2Lib::ModelLoader::GetInstance().Apply();
 	model = std::make_unique<Mo2Lib::Model>(model_resource);
-	//model->InitializeAnimation();
+
+	Mo2Lib::ModelLoader::GetInstance().End();
 
 
 	trans = parent->GetComponent<Transform>();

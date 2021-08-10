@@ -14,9 +14,6 @@ class GhostShip03 : public Component
 {
 public:
 	bool ismoving;
-	//Firearm* gun;
-	std::unique_ptr<StateMachine<GhostShip03>> fsm;
-	Mo2Lib::Animator anim;
 
 	enum STATE_LIST
 	{
@@ -30,9 +27,17 @@ public:
 	{
 		TPose = 0,
 		IDLE,
+		AFK_APPEAL,
 		RUN,
-		ATTACK,
+		SLASH1, 
+		SLASH2,
+		SLASH3, 
+		DASH_SLASH,
+		COUNTER,
+		JUMP_SLASH,
+		JUMP,
 		DODGE,
+		DEATH,
 		MAX_ANIM,
 	};
 
@@ -42,12 +47,16 @@ public:
 	void Draw();
 	void ImGui();
 
-	void MoveXZ(float speed);
+	void MoveXZ();
 	Mo2Lib::Vec3 InputDirection();
 	void LookForward();
 
-	Mo2Lib::Model* GetModel() { return model.get(); }
+	//Mo2Lib::Model* GetModel() { return model.get(); }
 private:
-	std::unique_ptr <Mo2Lib::Model> model;
-	std::shared_ptr<ShaderEx> phong;
+	std::unique_ptr<StateMachine<GhostShip03>> fsm;
+
+	class GShipImpl;
+	std::shared_ptr<GShipImpl> pimpl;
+public:
+	GShipImpl* GetPrivate() { return pimpl.get(); }
 };

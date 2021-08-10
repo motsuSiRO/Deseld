@@ -77,7 +77,7 @@ inline DirectX::XMFLOAT4X4 FbxAMatrixToFloat4x4(const FbxAMatrix& fbxValue)
 ModelResource::ModelResource(ID3D11Device* device, const char* fbxFilename)
 {
 	{
-		
+
 		FbxManager* fbxManager = FbxManager::Create();
 
 		// FBXに対する入出力を定義する
@@ -124,29 +124,18 @@ ModelResource::ModelResource(ID3D11Device* device, const char* fbxFilename)
 
 		// マネージャ解放
 		fbxManager->Destroy();		// 関連するすべてのオブジェクトが解放される
-	
-		
+
+
 	}
 }
 
 
-bool ModelResource::Load(ID3D11Device* device, ModelData* m_data, int load_type)
+bool ModelResource::Load(ID3D11Device* device, ModelData* m_data, bool anim)
 {
 	if (m_data)
 	{
-		switch (load_type)
-		{
-		case LOAD_STATIC_MODEL:
-			break;
-		case LOAD_SKINNED_MODEL:
-			ConvertFromData(device, m_data);
-			break;
-		case LOAD_ANIMATION:
-			ConvertFromAnimData(device, m_data);
-			break;
-		default:
-			break;
-		}
+		if (!anim)ConvertFromData(device, m_data);
+		else ConvertFromAnimData(device, m_data);
 
 		return true;
 	}
@@ -480,7 +469,7 @@ void ModelResource::BuildMesh(ID3D11Device* device, FbxNode* fbxNode, FbxMesh* f
 
 			indices.at(indexOffset + fbxVertex_index) = vertexCount;
 			vertices.at(vertexCount) = vertex;
-			
+
 			vertexCount++;
 		}
 
@@ -494,7 +483,7 @@ void ModelResource::BuildMesh(ID3D11Device* device, FbxNode* fbxNode, FbxMesh* f
 		D3D11_BUFFER_DESC bufferDesc = {};
 		D3D11_SUBRESOURCE_DATA subresourceData = {};
 
-		bufferDesc.ByteWidth = static_cast<UINT>(sizeof(Vertex)* vertices.size());
+		bufferDesc.ByteWidth = static_cast<UINT>(sizeof(Vertex) * vertices.size());
 		//bufferDesc.Usage = D3D11_USAGE_DEFAULT;
 		bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -812,7 +801,6 @@ void ModelResource::ConvertFromData(ID3D11Device* device, ModelData* m_data)
 	if (!m_data)return;
 
 	//Node
-	remove_node = m_data->remove_node;
 	nodes.resize(m_data->nodes.size());
 
 	for (size_t i = 0; i < nodes.size(); ++i)
@@ -831,9 +819,9 @@ void ModelResource::ConvertFromData(ID3D11Device* device, ModelData* m_data)
 		ModelData::Material& materialData = m_data->materials[i];
 		Material& material = materials[i];
 		material.color = materialData.color;
-	
-	
-		if (materialData.tex_count > 0)
+
+
+		if (materialData.tex_count > 0 && materialData.texture_filename != "")
 		{
 
 			// マルチバイト文字からワイド文字へ変換
@@ -953,12 +941,12 @@ void ModelResource::ConvertFromData(ID3D11Device* device, ModelData* m_data)
 
 	//Animation
 	animations.resize(m_data->animations.size());
-	
+
 	for (size_t i = 0; i < animations.size(); ++i)
 	{
 		ModelData::Animation& animData = m_data->animations[i];
 		Animation& anim = animations[i];
-		
+
 		anim.seconds_length = animData.seconds_length;
 
 		for (auto keyData : animData.keyframes)
@@ -966,13 +954,13 @@ void ModelResource::ConvertFromData(ID3D11Device* device, ModelData* m_data)
 			anim.keyframes.emplace_back(Keyframe());
 
 			Keyframe& key = anim.keyframes.back();
-			
+
 			key.seconds = keyData.seconds;
 			for (auto nodeData : keyData.node_keys)
 			{
 				key.node_keys.emplace_back(NodeKeyData());
 
- 				NodeKeyData& node_key = key.node_keys.back();
+				NodeKeyData& node_key = key.node_keys.back();
 				node_key.name = nodeData.name;
 				node_key.scale = nodeData.scale;
 				node_key.rotate = nodeData.rotate;
@@ -990,7 +978,7 @@ void ModelResource::ConvertFromAnimData(ID3D11Device* device, ModelData* m_data)
 {
 
 
-	for(auto& a_data : m_data->animations )
+	for (auto& a_data : m_data->animations)
 	{
 		animations.emplace_back(Animation());
 		Animation& anim = animations.back();

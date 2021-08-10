@@ -17,7 +17,7 @@ namespace RS_STATE
 		RS_WIREFRAME = 0,
 		RS_CULL_NONE,
 		RS_CULL_FRONT,
-		RS_CULL_BUCK,
+		RS_CULL_BACK,
 		MODE_END
 	};
 
@@ -95,7 +95,7 @@ public:
 		desc.CullMode = D3D11_CULL_BACK;
 		desc.AntialiasedLineEnable = false;
 
-		hr = device->CreateRasterizerState(&desc, states[RS_STATE::RS_CULL_BUCK].GetAddressOf());
+		hr = device->CreateRasterizerState(&desc, states[RS_STATE::RS_CULL_BACK].GetAddressOf());
 		_ASSERT_EXPR(SUCCEEDED(hr), hr_trace(hr));
 	}
 

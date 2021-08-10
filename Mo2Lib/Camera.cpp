@@ -279,7 +279,7 @@ void MainCamera::ImGui()
 	}
 	if ((size_t)index > cam_list.size() - 1)
 	{
-		index = cam_list.size() - 1;
+		index = (int)(cam_list.size() - 1);
 	}
 
 	//Mo2Gui()->str = cam_list.at(index)->GetFSM()->GetName_CurrentState();

@@ -40,19 +40,19 @@ void SceneGame::Initialize()
 	obj->AddComponent<PlayerControl>();
 	//obj->AddComponent<Firearm>();
 	obj->AddComponent<GhostShip03>();
-	Mo2Lib::game.obj_list.emplace_back(obj);
+	obj_list.emplace_back(obj);
 
 	obj = new Object("Stage01");
 	obj->AddComponent<Transform>();
 	obj->AddComponent<Stage01>();
-	Mo2Lib::game.obj_list.emplace_back(obj);
+	obj_list.emplace_back(obj);
 
 	obj = new Object("TheEmblion");
 	obj->AddComponent<Transform>();
 	obj->AddComponent<Physics2>();
 	//obj->AddComponent<Firearm>();
 	obj->AddComponent<TheEmblion>();
-	Mo2Lib::game.obj_list.emplace_back(obj);
+	obj_list.emplace_back(obj);
 
 
 	skinned_bp = std::make_unique<ShaderEx>();
@@ -101,21 +101,27 @@ void SceneGame::Update(float elapsed_time)
 {
 	elapsed_time = min(0.1f, elapsed_time);
 
-	auto buff = Mo2Lib::game.obj_list;
+	auto buff = obj_list;
 	for (auto obj : buff)
 	{
 		obj->Update(elapsed_time);
 
 		if (obj->destroy)
 		{
-			Mo2Lib::game.obj_list.remove(obj);
+			obj_list.remove(obj);
 		}
 	}
 	CAM_LIST()->Interpolation(elapsed_time);
 
 	particleSys->Update();
 
-	particleSys->Snow(GShip::arm_pos/*DirectX::XMFLOAT3(0.f, 0.f, 100.f)*/, 1);
+	//static int time = 0;
+	//time++;
+	//if (time > 100)
+	//{
+	//	particleSys->Snow(GShip::arm_pos/*DirectX::XMFLOAT3(0.f, 0.f, 100.f)*/, 1);
+	//	time = 0;
+	//}
 }
 
 
@@ -177,7 +183,7 @@ void SceneGame::Render()
 		sky_box->Render(Mo2System->DX11context.Get(), view_projection, true);
 
 
-		Mo2System->SetRSState(RS_STATE::RS_CULL_BUCK);
+		Mo2System->SetRSState(RS_STATE::RS_CULL_BACK);
 
 		{
 			V = CAM_LIST()->GetView();
@@ -193,7 +199,7 @@ void SceneGame::Render()
 		//Mo2Render().Draw(skybox_NoL.get(), *model);
 
 
-		for (auto obj : Mo2Lib::game.obj_list)
+		for (auto obj : obj_list)
 		{
 			obj->Draw();
 		}
@@ -243,7 +249,7 @@ void SceneGame::ImGui()
 
 		ImGui::BeginChild(ImGui::GetID((void*)0), ImVec2(250.f, 100.f), ImGuiWindowFlags_NoTitleBar);
 		static bool* only_obj;
-		for (auto& obj : Mo2Lib::game.obj_list)
+		for (auto& obj : obj_list)
 		{
 			ImGui::Text(obj->tag);
 			ImGui::SameLine();
@@ -306,12 +312,8 @@ void SceneGame::ImGui()
 		SetCursorPos((int)(viewport.Width / 2.f), (int)(viewport.Height / 2.f));
 	}
 
-	static bool ShowCollider = false;
-	if (ImGui::Button("Collider"))
-	{
-		ShowCollider ^= (bool)1;
-	}
-	for (auto obj : Mo2Lib::game.obj_list)
+
+	for (auto obj : obj_list)
 	{
 		obj->ImGui();
 
@@ -319,7 +321,7 @@ void SceneGame::ImGui()
 		{
 			if (dynamic_cast<ColliderComponent*>(com))
 			{
-				com->is_visible = ShowCollider;
+				com->is_visible = Mo2Gui()->visible_collider;
 			}
 		}
 

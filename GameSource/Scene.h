@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include "ComponentObject.h"
 
 class Scene
 {
@@ -10,12 +11,16 @@ private:
 	friend class SceneManager;
 	bool initialized = false;//ÉçÅ[ÉhèIóπFG
 
+protected:
+	std::list<std::shared_ptr<Object>> obj_list;
+
 public:
 	Scene() {}
 	virtual ~Scene() {}
 	virtual void Initialize() = 0;
 	virtual void Update(float elapsedTime) = 0;
 	virtual void Render() = 0;
+	std::list<std::shared_ptr<Object>>& GetObjects() { return obj_list; }
 };
 
 
@@ -63,6 +68,7 @@ public:
 	void Render();
 	void ChangeScene(Scene* new_scene);
 
+	std::list<std::shared_ptr<Object>>& GetObjects() { return current_scene->GetObjects(); }
 };
 
-#define SceneMgr SceneManager::GetInstance()
+#define Mo2Scene SceneManager::GetInstance()

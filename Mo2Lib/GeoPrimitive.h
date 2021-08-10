@@ -10,6 +10,7 @@
 class GeoPrimitive
 {
 public:
+	bool is_solid;
 	int					numIndices;
 	Mo2Lib::Transform transform;
 	//DirectX::XMFLOAT3	pos;				//	Åuà íuÅv
@@ -39,7 +40,7 @@ public:
 	Microsoft::WRL::ComPtr<ID3D11SamplerState> sampler_state;
 
 
-	void render(ID3D11DeviceContext* context, bool isSolid);
+	void render(ID3D11DeviceContext* context);
 	void render(ID3D11DeviceContext* context, const DirectX::XMFLOAT4X4& view_projection,
 		const DirectX::XMFLOAT4& light_dir,
 		bool isSolid);

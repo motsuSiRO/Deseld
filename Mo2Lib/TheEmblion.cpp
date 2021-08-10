@@ -16,24 +16,25 @@ void TheEmblion::Start()
 	phong = std::make_shared<ShaderEx>();
 	phong->Create(L"model_vs", L"model_ps");
 
-	const char* fbx_filename;
-	std::shared_ptr<ModelResource> model_resource = std::make_shared<ModelResource>();
+	std::shared_ptr<ModelResource> model_resource;
+	Mo2Lib::ModelLoader::GetInstance().Setup(/*true*/);
 
-	fbx_filename = "./Data/Assets/enemy/the embulion.fbx";
-	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_SKINNED_MODEL);
-	fbx_filename = "./Data/Assets/enemy/the embulion Idle.fbx";
-	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	
+	Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/enemy/the embulion.fbx");
+	Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/enemy/the embulion Idle.fbx", true);
+
+	model_resource = Mo2Lib::ModelLoader::GetInstance().Apply();
 	model = std::make_unique<Mo2Lib::Model>(model_resource);
+
+	Mo2Lib::ModelLoader::GetInstance().End();
+
 	model->InitializeAnimation();
 
-	anim.Initialize();
-	anim.PlayAnim(1, true);
+	model->PlayAnim(1, true);
 
 	trans = parent->GetComponent<Transform>();
 	trans->scale = { 3.f, 3.f, 3.f };
 
-	hitbox[0] = parent->AddComponent<BoxComponent>();
+	//hitbox[0] = parent->AddComponent<BoxComponent>();
 	s0 = parent->AddComponent<SphereComponent>();
 
 	s0->trans.scale = { 60.f, 60.f, 60.f };
@@ -42,11 +43,11 @@ void TheEmblion::Start()
 
 void TheEmblion::Update()
 {
-	hitbox[0]->trans.translate = model->GetNodes(1)->GetWorldPos();
+	//hitbox[0]->trans.translate = model->GetNodes(1)->GetWorldPos();
 
 	s0->trans.translate = trans->translate;
 
-	model->UpdateAnimation(&anim, parent->delta_time);
+	model->UpdateAnimation(parent->delta_time);
 }
 
 void TheEmblion::Draw()
@@ -85,7 +86,6 @@ void TheEmblion::ImGui()
 			ImGui::Text("%d %s", i, model->GetNodes().at(i).name);
 		}
 
-		anim.AnimImGui(std::string(typeid(TheEmblion).name()));
 
 	}
 }

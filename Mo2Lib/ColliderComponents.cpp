@@ -1,6 +1,7 @@
 #include "ColliderComponents.h"
+
+#include "Scene.h"
 #include "model_renderer.h"
-#include "GameSystem.h"
 #include "Collision.h"
 
 void ColliderComponent::Start()
@@ -9,6 +10,19 @@ void ColliderComponent::Start()
 	primitive = std::make_unique<GeoPrimitive>();
 	nolight = std::make_unique<ShaderEx>();
 	nolight->Create(L"NoLightObj_VS", L"NoLightObj_PS");
+}
+
+void ColliderComponent::Draw()
+{
+	primitive->SetTransform(trans);
+	primitive->color = { 1.f, 1.f, 1.f, 0.3f };
+	primitive->is_solid = true;
+	Mo2Render().Draw(nolight.get(), *primitive);
+
+	primitive->color = { 1.f, 1.f, 1.f, 1.f };
+	primitive->is_solid = false;
+	Mo2Render().Draw(nolight.get(), *primitive);
+
 }
 
 void ColliderComponent::ImGui()
@@ -29,7 +43,7 @@ void BoxComponent::Update()
 {
 	
 	bool detect = false;
-	for (auto obj : Mo2Lib::game.obj_list)
+	for (auto obj : Mo2Scene.GetObjects())
 	{
 		if (obj.get() == parent)
 		{
@@ -69,8 +83,7 @@ void BoxComponent::Update()
 
 void BoxComponent::Draw()
 {
-	primitive->SetTransform(trans);
-	Mo2Render().Draw(nolight.get(), *primitive);
+	Collider::Draw();
 }
 
 void BoxComponent::OnHit()
@@ -100,7 +113,7 @@ void SphereComponent::Update()
 {
 
 	bool detect = false;
-	for (auto obj : Mo2Lib::game.obj_list)
+	for (auto obj : Mo2Scene.GetObjects())
 	{
 		if (obj.get() == parent)
 		{
@@ -160,8 +173,7 @@ void SphereComponent::Update()
 
 void SphereComponent::Draw()
 {
-	primitive->SetTransform(trans);
-	Mo2Render().Draw(nolight.get(), *primitive);
+	Collider::Draw();
 }
 
 void SphereComponent::OnHit()

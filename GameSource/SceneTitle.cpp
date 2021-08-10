@@ -31,7 +31,7 @@ void SceneTitle::Update(float elapsedTime)
 {
 	if (INPUT.keys[DIK_SPACE] == 1)
 	{
-		SceneMgr.ChangeScene(new SceneLoad(new SceneGame));
+		Mo2Scene.ChangeScene(new SceneLoad(new SceneGame));
 	}
 
 }

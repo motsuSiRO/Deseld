@@ -107,6 +107,16 @@ public:
 		return orient;
 	}
 
+	Mo2Lib::Transform Convert()
+	{
+		Mo2Lib::Transform t;
+		t.translate = translate;
+		t.rotate = GetFixedQuaternion();
+		t.scale = scale;
+
+		return t;
+	}
+
 	void Start()
 	{
 		translate = { 0.f,0.f,0.f };

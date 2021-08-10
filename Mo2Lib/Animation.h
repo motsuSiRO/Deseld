@@ -1,12 +1,22 @@
 #pragma once
-//#include <string>
-#include <vector>
-#include <string>
-//#include "model.h"
-#include "Vector3D.h"
 
 namespace Mo2Lib
 {
+	enum ROOT_MOTION
+	{
+		NO_ROOT_MOTION = 0b0000,
+		ROOT_MOTION_XZ = 0b0001,
+		ROOT_MOTION_Y = 0b0010,
+		ROOT_MOTION_RY = 0b0100,
+	};
+
+	enum ANIM_TYPE
+	{
+		ANIM_NORMAL = 0,
+		ANIM_BLEND,
+		ANIM_RATIO,
+		ANIM_ADD,
+	};
 
 	struct Anim_Data//アニメーション単位のデータ
 	{
@@ -16,48 +26,12 @@ namespace Mo2Lib
 		float sec_len;
 		bool loop = false;
 		bool end_anim = true;
-		bool first_call = true;
 	};
 	struct Anim_Prev
 	{
 		bool change_anim;
-		float anim_index;
+		int anim_index;
 	};
 
-
-	class Animator
-	{
-	public:
-		void Initialize();
-		void PlayAnim(int animation_index, bool loop = false, bool force = true);
-		void PlayBlendAnim(int index, bool l = true, bool force = true);
-		bool IsPlaying() { return !data.end_anim; }
-		struct Node
-		{
-			const char* name;
-			Node* parent;
-			Mo2Lib::Transform transform;
-			DirectX::XMFLOAT4X4	local_transform;
-			DirectX::XMFLOAT4X4	world_transform;
-
-			Mo2Lib::Float3 GetWorldPos() { return Mo2Lib::Float3(world_transform._41, world_transform._42, world_transform._43); }
-			Mo2Lib::Float3 GetPos() { return Mo2Lib::Float3(transform.translate.x, transform.translate.y, transform.translate.z); }
-			void SetTransform(Mo2Lib::Transform t) { transform = t; }
-		};
-
-		enum ANIM_TYPE
-		{
-			ANIM_NORMAL = 0,
-			ANIM_BLEND,
-			ANIM_RATIO,
-			ANIM_ADD,
-		};
-		int current_anim_index;
-		int blend_type;
-		Anim_Data data;
-		Anim_Prev prev;
-		
-		void AnimImGui(std::string str);
-	};
 
 }

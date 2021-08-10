@@ -87,7 +87,7 @@ public:
 	const std::vector<Animation>& GetAnimations() const { return animations; }
 	void AddAnimation(const char* Filename);
 	int GetRemoveNodeCount() { return remove_node; }
-	bool Load(ID3D11Device* device, ModelData* m_data, int load_type);
+	bool Load(ID3D11Device* device, ModelData* m_data, bool is_animation);
 	//bool LoadFromBinary(ID3D11Device* device, const char* Filename, ModelData* m_data);
 	void Set(std::shared_ptr<Texture> texture) { materials[0].tex = texture; }
 

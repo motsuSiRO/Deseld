@@ -15,7 +15,7 @@ void Mo2GUI::Initialize()
 	win_camera = false;
 	win_pl = false;
 	win_reticule = false;
-	win_cursor = false;
+	win_cursor = true;
 	visible_collider = false;
 }
 
@@ -60,38 +60,42 @@ void Mo2GUI::SetNextWindowOnce(Mo2Lib::Float2 left_up, Mo2Lib::Float2 _size)
 
 void Mo2GUI::ImGui()
 {
-
 	if (ImGui::Button("showFPS"))
 	{
-		Mo2Gui()->win_showFPS ^= 1;
+		win_showFPS ^= (bool)1;
 	}
 	if (ImGui::Button("OPTION"))
 	{
-		Mo2Gui()->win_option ^= 1;
+		win_option ^= (bool)1;
 	}
 	if (ImGui::Button("INPUT"))
 	{
-		Mo2Gui()->win_input ^= 1;
+		win_input ^= (bool)1;
 	}
 	if (ImGui::Button("CAMERA"))
 	{
-		Mo2Gui()->win_camera ^= 1;
+		win_camera ^= (bool)1;
 	}
 	if (ImGui::Button("Player"))
 	{
-		Mo2Gui()->win_pl ^= 1;
+		win_pl ^= (bool)1;
 	}
 	if (ImGui::Button("Reticule"))
 	{
-		Mo2Gui()->win_reticule ^= 1;
+		win_reticule ^= (bool)1;
 	}
 	if (ImGui::Button("Show_Collider"))
 	{
-		visible_collider ^= 1;
+		visible_collider ^= (bool)1;
 	}
-	if (INPUT.KeyPressed(DIK_F1))
+	ImGui::SameLine();
+	ImGui::Checkbox("Collider", &visible_collider);
+
+	if (INPUT.KeyPressed(DIK_F1) || ImGui::Button("Show_Cursor"))
 	{
-		Mo2Gui()->win_cursor ^= 1;
+		win_cursor ^= (bool)1;
 	}
+	ImGui::Checkbox("Cursor##mo2Gui", &win_cursor);
+
 
 }

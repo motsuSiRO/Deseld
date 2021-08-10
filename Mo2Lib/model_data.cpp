@@ -671,6 +671,8 @@ void ModelData::BuildAnimation(FbxScene* fbxScene, FbxString* fbxAnimStackName)
 	animations.emplace_back(Animation());
 	Animation& animation = animations.back();
 
+	animation.name = filename;
+
 	// アニメーションデータのサンプリング設定
 	FbxTime::EMode fbxTimeMode = fbxScene->GetGlobalSettings().GetTimeMode();
 	FbxTime fbxFrameTime;
@@ -804,6 +806,8 @@ int ModelData::FindMaterial_index(FbxScene* fbxScene, const FbxSurfaceMaterial* 
 
 void ModelData::AddAnimation(const char* fbx_filename)
 {
+	filename = fbx_filename;
+
 	FbxManager* fbxManager = FbxManager::Create();
 
 	// FBXに対する入出力を定義する
@@ -828,7 +832,7 @@ void ModelData::AddAnimation(const char* fbx_filename)
 	//BinarySkeltalOutput(fbx_filename, this);
 }
 
-void ModelData::SaveToFile()
+void ModelData::SaveToFile(const char* name)
 {
-	BinarySkinmeshOutput(filename, this);
+	BinarySkinmeshOutput(name, this);
 }

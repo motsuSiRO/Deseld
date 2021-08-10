@@ -226,7 +226,7 @@ void ModelRenderer::Begin(const DirectX::XMFLOAT3 eye_pos, const DirectX::XMFLOA
 	//context->OMSetBlendState(Blender->states[Blender->ALPHA].Get(), blend_factor, 0xFFFFFFFF);
 	Mo2System->SetBlendState(BLEND_STATE::ALPHA);
 
-	Mo2System->SetRSState(RS_STATE::RS_CULL_BUCK);
+	Mo2System->SetRSState(RS_STATE::RS_CULL_BACK);
 	//context->OMSetDepthStencilState(m_depth_stencil_state.Get(), 0);
 	Mo2System->SetDSState(DS_STATE::D_TRUE_W_TRUE);
 	context->PSSetSamplers(0, 1, m_sampler_state.GetAddressOf());
@@ -253,7 +253,7 @@ void ModelRenderer::Draw(ShaderEx* shader, Mo2Lib::Model& model)
 
 
 	const ModelResource* model_resource = model.GetModelResource();
-	const std::vector<Mo2Lib::Animator::Node>& nodes = model.GetNodes();
+	const std::vector<Mo2Lib::Model::Node>& nodes = model.GetNodes();
 
 	//オブジェクト用定数バッファ更新w
 	CbObject cb_object;
@@ -329,7 +329,7 @@ void ModelRenderer::Draw(ShaderEx* shader, GeoPrimitive& model)
 		//context->DrawIndexed(model.numIndices, 0, 0);
 	}
 
-	model.render(context, true);
+	model.render(context);
 
 	shader->Inactivate();
 }

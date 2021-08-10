@@ -5,5 +5,7 @@
 //--------------------------------------------
 GSInput main(VSInput input)
 {
-	return input;
+	uint type = input.Color.r;
+	if (type < 0)discard;
+	else return input;
 }

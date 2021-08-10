@@ -12,17 +12,6 @@
 #include "ColliderComponents.h"
 //--------------------------------------------
 
-namespace GShip
-{
-	Mo2Lib::Float3 arm_pos;
-	Physics2* physics;
-	Transform* trans;
-	PlayerControl* pctrl;
-	BoxComponent* box;
-	SphereComponent* s0;
-}
-using namespace GShip;
-
 //-----------------------------------------------------
 //
 //		Constant term
@@ -38,6 +27,138 @@ const float JUMP_POW = 150.f;
 const float JUMP_RESPTION_TIME = 0.1f;
 
 
+
+class GhostShip03::GShipImpl
+{
+public:
+	std::unique_ptr <Mo2Lib::Model> model;
+	std::shared_ptr<ShaderEx> phong;
+	Mo2Lib::Float3 arm_pos;
+	Physics2* physics;
+	Transform* trans;
+	PlayerControl* pctrl;
+	BoxComponent* box;
+	SphereComponent* s0;
+
+	void LoadModel()
+	{
+		//const char* fbx_filename;
+		std::shared_ptr<ModelResource> model_resource;
+		Mo2Lib::ModelLoader::GetInstance().Setup(/*true*/);
+
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/GhostShip03.fbx");
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword Idle.fbx", true);
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword Appeal_bunbun.fbx", true);
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword Run.fbx", true);
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword Slash1.fbx", true);
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword Slash2.fbx", true);
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword Slash3.fbx", true);
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword DashSlash.fbx", true);
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword Counter.fbx", true);
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword JumpSlash.fbx", true);
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword Jump.fbx", true);
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword Rolling.fbx", true);
+		Mo2Lib::ModelLoader::GetInstance().Load("./Data/Assets/GhostShip/Sword Death.fbx", true);
+		
+		model_resource = Mo2Lib::ModelLoader::GetInstance().Apply();
+		model = std::make_unique<Mo2Lib::Model>(model_resource);
+
+		Mo2Lib::ModelLoader::GetInstance().End();
+
+		model->root_motion = (Mo2Lib::ROOT_MOTION)(Mo2Lib::NO_ROOT_MOTION);
+		model->InitializeAnimation(GhostShip03::IDLE);
+
+	}
+
+	void LoadShader()
+	{
+		phong = std::make_shared<ShaderEx>();
+		phong->Create(L"model_vs", L"model_ps");
+	}
+
+	Mo2Lib::Vec3 CulcDirection()
+	{
+		Mo2Lib::Vec3 dir = { sinf(trans->rotate.y), 0.f, cosf(trans->rotate.y) };
+
+		return dir;
+	}
+
+	void AddMoveSpeed(Mo2Lib::Vec3& dir)
+	{
+		physics->AddMoveSpeed(dir);
+	}
+
+	void AddMoveSpeedToTheDirection()
+	{
+		physics->AddMoveSpeed(CulcDirection());
+	}
+
+	bool IsMoving()
+	{
+		if (pctrl->dir_vec != 0)return true;
+		else return false;
+	}
+
+	void SetZeroVelocity()
+	{
+		physics->velocity = { 0.f,0.f,0.f };
+	}
+
+	void AdaptBoxTransform()
+	{
+		box->trans.translate = model->GetNodes(0)->GetWorldPos();
+		box->trans.rotate = DirectX::XMQuaternionRotationMatrix(DirectX::XMLoadFloat4x4(&model->GetNodes(0)->world_transform));
+		box->trans.scale = { 30.f, 100.f, 30.f };
+
+	}
+
+	void AdaptSphereTransform()
+	{
+		s0->trans.translate = trans->translate;
+		s0->trans.scale = { 30.f, 30.f, 30.f };
+
+	}
+
+	void SetMainCamOrientation()
+	{
+		CAM_LIST()->main_cam->SetOrientation(trans->translate);
+	}
+
+	void AnimSpdByPhysics()
+	{
+		model->data.anim_spd = physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
+	}
+
+	void DeffaultAnimSpd()
+	{
+		model->data.anim_spd = 1.f;
+	}
+
+	Mo2Lib::Vec3 GetVelocityXZ()
+	{
+		return Mo2Lib::Vec3(physics->velocity.x, 0.f, physics->velocity.z);
+	}
+
+	void PlayAnim(int index, bool loop = false, bool force = true)
+	{
+		model->PlayAnim(index, loop, force);
+	}
+
+	void PlayBlendAnim(int index, bool loop = false, bool force = true)
+	{
+		model->PlayBlendAnim(index, loop, force);
+	}
+
+
+	void ModelDraw()
+	{
+		model->SetTransform(trans->translate, trans->GetFixedQuaternion(), trans->scale);
+
+		Mo2Render().Draw(phong.get(), *model);
+	}
+};
+
+
 //-----------------------------------------------------
 //
 //		Action State
@@ -47,28 +168,29 @@ class PL_Idle : public State<GhostShip03>
 {
 	void Begin(GhostShip03* p)
 	{
-		p->anim.data.anim_spd = physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
+		//p->anim.data.anim_spd = p->GetPrivate()->physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
+		p->GetPrivate()->AnimSpdByPhysics();
 	}
 
 	void Execute(GhostShip03* p)
 	{
 
-		if (pctrl->dir_vec != 0)
+		if (p->GetPrivate()->pctrl->dir_vec != 0)
 		{
 			fsm->ChangeState(GhostShip03::PL_MOVE);
 		}
-		else if (pctrl->Pressed("Firstary"))
+		else if (p->GetPrivate()->pctrl->Pressed("Firstary"))
 		{
 			fsm->ChangeState(GhostShip03::PL_ATK);
 
 		}
-		else if (pctrl->Pressed("Dodge"))
+		else if (p->GetPrivate()->pctrl->Pressed("Dodge"))
 		{
 			fsm->ChangeState(GhostShip03::PL_DODGE);
 		}
 		else
 		{
-			p->anim.PlayBlendAnim(GhostShip03::IDLE);
+			p->GetPrivate()->PlayBlendAnim(GhostShip03::IDLE);
 		}
 	}
 
@@ -81,44 +203,42 @@ class PL_Idle : public State<GhostShip03>
 
 class PL_Move : public State<GhostShip03>
 {
-	float move_speed = 0.f;
 	bool ismoving;
 
 	void Begin(GhostShip03* p)
 	{
-		p->anim.data.anim_spd = physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
+		//p->anim.data.anim_spd = p->GetPrivate()->physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
 
-		physics->mass = INIT_MASS;
-		physics->limit_velocity = true;
-		physics->dynamic_friction = 10.f;
-		physics->MAX_VELOCITY = INIT_MAX_DASH_VELOCITY;
-		physics->MAX_MOVE_SPEED = MAX_WALK_SPEED;
+		p->GetPrivate()->physics->mass = INIT_MASS;
+		p->GetPrivate()->physics->limit_velocity = true;
+		p->GetPrivate()->physics->dynamic_friction = 10.f;
+		p->GetPrivate()->physics->MAX_VELOCITY = INIT_MAX_DASH_VELOCITY;
+		p->GetPrivate()->physics->MAX_MOVE_SPEED = MAX_WALK_SPEED;
 
-		move_speed = physics->MAX_MOVE_SPEED * physics->mass;
+		p->GetPrivate()->AnimSpdByPhysics();
 
-		Mo2Lib::Vec3 i_vec = p->InputDirection();
-		physics->AddForce(i_vec * move_speed);
+		p->MoveXZ();
 	}
 
 	void Execute(GhostShip03* p)
 	{
 		p->LookForward();
-		p->MoveXZ(move_speed);
+		p->MoveXZ();
 
 
-		p->anim.data.anim_spd = physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
-		p->anim.PlayBlendAnim(GhostShip03::RUN, true, true);
+		//p->anim.data.anim_spd = p->GetPrivate()->physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
+		p->GetPrivate()->PlayBlendAnim(GhostShip03::RUN, true, true);
 
 
-		if (pctrl->dir_vec.LengthSq() <= 0)
+		if (p->GetPrivate()->pctrl->dir_vec.LengthSq() <= 0)
 		{
 			fsm->ChangeState(GhostShip03::PL_IDLE);
 		}
-		else if (pctrl->Pressed("Firstary"))
+		else if (p->GetPrivate()->pctrl->Pressed("Firstary"))
 		{
 			fsm->ChangeState(GhostShip03::PL_ATK);
 		}
-		else if (pctrl->Pressed("Dodge"))
+		else if (p->GetPrivate()->pctrl->Pressed("Dodge"))
 		{
 			fsm->ChangeState(GhostShip03::PL_DODGE);
 		}
@@ -137,29 +257,40 @@ class PL_Attack : public State<GhostShip03>
 {
 	float move_speed = 0.f;
 	float timer;
+	int index;
 	void Begin(GhostShip03* p)
 	{
-		p->anim.data.anim_spd = 1.f;
-		p->anim.PlayBlendAnim(GhostShip03::ATTACK, false);
+		static int i = 0;
+		index = i + GhostShip03::SLASH1;
+
+		p->GetPrivate()->model->root_motion = (Mo2Lib::ROOT_MOTION)(Mo2Lib::ROOT_MOTION_XZ | Mo2Lib::ROOT_MOTION_Y);
+		p->GetPrivate()->DeffaultAnimSpd();
+		p->GetPrivate()->PlayBlendAnim(index, false);
+
+		i++;
+		if (i >= GhostShip03::MAX_ANIM - GhostShip03::SLASH1)
+		{
+			i = 0;
+		}
 	}
 
 	void Execute(GhostShip03* p)
 	{
 		//p->anim.data.anim_spd += 1.f + Mo2System->delta_time;
 
-		if (pctrl->Pressed("Dodge"))
+		if (p->GetPrivate()->pctrl->Pressed("Dodge"))
 		{
 			fsm->ChangeState(GhostShip03::PL_DODGE);
 		}
 
-		if (p->anim.data.end_anim)
+		if (p->GetPrivate()->model->data.end_anim)
 		{
-			if (pctrl->dir_vec != 0)
+			if (p->GetPrivate()->pctrl->dir_vec != 0)
 			{
 				fsm->ChangeState(GhostShip03::PL_MOVE);
 			}
 
-			else if (pctrl->dir_vec.LengthSq() == 0.f)
+			else if (p->GetPrivate()->pctrl->dir_vec.LengthSq() == 0.f)
 			{
 				fsm->ChangeState(GhostShip03::PL_IDLE);
 			}
@@ -168,7 +299,7 @@ class PL_Attack : public State<GhostShip03>
 	}
 	void End(GhostShip03* p)
 	{
-
+		p->GetPrivate()->model->root_motion = Mo2Lib::NO_ROOT_MOTION;
 	}
 };
 
@@ -178,36 +309,39 @@ class PL_Dodge : public State<GhostShip03>
 	float timer;
 	void Begin(GhostShip03* p)
 	{
-		physics->MAX_VELOCITY = INIT_MAX_VELOCITY * 1.5f;
-		physics->MAX_MOVE_SPEED = MAX_WALK_SPEED * 5.f;
+		p->GetPrivate()->physics->MAX_VELOCITY = INIT_MAX_VELOCITY * 1.5f;
+		p->GetPrivate()->physics->MAX_MOVE_SPEED = MAX_WALK_SPEED * 5.f;
 		timer = 0.5f;
 
-		p->anim.data.anim_spd = physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
-		p->anim.PlayAnim(GhostShip03::DODGE, false);
+		p->GetPrivate()->physics->velocity = p->InputDirection() * 100.f;
+
+		//p->anim.data.anim_spd = p->GetPrivate()->physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
+		p->GetPrivate()->AnimSpdByPhysics();
+
+		p->GetPrivate()->PlayAnim(GhostShip03::DODGE, false);
 	}
 
 	void Execute(GhostShip03* p)
 	{
 		p->LookForward();
-		Mo2Lib::Float3 dir = { sinf(trans->rotate.y), 0.f, cosf(trans->rotate.y) };
-		physics->AddForce(dir * physics->MAX_MOVE_SPEED * physics->mass);
+		//Mo2Lib::Float3 dir = { sinf(p->GetPrivate()->trans->rotate.y), 0.f, cosf(p->GetPrivate()->trans->rotate.y) };
+		//p->GetPrivate()->physics->AddForce(dir * p->GetPrivate()->physics->MAX_MOVE_SPEED * p->GetPrivate()->physics->mass);
+		p->GetPrivate()->AddMoveSpeedToTheDirection();
 		
-		
-		if (p->anim.data.end_anim)
+		if (p->GetPrivate()->model->data.end_anim)
 		{
-			if (pctrl->dir_vec != 0)
+			if (p->GetPrivate()->IsMoving())
 			{
-				p->anim.PlayAnim(GhostShip03::RUN, true);
+				p->GetPrivate()->PlayAnim(GhostShip03::RUN, true);
 				fsm->ChangeState(GhostShip03::PL_MOVE);
 			}
 
-			else if (pctrl->dir_vec.LengthSq() == 0.f)
+			else
 			{
-				physics->velocity = { 0.f,0.f,0.f };
-				p->anim.PlayAnim(GhostShip03::IDLE, true);
+				p->GetPrivate()->SetZeroVelocity();
+				p->GetPrivate()->PlayAnim(GhostShip03::IDLE, true);
 				fsm->ChangeState(GhostShip03::PL_IDLE);
 			}
-
 		}
 	}
 
@@ -225,12 +359,17 @@ class PL_Dodge : public State<GhostShip03>
 //---------------------------------------------------------------------
 void GhostShip03::Start()
 {
-	trans = parent->GetComponent<Transform>();
-	physics = parent->GetComponent<Physics2>();
-	pctrl = parent->GetComponent<PlayerControl>();
-	box = parent->AddComponent<BoxComponent>();
-	s0 = parent->AddComponent<SphereComponent>();
+	pimpl = std::make_shared<GShipImpl>();
+	pimpl->trans = parent->GetComponent<Transform>();
+	pimpl->physics = parent->GetComponent<Physics2>();
+	pimpl->pctrl = parent->GetComponent<PlayerControl>();
+	pimpl->box = parent->AddComponent<BoxComponent>();
+	pimpl->s0 = parent->AddComponent<SphereComponent>();
 	//gun = Parent->GetComponent<Firearm>();
+
+	pimpl->LoadShader();
+
+	pimpl->LoadModel();
 
 	fsm = std::make_unique<StateMachine<GhostShip03>>(this);
 	fsm->AddState(PL_IDLE, std::make_shared<PL_Idle>())
@@ -241,40 +380,6 @@ void GhostShip03::Start()
 	fsm->SetCurrentState(PL_IDLE);
 
 
-	phong = std::make_shared<ShaderEx>();
-	phong->Create(L"model_vs", L"model_ps");
-
-
-	const char* fbx_filename;
-	std::shared_ptr<ModelResource> model_resource = std::make_shared<ModelResource>();
-
-	//choose binary or fbx load when start up function
-	//choose save or not to binary when end function
-	fbx_filename = "./Data/Assets/GhostShip/GhostShip03.fbx";
-	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_SKINNED_MODEL);
-	fbx_filename = "./Data/Assets/GhostShip/Sword Idle.fbx";
-	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	fbx_filename = "./Data/Assets/GhostShip/Sword Run.fbx";
-	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	fbx_filename = "./Data/Assets/GhostShip/Sword Slash.fbx";
-	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	fbx_filename = "./Data/Assets/GhostShip/Rolling.fbx";
-	Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	//fbx_filename = "./Data/Assets/GhostShip/Pistol WalkBackward.fbx";
-	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	//fbx_filename = "./Data/Assets/GhostShip/Pistol sideStepL.fbx";
-	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	//fbx_filename = "./Data/Assets/GhostShip/Pistol sideStepR.fbx";
-	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	//fbx_filename = "./Data/Assets/GhostShip/Pistol AimUp.fbx";
-	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	//fbx_filename = "./Data/Assets/GhostShip/Pistol AimDown.fbx";
-	//Mo2Lib::LoadModelResource(model_resource, fbx_filename, Mo2Lib::LOADINGMODE_BIN, LOAD_ANIMATION);
-	model = std::make_unique<Mo2Lib::Model>(model_resource);
-	model->InitializeAnimation(GhostShip03::IDLE);
-
-	anim.Initialize();
-
 
 }
 
@@ -283,30 +388,27 @@ void GhostShip03::Update()
 	ismoving = false;
 
 	//anim.data.anim_spd = physics->velocity.Length() / physics->MAX_VELOCITY;
-	physics->Deceleration();
+	pimpl->physics->Deceleration();
 
 	fsm->Update(parent->delta_time);
 
 
-	model->UpdateAnimation(&anim, parent->delta_time);
+	pimpl->model->UpdateAnimation(parent->delta_time);
+	//pimpl->trans->translate += pimpl->model->RootAnimTransform(pimpl->trans->Convert()) * 0.01f;
 
-	box->trans.translate = model->GetNodes(0)->GetWorldPos();
-	box->trans.rotate = DirectX::XMQuaternionRotationMatrix(DirectX::XMLoadFloat4x4(&model->GetNodes(0)->world_transform));
-	box->trans.scale = { 30.f, 100.f, 30.f };
+	pimpl->AdaptBoxTransform();
 
-	s0->trans.translate = trans->translate;
-	s0->trans.scale = { 30.f, 30.f, 30.f };
+	pimpl->AdaptSphereTransform();
 
-	arm_pos = model->GetNodes(26)->GetWorldPos();
-
-	CAM_LIST()->main_cam->SetOrientation(trans->translate);
+	pimpl->SetMainCamOrientation();
 }
 
 void GhostShip03::Draw()
 {
-	model->SetTransform(trans->translate, trans->GetFixedQuaternion(), trans->scale);
+	//model->SetTransform(pimpl->trans->translate, pimpl->trans->GetFixedQuaternion(), pimpl->trans->scale);
 
-	Mo2Render().Draw(phong.get(), *model);
+	//Mo2Render().Draw(phong.get(), *model);
+	pimpl->ModelDraw();
 }
 
 void GhostShip03::ImGui()
@@ -333,12 +435,10 @@ void GhostShip03::ImGui()
 		ImGui::NewLine();
 
 		ImGui::NewLine();
-		for (size_t i = 0; i < model->GetNodes().size(); i++)
+		for (size_t i = 0; i < pimpl->model->GetNodes().size(); i++)
 		{
-			ImGui::Text("%d %s", i, model->GetNodes().at(i).name);
+			ImGui::Text("%d %s", i, pimpl->model->GetNodes().at(i).name);
 		}
-
-		anim.AnimImGui(std::string(typeid(GhostShip03).name()));
 	}
 
 
@@ -360,7 +460,7 @@ Mo2Lib::Vec3 GhostShip03::InputDirection()
 		Mo2Lib::Float2 key_vec = {};
 		Mo2Lib::Float2 zero = Mo2Lib::Float2(0, 1.f);
 
-		key_vec = pctrl->dir_vec;
+		key_vec = pimpl->pctrl->dir_vec;
 
 		key_vec.Normalize();
 
@@ -401,7 +501,7 @@ void GhostShip03::LookForward()
 	float now_angle = 0.f;
 
 	Mo2Lib::Vec3 forward = { 0.f, 0.f, 1.f };
-	Mo2Lib::Vec3 v = { physics->velocity.x, 0.f, physics->velocity.z };
+	Mo2Lib::Vec3 v = pimpl->GetVelocityXZ();
 	if (v == 0.f)return;
 
 	t_for = v.GetNormalize();//Mo2Lib::Float3(INPUT.StickVector().x, 0.f, INPUT.StickVector().y);
@@ -414,14 +514,14 @@ void GhostShip03::LookForward()
 	{
 		now_angle = DirectX::XM_2PI - now_angle;
 	}
-	trans->rotate.y = now_angle;
+	pimpl->trans->rotate.y = now_angle;
 
 }
 
 
-void GhostShip03::MoveXZ(float speed)
+void GhostShip03::MoveXZ()
 {
 	Mo2Lib::Vec3 i_vec = InputDirection();
-	physics->AddForce(i_vec * speed);
+	pimpl->physics->AddMoveSpeed(i_vec);
 
 }

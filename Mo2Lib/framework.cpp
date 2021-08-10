@@ -25,13 +25,15 @@ bool FrameWork::Initialize()
 
 	hr = CreateDevice(current_windowed);
 
-
-	blender.Create(DX11device.Get());
-	rasterizer.Create(DX11device.Get());
-	depthstencilstate.Create(DX11device.Get());
+	blender = std::make_unique<Blender>();
+	blender->Create(DX11device.Get());
+	rasterizer = std::make_unique<Rasterizer>();
+	rasterizer->Create(DX11device.Get());
+	depthstencilstate = std::make_unique<DepthStencilState>();
+	depthstencilstate->Create(DX11device.Get());
 
 	//SceneMgr.ChangeScene(new SceneTitle);
-	SceneMgr.ChangeScene(new SceneLoad(new SceneGame));
+	Mo2Scene.ChangeScene(new SceneLoad(new SceneGame));
 
 	return true;
 }
@@ -162,7 +164,7 @@ void FrameWork::Finalize()
 
 void FrameWork::Update(float elapsed_time/*Elapsed seconds from last frame*/)
 {
-	SceneMgr.Update(elapsed_time);
+	Mo2Scene.Update(elapsed_time);
 }
 
 void FrameWork::Render(float elapsed_time/*Elapsed seconds from last frame*/)
@@ -182,7 +184,7 @@ void FrameWork::Render(float elapsed_time/*Elapsed seconds from last frame*/)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	SceneMgr.Render();
+	Mo2Scene.Render();
 
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());

@@ -14,6 +14,7 @@ namespace Mo2Lib
 		//scale = { 1,1,1 };
 		color = { 1,1,1,1 };
 
+		data.blend_timer = 0.2f;
 
 		m_model_resource = resource;
 
@@ -35,6 +36,32 @@ namespace Mo2Lib
 
 	}
 
+	void Model::PlayAnim(int index, bool l, bool force)
+	{
+		if (current_anim_index == index && !data.end_anim) return;
+		if (current_anim_index == -1 || force)
+		{
+			current_anim_index = index;
+			data.anim_sec = 0.f;
+			data.end_anim = false;
+			data.loop = l;
+		}
+	}
+
+	void Model::PlayBlendAnim(int index, bool l, bool force)
+	{
+		if (current_anim_index == index && !data.end_anim) return;
+		if (current_anim_index == -1 || force)
+		{
+			prev.anim_index = current_anim_index;
+			current_anim_index = index;
+			data.anim_sec = 0.f;
+			data.end_anim = false;
+			data.loop = l;
+			prev.change_anim = true;
+		}
+
+	}
 
 	// アニメーション計算
 	void Model::InitializeAnimation(int index)
@@ -48,7 +75,7 @@ namespace Mo2Lib
 		{
 			const ModelResource::NodeKeyData& key0 = keyframe0.node_keys[node_index - remove];
 
-			Animator::Node& node = m_nodes.at(node_index);
+			Node& node = m_nodes.at(node_index);
 
 			DirectX::XMVECTOR s = DirectX::XMLoadFloat3(&key0.scale);
 			DirectX::XMVECTOR r = DirectX::XMLoadFloat4(&key0.rotate);
@@ -62,144 +89,46 @@ namespace Mo2Lib
 
 	}
 
-	void Model::UpdateAnimation(Animator* anim, float elapsed_time)
+	void Model::UpdateAnimation(float elapsed_time)
 	{
-		if (!anim)
+
+
+
+		if (prev.change_anim)
 		{
+			ChangeAnim(elapsed_time);
+
 			return;
 		}
 
 
-
-		if (anim->prev.change_anim)
+		switch (blend_type)
 		{
-			ChangeAnim(anim, elapsed_time);
-
-			return;
-		}
-
-
-		switch (anim->blend_type)
-		{
-		case Animator::ANIM_NORMAL:
-		case Animator::ANIM_BLEND:
-			NormalAnimation(anim, elapsed_time);
+		case ANIM_NORMAL:
+		case ANIM_BLEND:
+			NormalAnimation(elapsed_time);
 			break;
-		case Animator::ANIM_RATIO:
-			NormalAnimation(anim, elapsed_time);
-			RatioAnimation(anim, elapsed_time);
+		case ANIM_RATIO:
+			NormalAnimation(elapsed_time);
+			RatioAnimation(elapsed_time);
 			break;
-		case Animator::ANIM_ADD:
+		case ANIM_ADD:
 			break;
 		default:
 			break;
 		}
 	}
 
-	void Model::AddAnimation(Animator* anim, int c_index, float elapsed_time)
+	void Model::AddAnimation(int c_index, float elapsed_time)
 	{
-		//AnimationLayer& layer = anim->GetAnimLayer();
-		//AnimCall& call = layer.call[c_index];
-		//Anim_Data& data1 = anim->data[call.first];
-		//Anim_Data& data2 = anim->data[call.second];
-
-		//const ModelResource::Animation& animation1 = m_model_resource->GetAnimations().at(call.first);
-		//const ModelResource::Animation& animation2 = m_model_resource->GetAnimations().at(call.second);
-
-		//const std::vector<ModelResource::Keyframe>& keyframes1 = animation1.keyframes;
-		//const std::vector<ModelResource::Keyframe>& keyframes2 = animation2.keyframes;
-
-		//int key_count = static_cast<int>(keyframes2.size());
-		//for (int key_index = 0; key_index < key_count - 1; ++key_index)
-		//{
-		//	// 現在の時間がどのキーフレームの間にいるか判定する
-		//	const ModelResource::Keyframe& keyframe10 = keyframes1.at(key_index);
-		//	const ModelResource::Keyframe& keyframe11 = keyframes1.at(key_index + 1);
-		//	const ModelResource::Keyframe& keyframe20 = keyframes2.at(key_index);
-		//	const ModelResource::Keyframe& keyframe21 = keyframes2.at(key_index + 1);
-		//	if (data1.anim_sec >= keyframe10.seconds && data1.anim_sec < keyframe11.seconds)
-		//	{
-		//		float rate = (data1.anim_sec - keyframe10.seconds) / (keyframe11.seconds - keyframe10.seconds);
-
-		//		//int node_count = static_cast<int>(m_nodes.size());
-		//		//int remove = m_model_resource->GetRemoveNodeCount();
-		//		for (int node_index = layer.first_bone; node_index < layer.last_bone; ++node_index)
-		//		{
-		//			// ２つのキーフレーム間の補完計算
-		//			const ModelResource::NodeKeyData& key10 = keyframe10.node_keys.at(0);
-		//			const ModelResource::NodeKeyData& key11 = keyframe11.node_keys.at(1);
-		//			const ModelResource::NodeKeyData& key20 = keyframe20.node_keys.at(node_index);
-		//			const ModelResource::NodeKeyData& key21 = keyframe21.node_keys.at(node_index);
-
-		//			Animator::Node& node = m_nodes.at(node_index);
-
-		//			//DirectX::XMVECTOR s0 = DirectX::XMLoadFloat3(&key0.scale);
-		//			//DirectX::XMVECTOR s1 = DirectX::XMLoadFloat3(&key1.scale);
-		//			DirectX::XMVECTOR r10 = DirectX::XMLoadFloat4(&key10.rotate);
-		//			DirectX::XMVECTOR r11 = DirectX::XMLoadFloat4(&key11.rotate);
-		//			DirectX::XMVECTOR t10 = DirectX::XMLoadFloat3(&key10.translate);
-		//			DirectX::XMVECTOR t11 = DirectX::XMLoadFloat3(&key11.translate);
-
-		//			DirectX::XMVECTOR r20 = DirectX::XMLoadFloat4(&key20.rotate);
-		//			DirectX::XMVECTOR r21 = DirectX::XMLoadFloat4(&key21.rotate);
-		//			DirectX::XMVECTOR t20 = DirectX::XMLoadFloat3(&key20.translate);
-		//			DirectX::XMVECTOR t21 = DirectX::XMLoadFloat3(&key21.translate);
-
-		//			//DirectX::XMVECTOR s = DirectX::XMVectorLerp(s0, s1, rate);
-		//			DirectX::XMVECTOR r1 = DirectX::XMQuaternionSlerp(r10, r11, rate);
-		//			DirectX::XMVECTOR t1 = DirectX::XMVectorLerp(t10, t11, rate);
-
-		//			DirectX::XMVECTOR r2 = DirectX::XMQuaternionSlerp(r20, r21, rate);
-		//			DirectX::XMVECTOR t2 = DirectX::XMVectorLerp(t20, t21, rate);
-
-		//			r1 = DirectX::XMQuaternionMultiply(DirectX::XMQuaternionInverse(r1), r2);
-
-		//			t1 = DirectX::XMVectorSubtract(t1, t2);
-		//			//node.transform.scale = s;
-		//			//node.transform.rotate *= 2;
-		//			//node.transform.translate *= 2;
-		//			node.transform.rotate *= r1;
-
-		//			//node.transform.translate -= t;
-		//			//node.transform.rotate /= 2;
-		//			//node.transform.translate /= 2;
-
-
-		//		}
-		//		break;
-		//	}
-		//}
-
-
-		//// 時間経過
-		//// 最終フレーム処理
-		//data2.anim_sec += elapsed_time * data2.anim_spd;
-		////data1.first_call = false;
-
-		//if (data2.anim_sec >= animation2.seconds_length)
-		//{
-		//	if (data2.loop)
-		//	{
-		//		data2.anim_sec -= animation1.seconds_length;
-		//	}
-		//	else
-		//	{
-		//		data1.anim_sec = animation1.seconds_length;
-		//		data2.anim_sec = animation2.seconds_length;
-		//		data1.end_anim = true;
-		//		data2.end_anim = true;
-		//		layer.call.pop_back();
-		//		c_index--;
-		//	}
-		//}
 
 	}
 
-	void Model::NormalAnimation(Animator* anim, float elapsed_time)
+	void Model::NormalAnimation(float elapsed_time)
 	{
-		//Anim_Data& it = anim->data[layer.call[0].first];
+		Mo2Lib::ROOT_MOTION& root = root_motion;
 
-		const ModelResource::Animation& animation = m_model_resource->GetAnimations().at(anim->current_anim_index);
+		const ModelResource::Animation& animation = m_model_resource->GetAnimations().at(current_anim_index);
 
 		const std::vector<ModelResource::Keyframe>& keyframes = animation.keyframes;
 		int key_count = static_cast<int>(keyframes.size());
@@ -208,28 +137,57 @@ namespace Mo2Lib
 			// 現在の時間がどのキーフレームの間にいるか判定する
 			const ModelResource::Keyframe& keyframe0 = keyframes.at(key_index);
 			const ModelResource::Keyframe& keyframe1 = keyframes.at(key_index + 1);
-			if (anim->data.anim_sec >= keyframe0.seconds && anim->data.anim_sec < keyframe1.seconds)
+			if (data.anim_sec >= keyframe0.seconds && data.anim_sec < keyframe1.seconds)
 			{
-				float rate = (anim->data.anim_sec - keyframe0.seconds) / (keyframe1.seconds - keyframe0.seconds);
+				float rate = (data.anim_sec - keyframe0.seconds) / (keyframe1.seconds - keyframe0.seconds);
 				//int node_count = static_cast<int>(m_nodes.size());
-				for (int node_index = 0; node_index < m_nodes.size(); ++node_index)
+				bool first_bone = true;
+				for (size_t node_index = 0; node_index < m_nodes.size(); ++node_index)
 				{
 					// ２つのキーフレーム間の補完計算
 					const ModelResource::NodeKeyData& key0 = keyframe0.node_keys.at(node_index);
 					const ModelResource::NodeKeyData& key1 = keyframe1.node_keys.at(node_index);
 
-					Animator::Node& node = m_nodes.at(node_index);
+					Node& node = m_nodes.at(node_index);
 
 					//DirectX::XMVECTOR s0 = DirectX::XMLoadFloat3(&key0.scale);
 					//DirectX::XMVECTOR s1 = DirectX::XMLoadFloat3(&key1.scale);
-					DirectX::XMVECTOR r0 = DirectX::XMLoadFloat4(&key0.rotate);
-					DirectX::XMVECTOR r1 = DirectX::XMLoadFloat4(&key1.rotate);
-					DirectX::XMVECTOR t0 = DirectX::XMLoadFloat3(&key0.translate);
-					DirectX::XMVECTOR t1 = DirectX::XMLoadFloat3(&key1.translate);
+					Mo2Lib::Float4 r0 = DirectX::XMLoadFloat4(&key0.rotate);
+					Mo2Lib::Float4 r1 = DirectX::XMLoadFloat4(&key1.rotate);
+					Mo2Lib::Float3 t0 = DirectX::XMLoadFloat3(&key0.translate);
+					Mo2Lib::Float3 t1 = DirectX::XMLoadFloat3(&key1.translate);
 
-					//DirectX::XMVECTOR s = DirectX::XMVectorLerp(s0, s1, rate);
-					DirectX::XMVECTOR r = DirectX::XMQuaternionSlerp(r0, r1, rate);
-					DirectX::XMVECTOR t = DirectX::XMVectorLerp(t0, t1, rate);
+					Mo2Lib::Float4 r = r0.QuaternionSlerp(r1, rate);
+
+					Mo2Lib::Float3 t = DirectX::XMVectorLerp(t0.ConvertToXMVECTOR(), t1.ConvertToXMVECTOR(), rate);
+					
+					if (root ^ Mo2Lib::NO_ROOT_MOTION)
+					{
+						if (first_bone)
+						{
+							Mo2Lib::Float3 prev_t = t;
+							Mo2Lib::Float3 root_t = {};
+							if (root & Mo2Lib::ROOT_MOTION_XZ)
+							{
+								prev_t.x = node.transform.translate.x;
+								prev_t.z = node.transform.translate.z;
+								root_t = { prev_t.x - t.x, 0.f, prev_t.z - t.z };
+							}
+							if (root & Mo2Lib::ROOT_MOTION_Y)
+							{
+								prev_t.y = node.transform.translate.y;
+								root_t.y = prev_t.y - t.y;
+							}
+							if (root & Mo2Lib::ROOT_MOTION_RY)
+							{
+
+							}
+							root_trans.translate = root_t;
+							t = prev_t;
+
+							first_bone = false;
+						}
+					}
 
 					//node.transform.scale = s;
 					node.transform.rotate = r;
@@ -243,26 +201,26 @@ namespace Mo2Lib
 
 		// 時間経過
 		// 最終フレーム処理
-		anim->data.anim_sec += elapsed_time * anim->data.anim_spd;
+		data.anim_sec += elapsed_time * data.anim_spd;
 		//layer.first_rate = anim->data.anim_sec / animation.seconds_length;
 
-		if (anim->data.anim_sec >= animation.seconds_length)
+		if (data.anim_sec >= animation.seconds_length)
 		{
-			if (anim->data.loop)
+			if (data.loop)
 			{
-				anim->data.anim_sec -= animation.seconds_length;
+				data.anim_sec -= animation.seconds_length;
 			}
 			else
 			{
-				anim->data.anim_sec = animation.seconds_length;
-				anim->data.end_anim = true;
+				data.anim_sec = animation.seconds_length;
+				data.end_anim = true;
 			}
 		}
 	}
 
-	void Model::RatioAnimation(Animator* anim, float elapsed_time)
+	void Model::RatioAnimation(float elapsed_time)
 	{
-		const ModelResource::Animation& animation = m_model_resource->GetAnimations().at(anim->current_anim_index);
+		const ModelResource::Animation& animation = m_model_resource->GetAnimations().at(current_anim_index);
 		const std::vector<ModelResource::Keyframe>& keyframes = animation.keyframes;
 		int key_count = static_cast<int>(keyframes.size());
 		for (int key_index = 0; key_index < key_count - 1; ++key_index)
@@ -270,22 +228,22 @@ namespace Mo2Lib
 			// 現在の時間がどのキーフレームの間にいるか判定する
 			const ModelResource::Keyframe& keyframe0 = keyframes.at(key_index);
 			const ModelResource::Keyframe& keyframe1 = keyframes.at(key_index + 1);
-			if (anim->data.anim_sec >= keyframe0.seconds && anim->data.anim_sec < keyframe1.seconds)
+			if (data.anim_sec >= keyframe0.seconds && data.anim_sec < keyframe1.seconds)
 			{
-				float rate = (anim->data.anim_sec - keyframe0.seconds) / (keyframe1.seconds - keyframe0.seconds);
+				float rate = (data.anim_sec - keyframe0.seconds) / (keyframe1.seconds - keyframe0.seconds);
 				//assert(m_nodes.size() == keyframe0.node_keys.size());
 				//assert(m_nodes.size() == keyframe1.node_keys.size());
 
 				//int node_count = static_cast<int>(m_nodes.size());
 				//int remove = m_model_resource->GetRemoveNodeCount();
-				for (int node_index = 0; node_index < m_nodes.size(); ++node_index)
+				for (size_t node_index = 0; node_index < m_nodes.size(); ++node_index)
 				{
 					// ２つのキーフレーム間の補完計算
 					const ModelResource::NodeKeyData& key0 = keyframe0.node_keys.at(node_index);
 					const ModelResource::NodeKeyData& key1 = keyframe1.node_keys.at(node_index);
 
 					//Animator::Node& blend_node = anim->nodes.at(node_index);
-					Animator::Node& node = m_nodes.at(node_index);
+					Node& node = m_nodes.at(node_index);
 
 					DirectX::XMVECTOR s, r, t;
 					//if (anim->next_index >= 0)
@@ -323,108 +281,106 @@ namespace Mo2Lib
 			}
 		}
 
-		//anim->data.anim_sec = rate * animation.seconds_length;
-
-		//if (it.anim_sec >= animation.seconds_length)
-		//{
-		//	if (it.loop)
-		//	{
-		//		it.anim_sec -= animation.seconds_length;
-		//	}
-		//	else
-		//	{
-		//		it.anim_sec = animation.seconds_length;
-		//		it.end_anim = true;
-		//	}
-		//}
 	}
 
-	void Model::ChangeAnim(Animator* anim, float elapsed_time)
+	void Model::ChangeAnim(float elapsed_time)
 	{
-		const ModelResource::Animation& anim_prev = m_model_resource->GetAnimations().at(anim->prev.anim_index);
-		const ModelResource::Animation& animation = m_model_resource->GetAnimations().at(anim->current_anim_index);
+		Mo2Lib::ROOT_MOTION& root = root_motion;
+
+		const ModelResource::Animation& animation = m_model_resource->GetAnimations().at(current_anim_index);
+		const ModelResource::Animation& anim_prev = m_model_resource->GetAnimations().at(prev.anim_index);
 
 		const std::vector<ModelResource::Keyframe>& keyframes = animation.keyframes;
 		const std::vector<ModelResource::Keyframe>& keys_prev = anim_prev.keyframes;
-		//int key_count = static_cast<int>(keyframes.size());
-		//for (int key_index = 0; key_index < key_count - 1; ++key_index)
 		{
 			// 現在の時間がどのキーフレームの間にいるか判定する
 			const ModelResource::Keyframe& keyframe0 = keyframes.at(0);
 			const ModelResource::Keyframe& key_prev = keys_prev.back();
-			//const ModelResource::Keyframe& keyframe1 = keyframes.at(key_index + 1);
-			//if (anim->current_sec >= keyframe0.seconds && anim->current_sec < keyframe1.seconds)
+
+			float rate = data.anim_sec / data.blend_timer;
+			bool first_bone = true;
+			for (int node_index = 0; node_index < m_nodes.size(); ++node_index)
 			{
-				float rate = anim->data.anim_sec / anim->data.blend_timer;
+				// ２つのキーフレーム間の補完計算
+				const ModelResource::NodeKeyData& key0 = keyframe0.node_keys.at(node_index);
+				const ModelResource::NodeKeyData& key1 = key_prev.node_keys.at(node_index);
 
-				//assert(m_nodes.size() == keyframe0.node_keys.size());
-				//assert(m_nodes.size() == keyframe1.node_keys.size());
+				Node& node = m_nodes[node_index];
 
-				//int node_count = static_cast<int>(m_nodes.size());
-				for (int node_index = 0; node_index < m_nodes.size(); ++node_index)
+				//DirectX::XMVECTOR s0 = DirectX::XMLoadFloat3(&key0.scale);
+				//DirectX::XMVECTOR s1 = DirectX::XMLoadFloat3(&key1.scale);
+				Mo2Lib::Float4 r0 = DirectX::XMLoadFloat4(&key0.rotate);
+				Mo2Lib::Float4 r1 = DirectX::XMLoadFloat4(&key1.rotate);
+				Mo2Lib::Float3 t0 = DirectX::XMLoadFloat3(&key0.translate);
+				Mo2Lib::Float3 t1 = DirectX::XMLoadFloat3(&key1.translate);
+
+				Mo2Lib::Float4 r = r1.QuaternionSlerp(r0, min(1.0f, rate));
+				Mo2Lib::Float3 t = DirectX::XMVectorLerp(t1.ConvertToXMVECTOR(), t0.ConvertToXMVECTOR(), min(1.0f, rate));
+
+				if (first_bone /*&& root ^ Mo2Lib::NO_ROOT_MOTION*/)
 				{
-					// ２つのキーフレーム間の補完計算
-					const ModelResource::NodeKeyData& key0 = keyframe0.node_keys.at(node_index);
-					const ModelResource::NodeKeyData& key1 = key_prev.node_keys.at(node_index);
-					//const ModelResource::NodeKeyData& key1 = keyframe1.node_keys.at(node_index - remove);
-
-					Animator::Node& node = m_nodes[node_index];
-
-					DirectX::XMVECTOR s, r, t;
-					//if (anim->next_index >= 0)
+					Mo2Lib::Float3 prev_t = t;
+					Mo2Lib::Float3 root_t = {};
+					if (root & Mo2Lib::ROOT_MOTION_XZ)
 					{
-						//DirectX::XMVECTOR s0 = DirectX::XMLoadFloat3(&key0.scale);
-						//DirectX::XMVECTOR s1 = DirectX::XMLoadFloat3(&key1.scale);
-						DirectX::XMVECTOR r0 = DirectX::XMLoadFloat4(&key0.rotate);
-						DirectX::XMVECTOR r1 = DirectX::XMLoadFloat4(&key1.rotate);
-						//DirectX::XMVECTOR r1 = DirectX::XMLoadFloat4(&key1.rotate);
-						DirectX::XMVECTOR t0 = DirectX::XMLoadFloat3(&key0.translate);
-						DirectX::XMVECTOR t1 = DirectX::XMLoadFloat3(&key1.translate);
-						//DirectX::XMVECTOR t1 = DirectX::XMLoadFloat3(&key1.translate);
-
-						//s = DirectX::XMVectorLerp(
-						//	node.transform.scale.ConvertToXMVECTOR(),
-						//	s0, anim->blend_sec);
-						r = DirectX::XMQuaternionSlerp(
-							r1,
-							r0, min(1.0f, rate));
-						t = DirectX::XMVectorLerp(
-							t1,
-							t0, min(1.0f, rate));
+						prev_t.x = node.transform.translate.x;
+						prev_t.z = node.transform.translate.z;
+						root_t = { prev_t.x - t.x, 0.f, prev_t.z - t.z };
+					}
+					if (root & Mo2Lib::ROOT_MOTION_Y)
+					{
+						prev_t.y = node.transform.translate.y;
+						root_t.y = prev_t.y - t.y;
+					}
+					if (root & Mo2Lib::ROOT_MOTION_RY)
+					{
 
 					}
+					root_trans.translate = {};
+					t = { 0.f, prev_t.y, 0.f };
 
-					//node.transform.scale = s;
-					node.transform.rotate = r;
-					node.transform.translate = t;
-
-					//DirectX::XMStoreFloat3(&node.transform.scale, s);
-					//DirectX::XMStoreFloat4(&node.transform.rotate, r);
-					//DirectX::XMStoreFloat3(&node.transform.translate, t);
-
+					first_bone = false;
 				}
+
+				//node.transform.scale = s;
+				node.transform.rotate = r;
+				node.transform.translate = t;
+
 			}
 		}
 
-		anim->data.anim_sec += elapsed_time;
-		//it.first_call = false;
-		if (anim->data.anim_sec >= anim->data.blend_timer)
+		data.anim_sec += elapsed_time;
+		if (data.anim_sec >= data.blend_timer)
 		{
-			anim->data.anim_sec = 0.f;
-			anim->data.end_anim = false;
-			anim->prev.change_anim = false;
+			data.anim_sec = 0.f;
+			data.end_anim = false;
+			prev.change_anim = false;
 		}
 
 	}
 
+	Mo2Lib::Float3 Model::RootAnimTransform(Transform& t)
+	{
+		DirectX::XMMATRIX S, R;
+		S = DirectX::XMMatrixScaling(t.scale.x, t.scale.y, t.scale.z);
+		R = DirectX::XMMatrixRotationQuaternion(DirectX::XMLoadFloat4(&t.rotate));
+		DirectX::XMMATRIX m = S * R;
+		DirectX::XMMATRIX inv_m = DirectX::XMMatrixInverse(nullptr, m);
 
+		Mo2Lib::Float3 local;
+		DirectX::XMVECTOR v = DirectX::XMVectorSet(root_trans.translate.x, root_trans.translate.y, root_trans.translate.z, 1.0f);
+		local = DirectX::XMVector3TransformCoord(v, inv_m);
+		root_trans = {};
+
+		return local;
+	}
 
 
 	// ローカル変換行列計算
 	void Model::CalculateLocalTransform()
 	{
 
-		for (Animator::Node& node : m_nodes)
+		for (Node& node : m_nodes)
 		{
 			DirectX::XMMATRIX scale, rotate, translate, local;
 			scale = DirectX::XMMatrixScaling(node.transform.scale.x, node.transform.scale.y, node.transform.scale.z);
@@ -440,7 +396,7 @@ namespace Mo2Lib
 	void Model::CalculateWorldTransform()
 	{
 		DirectX::XMMATRIX world = BulidWorld();
-		for (Animator::Node& node : m_nodes)
+		for (Node& node : m_nodes)
 		{
 			if (node.parent != nullptr)
 			{
@@ -463,52 +419,71 @@ namespace Mo2Lib
 	}
 
 
-
-
-	int LoadModelResource(std::shared_ptr<ModelResource> resource, const char* filename, int mode, int load_datatype, bool is_save)
+	void ModelLoader::Setup(bool is_save)
 	{
-		static std::unordered_map<std::string, std::shared_ptr<ModelResource>> cache;
+		assert(!active, "This loading is Active");
+
+		is_saving = is_save;
+
+		model_name = "";
+		meta_data = std::make_shared<ModelData>();
+		resource_buff = std::make_shared<ModelResource>();
+		active = true;
+
+	}
+
+	void ModelLoader::Load(const char* filename, bool anim)
+	{
+		if (loaded_bin || is_find)return;
+		if (model_name == "")model_name = filename;
 
 		auto it = cache.find(filename);
 		if (it != cache.end())
 		{
 
-			*resource = *(it->second);
-			return 1;
+			*resource_buff = *(it->second);
+			is_find = true;
+			return;
 		}
 
-		std::shared_ptr<ModelData> m_data = std::make_shared<ModelData>();
-		//*resource = std::make_shared<ModelResource>();
-
-		switch (mode)
+		if (!anim)
 		{
-		case Mo2Lib::LOADINGMODE_FBX:
-			m_data->Load(filename, ModelData::BINARY);
-			resource->Load(Mo2System->DX11device.Get(), m_data.get(), load_datatype);
-			break;
-		case Mo2Lib::LOADINGMODE_BIN:
-			m_data->Load(filename, ModelData::BINARY);
-			resource->Load(Mo2System->DX11device.Get(), m_data.get(), load_datatype);
-
-			cache[filename] = resource;
-			break;
-		case Mo2Lib::LOADINGMODE_JSON:
-			m_data->Load(filename, ModelData::JSON);
-			resource->Load(Mo2System->DX11device.Get(), m_data.get(), load_datatype);
-
-			cache[filename] = resource;
-			break;
-		default:
-			break;
+			loaded_bin = meta_data->Load(filename, ModelData::BINARY);
 		}
-
-		if (is_save)
+		else
 		{
-			m_data->SaveToFile();
+			meta_data->AddAnimation(filename);
 		}
-
-		return 0;
 
 	}
+
+	std::shared_ptr<ModelResource> ModelLoader::Apply()
+	{
+		resource_buff->Load(Mo2System->DX11device.Get(), meta_data.get(), false);
+
+		if (is_saving)
+		{
+			meta_data->SaveToFile(model_name.c_str());
+		}
+
+		return resource_buff;
+	}
+
+	void ModelLoader::End()
+	{
+		assert(active, "This loading isn't Active");
+
+		cache[model_name] = resource_buff;
+
+		meta_data.reset();
+		resource_buff.reset();
+
+		model_name = "";
+		loaded_bin = false;
+		is_find = false;
+		active = false;
+	}
+
+
 }
 

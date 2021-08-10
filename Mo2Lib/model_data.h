@@ -6,6 +6,7 @@
 #include <fbxsdk.h>
 #include <wrl.h>
 
+#include "Vector3D.h"
 #include "Mo2Cerealize.h"
 
 struct tMatrix
@@ -179,6 +180,7 @@ struct ModelData
 	};
 	struct Animation
 	{
+		std::string name;
 		float						seconds_length;
 		std::vector<Keyframe>		keyframes;
 
@@ -186,13 +188,13 @@ struct ModelData
 		void serialize(Archive& archive)
 		{
 			archive(
+				CEREAL_NVP(name),
 				CEREAL_NVP(seconds_length),
 				CEREAL_NVP(keyframes)
 			);
 		}
 	};
 
-	int remove_node = 0;
 	const char* filename;
 	std::vector<Node>		nodes;
 
@@ -214,7 +216,6 @@ struct ModelData
 	void serialize(Archive& archive)
 	{
 		archive(
-			CEREAL_NVP(remove_node),
 			CEREAL_NVP(nodes),
 			CEREAL_NVP(meshes),
 			CEREAL_NVP(materials),
@@ -247,5 +248,5 @@ struct ModelData
 	std::string FindNode_name(int index);
 	int FindMaterial_index(FbxScene* fbxScene, const FbxSurfaceMaterial* fbxSurfaceMaterial);
 
-	void SaveToFile();
+	void SaveToFile(const char* modelname);
 };

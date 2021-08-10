@@ -47,7 +47,7 @@ void SceneLoad::Update(float elapsedTime)
 	// ŽŸ‚ÌƒV[ƒ“‚Ö
 	if (nextScene->initialized)
 	{
-		SceneMgr.ChangeScene(nextScene.release());
+		Mo2Scene.ChangeScene(nextScene.release());
 		return;
 	}
 

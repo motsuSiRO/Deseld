@@ -34,9 +34,6 @@ private:
 	typedef std::shared_ptr<State<entity_type>> State_ptr;
 	std::unordered_map<int, State_ptr> state_list;
 
-	//char* global_state_name;
-	//char* current_state_name;
-
 	entity_type* owner;
 
 	int current_state_index;
@@ -44,7 +41,7 @@ private:
 	int global_state_index;
 
 public:
-
+	float state_timer;
 	float dt;
 	StateMachine(entity_type* owner) :
 		dt(0.f),
@@ -56,6 +53,8 @@ public:
 		{
 			state_list[current_state_index]->SetFSM(this);
 			state_list[current_state_index]->Begin(owner);
+
+			state_timer = 0.f;
 		}
 	}
 	void SetPreviousState(State<entity_type>* s) { pevious_state = s; }
@@ -77,6 +76,8 @@ public:
 		}
 #else
 		dt = elapsed_time;
+		state_timer += dt;
+
 		if (current_state_index >= 0)
 		{
 			state_list[current_state_index]->Execute(owner);
@@ -96,6 +97,8 @@ public:
 		state_list[current_state_index]->SetFSM(this);
 
 		state_list[current_state_index]->Begin(owner);
+
+		state_timer = 0.f;
 	}
 
 
@@ -128,41 +131,8 @@ public:
 		return *this;
 	}
 
-	//State<entity_type>* GetCurrentState() { return current_state; }
-	//State<entity_type>* GetPreviousState() { return previous_state; }
-	//State<entity_type>* GetGlobalState() { return global_state; }
-	//char* GetGlobalName() { return global_state_name; }
 	const char* GetCurrentName() { return state_list[current_state_index]->name.c_str(); }
+	const char* GetPreviousName() { return state_list[prev_state_index]->name.c_str(); }
 
-	//const char* GetName_CurrentState()const
-	//{
-	//	std::string s(typeid(state_list[current_state_index].get()).name());
-
-	//	//remove the 'class ' part from the front of the string
-	//	if (s.size() > 5)
-	//	{
-	//		s.erase(0, 6);
-	//	}
-
-	//	return s.data();
-	//	//return current_state_name;
-	//}
-
-	//std::string GetName_GlobalState()const
-	//{
-	//	std::string s(typeid(*current_state).name());
-
-	//	//remove the 'class ' part from the front of the string
-	//	if (s.size() > 5)
-	//	{
-	//		s.erase(0, 6);
-	//	}
-	//	else
-	//	{
-	//		s = "InValid";
-	//	}
-
-	//	return s;
-	//}
 };
 

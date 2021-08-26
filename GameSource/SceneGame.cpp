@@ -239,7 +239,7 @@ void SceneGame::ImGui()
 	{
 
 		Mo2Gui()->ImGui();
-		visiblity = Mo2Gui()->visible_collider;
+		Mo2Gui()->visible_collider;
 
 		static int anim_index = 0;
 		static float anim_speed = 1.0f;

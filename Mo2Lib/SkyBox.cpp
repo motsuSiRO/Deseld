@@ -513,7 +513,7 @@ bool SkyBox::Set(int index)
 
 void SkyBox::ImGui()
 {
-	if (ImGui::Begin("SkyBox"))
+	ImGui::Begin("SkyBox");
 	{
 		static int tex_num = 0;
 		ImGui::Text("MAX_TEX_NUM : %d", tex_list.size());

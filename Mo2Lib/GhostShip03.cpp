@@ -26,6 +26,34 @@ const float INIT_G_SCALE = 200.f;
 const float JUMP_POW = 150.f;
 const float JUMP_RESPTION_TIME = 0.1f;
 
+enum GSHIP_STATE
+{
+	PL_IDLE = 0,
+	PL_MOVE,
+	PL_3ATK,
+	PL_DATK,
+	PL_PARRY,
+	PL_JATK,
+	PL_DODGE,
+};
+
+enum GSHIP_ANIM
+{
+	TPose = 0,
+	IDLE,
+	AFK_APPEAL,
+	RUN,
+	SLASH1,
+	SLASH2,
+	SLASH3,
+	DASH_SLASH,
+	COUNTER,
+	JUMP_SLASH,
+	JUMP,
+	DODGE,
+	DEATH,
+	MAX_ANIM,
+};
 
 
 class GhostShip03::GShipImpl
@@ -39,6 +67,7 @@ public:
 	PlayerControl* pctrl;
 	BoxComponent* box;
 	SphereComponent* s0;
+
 
 	void LoadModel()
 	{
@@ -66,7 +95,7 @@ public:
 		Mo2Lib::ModelLoader::GetInstance().End();
 
 		model->root_motion = (Mo2Lib::ROOT_MOTION)(Mo2Lib::NO_ROOT_MOTION);
-		model->InitializeAnimation(GhostShip03::IDLE);
+		model->InitializeAnimation(GSHIP_ANIM::IDLE);
 
 	}
 
@@ -166,10 +195,15 @@ public:
 //-----------------------------------------------------
 class PL_Idle : public State<GhostShip03>
 {
+	float timer;
 	void Begin(GhostShip03* p)
 	{
 		//p->anim.data.anim_spd = p->GetPrivate()->physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
 		p->GetPrivate()->AnimSpdByPhysics();
+
+		p->GetPrivate()->PlayBlendAnim(GSHIP_ANIM::IDLE, true);
+
+		timer = 0.f;
 	}
 
 	void Execute(GhostShip03* p)
@@ -177,20 +211,32 @@ class PL_Idle : public State<GhostShip03>
 
 		if (p->GetPrivate()->pctrl->dir_vec != 0)
 		{
-			fsm->ChangeState(GhostShip03::PL_MOVE);
+			fsm->ChangeState(GSHIP_STATE::PL_MOVE);
 		}
 		else if (p->GetPrivate()->pctrl->Pressed("Firstary"))
 		{
-			fsm->ChangeState(GhostShip03::PL_ATK);
+			fsm->ChangeState(GSHIP_STATE::PL_3ATK);
 
 		}
 		else if (p->GetPrivate()->pctrl->Pressed("Dodge"))
 		{
-			fsm->ChangeState(GhostShip03::PL_DODGE);
+			fsm->ChangeState(GSHIP_STATE::PL_DODGE);
 		}
 		else
 		{
-			p->GetPrivate()->PlayBlendAnim(GhostShip03::IDLE);
+			if (timer > 8.f)
+			{
+				p->GetPrivate()->PlayBlendAnim(GSHIP_ANIM::AFK_APPEAL);
+				timer = 0.f;
+			}
+			if (!p->GetPrivate()->model->IsPlaying())
+			{
+				p->GetPrivate()->PlayBlendAnim(GSHIP_ANIM::IDLE, true);
+			}
+		}
+		if (p->GetPrivate()->model->GetCurrentAnimIndex() == (int)GSHIP_ANIM::IDLE)
+		{
+			timer += fsm->dt;
 		}
 	}
 
@@ -217,6 +263,8 @@ class PL_Move : public State<GhostShip03>
 
 		p->GetPrivate()->AnimSpdByPhysics();
 
+		p->GetPrivate()->PlayBlendAnim(GSHIP_ANIM::RUN, true);
+
 		p->MoveXZ();
 	}
 
@@ -227,20 +275,19 @@ class PL_Move : public State<GhostShip03>
 
 
 		//p->anim.data.anim_spd = p->GetPrivate()->physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
-		p->GetPrivate()->PlayBlendAnim(GhostShip03::RUN, true, true);
 
 
 		if (p->GetPrivate()->pctrl->dir_vec.LengthSq() <= 0)
 		{
-			fsm->ChangeState(GhostShip03::PL_IDLE);
+			fsm->ChangeState(GSHIP_STATE::PL_IDLE);
 		}
 		else if (p->GetPrivate()->pctrl->Pressed("Firstary"))
 		{
-			fsm->ChangeState(GhostShip03::PL_ATK);
+			fsm->ChangeState(GSHIP_STATE::PL_3ATK);
 		}
 		else if (p->GetPrivate()->pctrl->Pressed("Dodge"))
 		{
-			fsm->ChangeState(GhostShip03::PL_DODGE);
+			fsm->ChangeState(GSHIP_STATE::PL_DODGE);
 		}
 
 	}
@@ -253,24 +300,34 @@ class PL_Move : public State<GhostShip03>
 };
 
 
-class PL_Attack : public State<GhostShip03>
+class PL_3Attack : public State<GhostShip03>
 {
-	float move_speed = 0.f;
-	float timer;
-	int index;
+	int index = 0;
+
 	void Begin(GhostShip03* p)
 	{
-		static int i = 0;
-		index = i + GhostShip03::SLASH1;
 
-		p->GetPrivate()->model->root_motion = (Mo2Lib::ROOT_MOTION)(Mo2Lib::ROOT_MOTION_XZ | Mo2Lib::ROOT_MOTION_Y);
+		p->GetPrivate()->model->SetNextRootMotion(Mo2Lib::ROOT_MOTION_XZ);
 		p->GetPrivate()->DeffaultAnimSpd();
-		p->GetPrivate()->PlayBlendAnim(index, false);
 
-		i++;
-		if (i >= GhostShip03::MAX_ANIM - GhostShip03::SLASH1)
+		if (Mo2Lib::isEqual(fsm->GetPreviousName(), "PL_3Attack"))
 		{
-			i = 0;
+			p->GetPrivate()->PlayBlendAnim(index + GSHIP_ANIM::SLASH1, false);
+		}
+		else
+		{
+			if (0.4f < fsm->state_timer)
+			{
+				index = 0;
+			}
+			p->GetPrivate()->PlayAnim(index + GSHIP_ANIM::SLASH1, false);
+		}
+
+
+		index++;
+		if (index > GSHIP_ANIM::SLASH3 - GSHIP_ANIM::SLASH1)
+		{
+			index = 0;
 		}
 	}
 
@@ -280,29 +337,77 @@ class PL_Attack : public State<GhostShip03>
 
 		if (p->GetPrivate()->pctrl->Pressed("Dodge"))
 		{
-			fsm->ChangeState(GhostShip03::PL_DODGE);
+			fsm->ChangeState(GSHIP_STATE::PL_DODGE);
+		}
+		else if (p->GetPrivate()->pctrl->Pressed("Firstary"))
+		{
+			if (p->GetPrivate()->model->OverAnimEndOffset(0.7f))
+			{
+				fsm->ChangeState(GSHIP_STATE::PL_3ATK);
+			}
 		}
 
 		if (p->GetPrivate()->model->data.end_anim)
 		{
 			if (p->GetPrivate()->pctrl->dir_vec != 0)
 			{
-				fsm->ChangeState(GhostShip03::PL_MOVE);
+				fsm->ChangeState(GSHIP_STATE::PL_MOVE);
 			}
 
 			else if (p->GetPrivate()->pctrl->dir_vec.LengthSq() == 0.f)
 			{
-				fsm->ChangeState(GhostShip03::PL_IDLE);
+				fsm->ChangeState(GSHIP_STATE::PL_IDLE);
 			}
 
 		}
 	}
 	void End(GhostShip03* p)
 	{
-		p->GetPrivate()->model->root_motion = Mo2Lib::NO_ROOT_MOTION;
+		p->GetPrivate()->model->SetNextRootMotion(Mo2Lib::NO_ROOT_MOTION);
 	}
 };
 
+
+class PL_DashAttack : public State<GhostShip03>
+{
+
+	void Begin(GhostShip03* p)
+	{
+
+		p->GetPrivate()->model->SetNextRootMotion(Mo2Lib::ROOT_MOTION_XZ);
+		p->GetPrivate()->DeffaultAnimSpd();
+		p->GetPrivate()->PlayAnim(GSHIP_ANIM::DASH_SLASH, false);
+
+	}
+
+	void Execute(GhostShip03* p)
+	{
+		//p->anim.data.anim_spd += 1.f + Mo2System->delta_time;
+
+		if (p->GetPrivate()->pctrl->Pressed("Dodge"))
+		{
+			fsm->ChangeState(GSHIP_STATE::PL_DODGE);
+		}
+
+		if (p->GetPrivate()->model->data.end_anim)
+		{
+			if (p->GetPrivate()->pctrl->dir_vec != 0)
+			{
+				fsm->ChangeState(GSHIP_STATE::PL_MOVE);
+			}
+
+			else if (p->GetPrivate()->pctrl->dir_vec.LengthSq() == 0.f)
+			{
+				fsm->ChangeState(GSHIP_STATE::PL_IDLE);
+			}
+
+		}
+	}
+	void End(GhostShip03* p)
+	{
+		p->GetPrivate()->model->SetNextRootMotion(Mo2Lib::NO_ROOT_MOTION);
+	}
+};
 
 class PL_Dodge : public State<GhostShip03>
 {
@@ -318,7 +423,7 @@ class PL_Dodge : public State<GhostShip03>
 		//p->anim.data.anim_spd = p->GetPrivate()->physics->MAX_VELOCITY / INIT_MAX_VELOCITY;
 		p->GetPrivate()->AnimSpdByPhysics();
 
-		p->GetPrivate()->PlayAnim(GhostShip03::DODGE, false);
+		p->GetPrivate()->PlayAnim(GSHIP_ANIM::DODGE, false);
 	}
 
 	void Execute(GhostShip03* p)
@@ -332,15 +437,15 @@ class PL_Dodge : public State<GhostShip03>
 		{
 			if (p->GetPrivate()->IsMoving())
 			{
-				p->GetPrivate()->PlayAnim(GhostShip03::RUN, true);
-				fsm->ChangeState(GhostShip03::PL_MOVE);
+				p->GetPrivate()->PlayAnim(GSHIP_ANIM::RUN, true);
+				fsm->ChangeState(GSHIP_STATE::PL_MOVE);
 			}
 
 			else
 			{
 				p->GetPrivate()->SetZeroVelocity();
-				p->GetPrivate()->PlayAnim(GhostShip03::IDLE, true);
-				fsm->ChangeState(GhostShip03::PL_IDLE);
+				p->GetPrivate()->PlayAnim(GSHIP_ANIM::IDLE, true);
+				fsm->ChangeState(GSHIP_STATE::PL_IDLE);
 			}
 		}
 	}
@@ -365,7 +470,12 @@ void GhostShip03::Start()
 	pimpl->pctrl = parent->GetComponent<PlayerControl>();
 	pimpl->box = parent->AddComponent<BoxComponent>();
 	pimpl->s0 = parent->AddComponent<SphereComponent>();
-	//gun = Parent->GetComponent<Firearm>();
+
+	pimpl->physics->mass = INIT_MASS;
+	pimpl->physics->limit_velocity = true;
+	pimpl->physics->dynamic_friction = 10.f;
+	pimpl->physics->MAX_VELOCITY = INIT_MAX_DASH_VELOCITY;
+	pimpl->physics->MAX_MOVE_SPEED = MAX_WALK_SPEED;
 
 	pimpl->LoadShader();
 
@@ -374,7 +484,7 @@ void GhostShip03::Start()
 	fsm = std::make_unique<StateMachine<GhostShip03>>(this);
 	fsm->AddState(PL_IDLE, std::make_shared<PL_Idle>())
 		.AddState(PL_MOVE, std::make_shared<PL_Move>())
-		.AddState(PL_ATK, std::make_shared<PL_Attack>())
+		.AddState(PL_3ATK, std::make_shared<PL_3Attack>())
 		.AddState(PL_DODGE, std::make_shared<PL_Dodge>());
 
 	fsm->SetCurrentState(PL_IDLE);
@@ -435,12 +545,17 @@ void GhostShip03::ImGui()
 		ImGui::NewLine();
 
 		ImGui::NewLine();
-		for (size_t i = 0; i < pimpl->model->GetNodes().size(); i++)
+		if (ImGui::CollapsingHeader("Bones"))
 		{
-			ImGui::Text("%d %s", i, pimpl->model->GetNodes().at(i).name);
+			for (size_t i = 0; i < pimpl->model->GetNodes().size(); i++)
+			{
+				ImGui::Text("%d %s", i, pimpl->model->GetNodes().at(i).name);
+			}
+
 		}
 	}
 
+	pimpl->model->ImGuiAnim();
 
 }
 

@@ -24,7 +24,6 @@ private:
 	std::unique_ptr<ShaderEx>			primi_shader;
 	std::unique_ptr<ShaderEx>			point_sprite;
 
-	bool visiblity = false;
 	float rad;
 public:
 	SceneGame() {}

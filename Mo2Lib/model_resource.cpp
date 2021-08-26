@@ -174,7 +174,6 @@ void ModelResource::BuildNodes(FbxNode* fbxNode, int parentNode_index)
 	case FbxNodeAttribute::eNull:
 	case FbxNodeAttribute::eMarker:
 	case FbxNodeAttribute::eMesh:
-		remove_node++;
 	case FbxNodeAttribute::eSkeleton:
 		BuildNode(fbxNode, parentNode_index);
 		break;
@@ -947,6 +946,7 @@ void ModelResource::ConvertFromData(ID3D11Device* device, ModelData* m_data)
 		ModelData::Animation& animData = m_data->animations[i];
 		Animation& anim = animations[i];
 
+		anim.name = animData.name.c_str();
 		anim.seconds_length = animData.seconds_length;
 
 		for (auto keyData : animData.keyframes)
@@ -983,6 +983,7 @@ void ModelResource::ConvertFromAnimData(ID3D11Device* device, ModelData* m_data)
 		animations.emplace_back(Animation());
 		Animation& anim = animations.back();
 
+		anim.name = a_data.name.c_str();
 		anim.seconds_length = a_data.seconds_length;
 
 		for (auto keyData : a_data.keyframes)

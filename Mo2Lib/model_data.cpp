@@ -671,7 +671,9 @@ void ModelData::BuildAnimation(FbxScene* fbxScene, FbxString* fbxAnimStackName)
 	animations.emplace_back(Animation());
 	Animation& animation = animations.back();
 
-	animation.name = filename;
+	char name[256];
+	_splitpath_s(filename, nullptr, 0, nullptr, 0, name, 256, nullptr, 0);
+	animation.name = name;
 
 	// アニメーションデータのサンプリング設定
 	FbxTime::EMode fbxTimeMode = fbxScene->GetGlobalSettings().GetTimeMode();

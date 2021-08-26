@@ -29,38 +29,34 @@ namespace Mo2Lib
 		};
 
 		// アニメーション
-		//bool IsPlayAnimation() const { return m_current_anim >= 0; }
-		//void PlayAnimation(int animation_index, float anim_rate = 1.0f, bool loop = false);
-		//void PlayBlendAnimation(int animation_index, float blend_rate = 1.0f, float anim_rate = 1.0f, bool loop = false);
-		//void PlayRatingAnimation(int animation_index1, int animation_index2, float blend_rate = 1.0f, float anim_rate = 1.0f, bool loop = false);
-		//void PlayAnim(int layer_index, int anim_index, bool loop = false, bool force = false);
-		//void PlayBlendAnim(int layer_index, int anim_index, bool loop = false, bool force = false);
-		//void PlayAddAnim(int layer_index, int anim_first, int anim_second, bool loop = false, bool force = false);
-		//void PlayRatioAnim(int layer_index, int anim_first, int anim_second, float blend_rate, bool force = true);
-		//void PlayRatioDefAnim(int layer_index, int anim_first, int anim_second, float blend_rate, bool force = true);
-		void Initialize();
-		void PlayAnim(int animation_index, bool loop = false, bool force = true);
-		void PlayBlendAnim(int index, bool l = true, bool force = true);
-		bool IsPlaying() { return !data.end_anim; }
-
-
 		int current_anim_index;
 		int blend_type;
 		Transform root_trans = {};
 		ROOT_MOTION root_motion;
+		ROOT_MOTION next_root_motion;
 		Anim_Data data;
 		Anim_Prev prev;
 
+		void PlayAnim(int animation_index, bool loop = false, bool force = true);
+		void PlayBlendAnim(int index, bool l = true, bool force = true);
+		bool IsPlaying() { return !data.end_anim; }
+		bool OverAnimEndOffset(float offset) { return data.anim_sec + offset >= data.sec_len; }
+		int GetCurrentAnimIndex() { return current_anim_index; }
+		Mo2Lib::Float3 RootAnimTransform(Transform& transform);
+		void SetNextRootMotion(int root_motion) { next_root_motion = (ROOT_MOTION)root_motion; }
 		
 		void InitializeAnimation(int anim_index = 0);
 		void UpdateAnimation(float elapsed_time);
+
+		void ImGuiAnim();
+	private:
 		void NormalAnimation(float elapsed_time);
 		void AddAnimation(int call_index, float elapsed_time);
 		void RatioAnimation(float elapsed_time);
 		void ChangeAnim(float elapsed_time);
 		//void RatingAnim(Animator* anim_data, float elapsed_time);
-		Mo2Lib::Float3 RootAnimTransform(Transform& transform);
 		
+	public:
 		// 行列計算
 		void CalculateLocalTransform();
 		void CalculateWorldTransform();

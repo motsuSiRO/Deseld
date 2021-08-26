@@ -4,6 +4,7 @@
 #include "misc.h"
 #include "Vector3D.h"
 #include "framework.h"
+#include "Mo2GUI.h"
 
 namespace Mo2Lib
 {
@@ -70,10 +71,9 @@ namespace Mo2Lib
 		const ModelResource::Keyframe& keyframe0 = animation.keyframes[0];
 		int node_count = static_cast<int>(m_nodes.size());
 
-		int remove = m_model_resource->GetRemoveNodeCount();
-		for (int node_index = remove; node_index < node_count; ++node_index)
+		for (int node_index = 0; node_index < node_count; ++node_index)
 		{
-			const ModelResource::NodeKeyData& key0 = keyframe0.node_keys[node_index - remove];
+			const ModelResource::NodeKeyData& key0 = keyframe0.node_keys[node_index];
 
 			Node& node = m_nodes.at(node_index);
 
@@ -100,7 +100,7 @@ namespace Mo2Lib
 
 			return;
 		}
-
+		root_motion = next_root_motion;
 
 		switch (blend_type)
 		{
@@ -129,6 +129,7 @@ namespace Mo2Lib
 		Mo2Lib::ROOT_MOTION& root = root_motion;
 
 		const ModelResource::Animation& animation = m_model_resource->GetAnimations().at(current_anim_index);
+		data.sec_len = animation.seconds_length;
 
 		const std::vector<ModelResource::Keyframe>& keyframes = animation.keyframes;
 		int key_count = static_cast<int>(keyframes.size());
@@ -317,29 +318,32 @@ namespace Mo2Lib
 				Mo2Lib::Float4 r = r1.QuaternionSlerp(r0, min(1.0f, rate));
 				Mo2Lib::Float3 t = DirectX::XMVectorLerp(t1.ConvertToXMVECTOR(), t0.ConvertToXMVECTOR(), min(1.0f, rate));
 
-				if (first_bone /*&& root ^ Mo2Lib::NO_ROOT_MOTION*/)
+				if (root ^ Mo2Lib::NO_ROOT_MOTION)
 				{
-					Mo2Lib::Float3 prev_t = t;
-					Mo2Lib::Float3 root_t = {};
-					if (root & Mo2Lib::ROOT_MOTION_XZ)
+					if (first_bone)
 					{
-						prev_t.x = node.transform.translate.x;
-						prev_t.z = node.transform.translate.z;
-						root_t = { prev_t.x - t.x, 0.f, prev_t.z - t.z };
-					}
-					if (root & Mo2Lib::ROOT_MOTION_Y)
-					{
-						prev_t.y = node.transform.translate.y;
-						root_t.y = prev_t.y - t.y;
-					}
-					if (root & Mo2Lib::ROOT_MOTION_RY)
-					{
+						Mo2Lib::Float3 prev_t = t;
+						Mo2Lib::Float3 root_t = {};
+						if (root & Mo2Lib::ROOT_MOTION_XZ)
+						{
+							prev_t.x = node.transform.translate.x;
+							prev_t.z = node.transform.translate.z;
+							root_t = { prev_t.x - t.x, 0.f, prev_t.z - t.z };
+						}
+						if (root & Mo2Lib::ROOT_MOTION_Y)
+						{
+							prev_t.y = node.transform.translate.y;
+							root_t.y = prev_t.y - t.y;
+						}
+						if (root & Mo2Lib::ROOT_MOTION_RY)
+						{
 
-					}
-					root_trans.translate = {};
-					t = { 0.f, prev_t.y, 0.f };
+						}
+						root_trans.translate = root_t;
+						t = prev_t;
 
-					first_bone = false;
+						first_bone = false;
+					}
 				}
 
 				//node.transform.scale = s;
@@ -375,6 +379,30 @@ namespace Mo2Lib
 		return local;
 	}
 
+	void Model::ImGuiAnim()
+	{
+		std::string str, s;
+		s = "##" + GetNodes().size();
+		ImGui::SetNextTreeNodeOpen(true, ImGuiCond_Appearing);
+		str = "Animation" + s;
+
+
+		if (ImGui::CollapsingHeader(str.c_str()))
+		{
+			str = "##Animation" + GetNodes().size();
+			const ModelResource::Animation& animation = m_model_resource->GetAnimations().at(current_anim_index);
+			
+
+			ImGui::Text(animation.name);
+			s = str;
+			float length = data.sec_len;
+			s = str + "anim_end";
+			ImGui::DragFloat(s.c_str(), &length);
+			ImGui::SliderFloat(s.c_str(), &data.anim_sec, 0.f, length, "%.1f sec");
+
+		}
+
+	}
 
 	// ローカル変換行列計算
 	void Model::CalculateLocalTransform()
@@ -421,7 +449,7 @@ namespace Mo2Lib
 
 	void ModelLoader::Setup(bool is_save)
 	{
-		assert(!active, "This loading is Active");
+		assert(!active && "This loading is Active");
 
 		is_saving = is_save;
 
@@ -471,7 +499,7 @@ namespace Mo2Lib
 
 	void ModelLoader::End()
 	{
-		assert(active, "This loading isn't Active");
+		assert(active && "This loading isn't Active");
 
 		cache[model_name] = resource_buff;
 

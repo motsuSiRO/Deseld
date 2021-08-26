@@ -15,31 +15,7 @@ class GhostShip03 : public Component
 public:
 	bool ismoving;
 
-	enum STATE_LIST
-	{
-		PL_IDLE = 0,
-		PL_MOVE,
-		PL_ATK,
-		PL_DODGE,
-	};
 
-	enum ANIM_STATE
-	{
-		TPose = 0,
-		IDLE,
-		AFK_APPEAL,
-		RUN,
-		SLASH1, 
-		SLASH2,
-		SLASH3, 
-		DASH_SLASH,
-		COUNTER,
-		JUMP_SLASH,
-		JUMP,
-		DODGE,
-		DEATH,
-		MAX_ANIM,
-	};
 
 
 	void Start();

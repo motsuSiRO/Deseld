@@ -237,6 +237,9 @@
       <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DIrectXTex\Bin\Desktop_2019\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDebug|x64'">
     <ClCompile>
@@ -258,6 +261,9 @@
       <AdditionalDependencies>d3d11.lib;dxgi.lib;libfbxsdk-md.lib;DirectXTex.lib;libfbxsdk-md.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(ProjectDir)ExternalLib\FBX SDK\2016.1.2\lib\vs2015\$(PlatformTarget)\$(Configuration);$(ProjectDir)ExternalLib\DIrectXTex\Bin\Desktop_2019\$(PlatformTarget)\$(Configuration)</AdditionalLibraryDirectories>
     </Link>
+    <FxCompile>
+      <ShaderModel>5.0</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ExternalLib\ImGui\imgui.cpp" />

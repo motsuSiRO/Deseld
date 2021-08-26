@@ -77,7 +77,7 @@ public:
 	};
 	struct Animation
 	{
-		//std::string					name;
+		const char*					name;
 		float						seconds_length;
 		std::vector<Keyframe>		keyframes;
 	};
@@ -86,7 +86,6 @@ public:
 	const std::vector<Node>& GetNodes() const { return nodes; }
 	const std::vector<Animation>& GetAnimations() const { return animations; }
 	void AddAnimation(const char* Filename);
-	int GetRemoveNodeCount() { return remove_node; }
 	bool Load(ID3D11Device* device, ModelData* m_data, bool is_animation);
 	//bool LoadFromBinary(ID3D11Device* device, const char* Filename, ModelData* m_data);
 	void Set(std::shared_ptr<Texture> texture) { materials[0].tex = texture; }
@@ -120,7 +119,6 @@ private:
 private:
 	
 
-	int						remove_node = 0;
 	std::vector<Node>		nodes;
 	std::vector<Material>	materials;
 	std::vector<Mesh>		meshes;

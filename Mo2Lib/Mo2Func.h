@@ -1,7 +1,7 @@
 #pragma once
 #include <math.h>
 #include <sstream>
-#include <string>
+//#include <string>
 //#include <vector>
 //#include <limits>
 #include <cassert>
@@ -98,5 +98,11 @@ namespace Mo2Lib
 		return false;
 	}
 
+	inline bool isEqual(const char* s1, const char* s2)
+	{
+		if (strcmp(s1, s2) == 0)return true;
+
+		return false;
+	}
 }
 
